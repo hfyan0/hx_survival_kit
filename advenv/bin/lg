@@ -1,0 +1,47 @@
+#!/bin/bash
+# sunny ls grep
+
+LGTMPFILE1="$(mktemp)"
+LGTMPFILE2="$(mktemp)"
+
+cat /dev/null > $LGTMPFILE2
+
+if [[ $# -eq 0 ]]
+then
+    echo "Usage: $(basename $0) [-f|-d|-a] [patterns]"
+    exit
+fi
+
+ls -p > $LGTMPFILE1
+
+while getopts dfaesb opt; do
+  case $opt in
+    d)
+      ls -p | grep / > $LGTMPFILE1
+      ;;
+    f)
+      ls -p | grep -v / > $LGTMPFILE1
+      ;;
+    a)
+      ls -a > $LGTMPFILE1
+      ;;
+    ?)
+      exit;
+      ;;
+  esac
+done
+
+for i in $@
+do
+    if [[ $i == "-f" || $i == "-d" || $i == "-a" ]]
+    then
+        continue
+    fi
+    cat $LGTMPFILE1 | grep $i >  $LGTMPFILE2
+    cat $LGTMPFILE2 > $LGTMPFILE1
+done
+
+
+cat $LGTMPFILE1
+
+rm -f $LGTMPFILE1 $LGTMPFILE2

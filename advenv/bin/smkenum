@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+import sys
+
+def createTup(line):
+    line = line.replace("//","")
+    line = line.strip()
+    orik,v = [x.strip() for x in line.split(',')]
+    s = orik
+    k_words = orik.split(' ')
+    k = ""
+    if len(k_words) == 1:
+        k = orik
+    else:
+        for k_word in k_words:
+            k_word = k_word[0].upper() + k_word[1:].lower()
+            k += k_word
+    return (k,s,v)
+
+if __name__ == '__main__':
+
+    raw_input_lines = [line.strip() for line in sys.stdin]
+    for s in raw_input_lines:
+        print(s)
+
+    ###################################################
+    # see if first line is NAME
+    ###################################################
+    if "NAME" in raw_input_lines[0]:
+        NAME = raw_input_lines[0].split(',')[1].strip()
+        raw_input_lines = raw_input_lines[1:]
+    else:
+        NAME = "NAME"
+
+    ksv_lines = [createTup(line) for line in raw_input_lines]
+    max_k = max([len(x[0]) for x in ksv_lines])
+
+    print("struct " + NAME + " {")
+    print("    enum Value: int {")
+
+    for k,s,v in ksv_lines:
+        padding = ' '*(max_k-len(k))
+        print(f"            {k}{padding} = {v},")
+
+    print("    };")
+    print("    static std::string ToString(Value v) {")
+    print("        switch(v) {")
+
+    for k,s,v in ksv_lines:
+        padding = ' '*(max_k-len(k))
+        print(f"            case {k}{padding}: return \"{s}\";")
+
+    padding = ' '*(max_k-len("default")+5)
+    print(f"            default{padding}: return \"Undefined\";")
+    print("        }")
+    print("    }")
+    print("    static Value FromInt(const int i) {")
+    print("        switch(i) {")
+
+    for k,s,v in ksv_lines:
+        padding = ' '*(3-len(v))
+        print(f"            case {padding}{v}: return {k};")
+
+    print(f"            default: return Undefined;")
+    print("        }")
+    print("    }")
+    print("    static Value FromString(const string &s) {")
+
+    for k,s,v in ksv_lines:
+        padding = ' '*(max_k-len(k))
+        print(f"            if (s == \"{k}\"{padding}) return {k};")
+
+    print("            return Undefined;")
+    print("    }")
+    print("    static std::string ToString(const int i) {")
+    print("        return ToString(FromInt(i));")
+    print("    }")
+    print("    static vector<Value> GetElements() {")
+    print("        return {")
+    print(',\n'.join([f"                    {k}" for k,s,v in ksv_lines]))
+    print("               };")
+    print("    }")
+    print("};")

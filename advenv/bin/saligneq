@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+import sys
+
+def align_anchors(in_lines,anchor_locs):
+    def align_line(line, align_loc, anchor_loc):
+        return line[:anchor_loc-1] + " " + ' '*(align_loc-anchor_loc) + line[anchor_loc:]
+    max_anchor_loc = max(anchor_locs)
+    return [align_line(line,max_anchor_loc,type_end) for line,type_end in zip(in_lines,anchor_locs)]
+
+def remove_conseq_spaces_arnd_eq(x):
+    for i in range(20):
+        x = x.replace("  =", " =")
+        x = x.replace("=  ", "= ")
+    return x
+
+###################################################
+in_lines = [line for line in sys.stdin]
+if not in_lines:
+    sys.exit()
+
+init_indent = len(in_lines[0]) - len(in_lines[0].lstrip())
+
+in_lines = [remove_conseq_spaces_arnd_eq(line.strip()) for line in in_lines]
+
+in_lines = align_anchors(
+               in_lines,
+               [line.find('=') for line in in_lines])
+
+in_lines = [' '*init_indent+x  for x in in_lines]
+print('\n'.join(in_lines))

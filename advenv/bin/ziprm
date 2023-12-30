@@ -1,0 +1,64 @@
+#!/bin/bash
+
+echo "--------------------------------------------------"
+
+if [[ $# -eq 0 ]]
+then
+    echo "Usage: $(basename $0) [file name] [(optional) password]"
+    echo "       [file name] can be either:"
+    echo "           1. folder name, or"
+    echo "           2. zip file."
+    exit
+elif [[ -d $1 ]]
+then
+
+    PWDENC=""
+    if [[ -n $2 ]]
+    then
+        echo "You have specified to encrypt with password: $2"
+        echo -n "Please re-type the password to confirm: "
+        read pwdconfirm
+        if [[ $2 == $pwdconfirm ]]
+        then
+            PWDENC="-P $pwdconfirm"
+        fi
+    fi
+    FOLDERNAME=$(echo $1 | tr -d '/')
+    zip -9r $PWDENC "$FOLDERNAME".zip "$FOLDERNAME" && rm -rf "$FOLDERNAME"
+
+    echo "Peeking insdie "$FOLDERNAME".zip"
+    unzip $PWDENC -t "$FOLDERNAME".zip | head -5
+    echo "..."
+    unzip $PWDENC -t "$FOLDERNAME".zip | tail -5
+    echo
+else
+    ARG1="$1"
+
+    if [[ ! -f $ARG1 ]]
+    then
+        echo "--------------------------------------------------"
+        echo "$ARG1 does not exist."
+        echo "--------------------------------------------------"
+        exit
+    fi
+    if [[ ${ARG1: -4} == ".zip" ]]
+    then
+        PREFIX=$(echo $ARG1 | cut -d'.' -f 1)
+        FOLDER_NOMESS=$PREFIX"_"$(date +'%Y%m%d_%H%M%S')
+        mkdir $FOLDER_NOMESS
+        mv $ARG1 $FOLDER_NOMESS
+        cd $FOLDER_NOMESS
+
+        unzip $ARG1 && rm -f $ARG1
+
+        if [[ $(ls | wc -l) -eq 1 ]]
+        then
+            mv * ..
+            cd ..
+            rmdir $FOLDER_NOMESS
+            exit
+        else
+            cd ..
+        fi
+    fi
+fi

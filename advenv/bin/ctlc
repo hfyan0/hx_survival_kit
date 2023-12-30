@@ -1,0 +1,2 @@
+#!/bin/bash
+sed -e 's/,/,\n/g' | sed -e 's/\s\+$//' | sed -e 's/^\s\+//' | sed '/^$/d'

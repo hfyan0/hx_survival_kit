@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+import sys
+
+if len(sys.argv) == 1:
+    print (f"Usage: {sys.argv[0]} [delimitor (w / s = space | t = tab)] [column numbers (starting from 1)]")
+    sys.exit(0)
+
+delim = sys.argv[1:]
+
+try:
+    x = float(sys.argv[1])
+    delim = ' '
+    col_list = list(map(int,sys.argv[1:]))
+except:
+    delim = sys.argv[1]
+    col_list = list(map(int,sys.argv[2:]))
+
+delim = '\t' if delim == 't' else delim
+delim = ' '  if delim in ['w','s'] else delim
+
+for line in sys.stdin:
+    line = line.strip()
+
+    flds = line.split() if delim == ' ' else line.split(delim)
+
+    print(delim.join(
+          [("" if x > len(flds) else flds[x-1].strip()) for x in col_list]
+          ))

@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+# #!/bin/bash
+# tr -d ',' | awk 'BEGIN{cv=0}{cv=($1+cv); print cv;}'
+
+import sys
+
+data = [line.strip() for line in sys.stdin]
+data = [(float(x) if x else 0)  for x in data]
+
+cum = 0
+for d in data:
+    cum += d
+    print(cum)

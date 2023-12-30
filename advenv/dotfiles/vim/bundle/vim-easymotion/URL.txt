@@ -1,0 +1,2 @@
+origin	https://github.com/Lokaltog/vim-easymotion (fetch)
+origin	https://github.com/Lokaltog/vim-easymotion (push)

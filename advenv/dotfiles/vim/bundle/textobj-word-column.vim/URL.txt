@@ -1,0 +1,2 @@
+origin	https://github.com/coderifous/textobj-word-column.vim.git (fetch)
+origin	https://github.com/coderifous/textobj-word-column.vim.git (push)
