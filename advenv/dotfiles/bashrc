@@ -26,7 +26,6 @@ alias g='grep --color=auto'
 alias gv='grep -v'
 alias eg="egrep -a --color"
 alias md='mkdir -p'
-alias md5='md5sum'
 alias tp='htop || top'
 alias ifc='ifconfig | less'
 alias wcl='wc -l'
@@ -161,44 +160,6 @@ unset -f ff; ff() {
       rm -f $tmpfile2
   fi
 }
-unset -f v; v() {
-  if [[ -n $(which nvim 2> /dev/null) ]]
-  then
-      OURVIM="nvim"
-  elif [[ -n $(which vim 2> /dev/null) ]]
-  then
-      OURVIM="vim"
-  elif [[ -n $(which vi 2> /dev/null) ]]
-  then
-      OURVIM="vi"
-  fi
-
-  if [[ $# -eq 0 ]]
-  then
-      $OURVIM -p $(cat -)
-  else
-      # get file list
-      filelist=""
-      for f in $@
-      do
-          filelist="${filelist} $(ls | grep $f)"
-      done
-      $OURVIM -p $filelist
-  fi
-}
-unset -f vw; vw() {
-  if [[ -n $(which nvim 2> /dev/null) ]]
-  then
-      nvim -R -p $@
-  elif [[ -n $(which vim 2> /dev/null) ]]
-  then
-      vim -R -p $@
-  elif [[ -n $(which view 2> /dev/null) ]]
-  then
-      view $@
-  fi
-}
-
 unset -f pf; pf() {
   echo $(pwd)/$(echo $@)
 }
@@ -239,14 +200,6 @@ unset -f cpb; cpb(){
         cp -rp $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
         ls --color=auto -F --group-directories-first
         cd $thisdir
-    fi
-}
-unset -f m5; m5() {
-    if [[ $# -eq 0 ]]
-    then
-        ls -p | grep -v / | xargs md5sum
-    else
-        md5sum $@
     fi
 }
 unset -f ty; ty() {

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [[ -n $(which nvim 2> /dev/null) ]]
+then
+    OURVIM="nvim"
+elif [[ -n $(which vim 2> /dev/null) ]]
+then
+    OURVIM="vim"
+elif [[ -n $(which vi 2> /dev/null) ]]
+then
+    OURVIM="vi"
+else
+    OURVIM="vi"
+fi
+
+if [[ $# -eq 0 ]]
+then
+    $OURVIM -p $(cat -)
+else
+    # get file list
+    filelist=""
+    for f in $@
+    do
+        filelist="${filelist} $(ls | grep $f)"
+    done
+    $OURVIM -p $filelist
+fi
