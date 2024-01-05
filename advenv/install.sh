@@ -20,3 +20,5 @@ ln -s $HOME/.advenv/dotfiles/gitconfig $HOME/.gitconfig
 
 cd
 source $HOME/.load_advenv
+
+echo "Download git from: https://github.com/git/git/releases/tag/v2.30.2"
