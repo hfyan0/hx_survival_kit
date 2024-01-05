@@ -2,10 +2,17 @@
     default = simple
 
 [diff]
-    tool = vimdiff
+    # tool = gvimdiff
+    # tool = nvimdiff
+    # tool = meld
+    # tool = vimdiff
+      tool = myvimdiff
 
 # [difftool]
 #   prompt = true
+
+[difftool "myvimdiff"]
+    cmd = $HOME/.advenv/bin/gitdiff $LOCAL $REMOTE
 
 [alias]
     d = difftool
