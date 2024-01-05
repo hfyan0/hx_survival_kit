@@ -16,6 +16,7 @@ ln -s $HOME/.advenv/dotfiles/vim $HOME/.vim
 ln -s $HOME/.advenv/dotfiles/tigrc $HOME/.tigrc
 ln -s $HOME/.advenv/dotfiles/tmux.conf $HOME/.tmux.conf
 ln -s $HOME/.advenv/dotfiles/gitconfig $HOME/.gitconfig
+ln -s $HOME/.advenv/local/git_2.30.2/bin/git $HOME/.advenv/bin/git
 
 cd
 source $HOME/.load_advenv
