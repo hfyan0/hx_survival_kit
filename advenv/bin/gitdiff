@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# meld $@
-cat $HOME/Dropbox/dotfiles/diff_vimrc > $HOME/.vimrc
-vimdiff $@
-cat $HOME/Dropbox/dotfiles/programming_vimrc > $HOME/.vimrc
