@@ -1,8 +1,14 @@
 [push]
     default = simple
 
+[diff]
+    tool = vimdiff
+
+# [difftool]
+#   prompt = true
+
 [alias]
-    d = diff
+    d = difftool
 
 [merge]
     # tool = vimdiff
