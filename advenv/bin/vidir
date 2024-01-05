@@ -66,7 +66,7 @@ foreach (@sorted) {
 @sorted=();
 close OUT || die "$0: cannot write ".$tmp->filename.": $!\n";
 
-my @editor = 'vim';
+my @editor = 'nvim';
 
 # if(exists($ENV{VIDIR_EDITOR})) {
 #   @editor = $ENV{VIDIR_EDITOR};
