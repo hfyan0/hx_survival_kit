@@ -11,5 +11,6 @@ unlink $HOME/.config/nvim
 unlink $HOME/.vim
 unlink $HOME/.tigrc
 unlink $HOME/.tmux.conf
+unlink $HOME/.gitconfig
 
 rm -rf $HOME/.advenv
