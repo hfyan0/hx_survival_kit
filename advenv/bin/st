@@ -43,13 +43,13 @@ fi
 
 if [[ $fx_arg == "e" ]]
 then
-    $VIMCMD -X $ACTIVEBUFFERS
+    nvim $ACTIVEBUFFERS
     exit
 fi
 
 if [[ $fx_arg == "v" ]]
 then
-    vim -p $(cat $ACTIVEBUFFERS)
+    nvim -p $(cat $ACTIVEBUFFERS)
     exit
 fi
 

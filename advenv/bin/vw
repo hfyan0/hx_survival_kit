@@ -21,7 +21,12 @@ else
     filelist=""
     for f in $@
     do
-        filelist="${filelist} $(ls | grep $f)"
+        if [[ -e $f ]]
+        then
+            filelist="${filelist} $f"
+        else
+            filelist="${filelist} $(ls | grep $f)"
+        fi
     done
     $OURVIM -p $filelist
 fi
