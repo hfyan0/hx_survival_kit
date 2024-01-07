@@ -22,7 +22,6 @@ alias C='cat'
 alias ch7='chmod 755'
 alias ch6='chmod 644'
 alias ch600='chmod 600'
-alias rf='rm -rf'
 alias tf='tail -500f'
 alias g='grep --color=auto'
 alias gv='grep -v'
@@ -55,7 +54,6 @@ alias cte='VISUAL=vim crontab -e'
 alias rtn='route -n'
 alias dus='du -sh .'
 alias dush='du -sh * | sort -h'
-alias rd='rmdir'
 alias lvr='ls | vidir -'
 alias lwcl="ls | wc -l"
 alias pmi='yum install -y'
@@ -141,6 +139,28 @@ unset -f c; c() {
 }
 unset -f i; i() {
     cd $(echo $(ls -Fd ../*$1* | grep "/$") | awk '{print $1}') && print_dir_info
+}
+unset -f rf; rf() {
+    if [[ $@ == "." ]]
+    then
+        CUR_DIR=$(pwd)
+        cd ..
+        rm -rf $CUR_DIR
+    else
+        rm -rf $@
+    fi
+    ls --color=auto -F --group-directories-first
+}
+unset -f rd; rd() {
+    if [[ $@ == "." ]]
+    then
+        CUR_DIR=$(pwd)
+        cd ..
+        rmdir $CUR_DIR
+    else
+        rmdir $@
+    fi
+    ls --color=auto -F --group-directories-first
 }
 
 unset -f ff; ff() {

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TMPFILE=$(mktemp)
+
+awk '{print}' > $TMPFILE
+
+INPUTARG="$@"
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" == *"gz" ]]
+    then
+        cat $line | gunzip | grep -a --color $INPUTARG
+    else
+        echo $line | xargs grep -H -a --color $INPUTARG
+    fi
+done < $TMPFILE
+
+rm -f $TMPFILE
