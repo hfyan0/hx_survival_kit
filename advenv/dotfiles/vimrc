@@ -111,14 +111,14 @@ autocmd FocusLost * if mode()[0] =~ 'i\|R' | call feedkeys("\<Esc>") | endif
 
 "Medium
 "colorscheme mustang_sunny
-"colorscheme xoria256_sunny
+ colorscheme xoria256_sunny
 "colorscheme 256-jungle " vimdiff hard to read
 "colorscheme fu_sunny
 "colorscheme spacegray
 "colorscheme molokai
 
 "Mild
- colorscheme lilypink_sunny
+"colorscheme lilypink_sunny
 "colorscheme hybrid
 "colorscheme flatlandia
 "colorscheme iceberg
