@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [[ $1 == "n" ]]
+then
+    tmux -2 -u
+    # tmux new -s $@
+elif [[ $1 == "ls" ]]
+then
+    tmux ls
+elif [[ $1 == "l" ]]
+then
+    tmux ls
+elif [[ $1 == "lsc" ]]
+then
+    tmux lsc
+elif [[ -n $1 ]]
+then
+    tmux a -t $1
+else
+    tmux lsc | while read line
+    do
+        clt=$(echo $line | awk -F ":" '{print $1}')
+        sess=$(echo $line | awk '{print $2}')
+        default_sess=0 # defining our default session
+
+        if [[ $sess -eq $default_sess ]]
+        then
+            # attach to default session
+            tmux detach -t $clt
+            tmux a -t $default_sess
+            exit
+        fi
+    done
+
+    # otherwise
+    tmux -u a || tmux -2 -u
+fi

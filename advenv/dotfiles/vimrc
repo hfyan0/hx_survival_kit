@@ -1,0 +1,242 @@
+"autocmd!                          " Remove ALL auto-commands.  This avoids having the autocommands twice when the vimrc file is sourced again.
+:abclear
+
+" ---------------------------------------------------------------------------------------------------
+ set autoread                      " Always reload buffer when external changes detected
+ set background=dark               " background is dark or light
+"set backspace=2                   " can use backspace in insert mode
+ set backspace=indent,eol,start    " can backspace past the start of operation in insert mode
+ set backupdir=/tmp
+"set cursorline                    " horizontal cursor line
+ set expandtab                     " Replace tabs with spaces
+ set softtabstop=4
+ set tabstop=4                     " 1 tab is shown by 4 spaces
+ set shiftwidth=4                  " use X spaces when using autoindent/cindent
+ set ffs=unix,dos                  " Convert all files to unix format and set default fileformat to unix.
+ set ff=unix
+ set hidden                        " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first. Also, undo buffers and marks are preserved while the buffer is open. This is an absolute must-have.
+ set history=1000                  " remember more commands and search history
+ set hlsearch                      " highlight our search
+ set incsearch                     " incsearch
+ set lazyredraw                    " Don't redraw while executing macros (good performance config)
+ set autoindent                    " autoindent
+ set nobackup                      " backup files ~ are a nuisance
+ set noerrorbells                  " don't beep
+ set nofoldenable                  " Initially no code folding...
+ set foldmethod=syntax
+ set nostartofline                 " The cursor is kept in the same column (if possible)
+"set novisualbell
+ set visualbell t_vb=              " turn off the flashing in visual bell
+ set ruler                         " Show the line and column number of the cursor position in the status line.
+ set showcmd                       " show current uncompleted command
+ set showmatch                     " show matching parenthesis
+ set showmode                      " show INSERT in the status line
+ set tags=./tags;                  " Set the tag file search order
+"set term=screen-256color          " old way prior to nvim
+"set term=xterm                    " new ways under nvim for screen-256color
+"set t_Co=256                      " new ways under nvim for screen-256color
+ set title                         " change the terminal's title
+ set undolevels=1000               " use many muchos levels of undo
+"set cursorcolumn                  " vertical cursor column
+ set number                        " line number
+ set relativenumber                " line numbering in relative numbers
+ set nowrap
+ set noswapfile
+ set autowriteall                  " Save buffer automatically when changing files
+"set nocompatible                  " Disable vi-compatibility for powerline
+"set complete=.,w,b,u,t,i,kspell   " where to look for auto completion, current buffer, other windows, other buffers, unloaded buffers, text files, included files, from the dictionary only when spell checking is set
+ set complete=.,w,b,u,kspell       " where to look for auto completion, current buffer, other windows, other buffers, unloaded buffers, text files, from the dictionary only when spell checking is set
+"set list
+"set listchars=tab:▸\ ,eol:¬
+"set clipboard=unnamed             " Use OS clipboard by default.
+ set scrolloff=2                   " Minimal number of screen lines to keep above and below the cursor.
+ set smartcase                     " Applies case sensitivity if at least one of the letters in the pattern is uppercase; otherwise, case is ignored.
+"set virtualedit=block             " Allow moving into blank space in visual block mode
+ set tabpagemax=100                " Allow more opened tabs
+
+ set encoding=utf-8
+ set fileencoding=utf-8
+ set sidescroll=1                  " (??? unsure) =1 causes the strange behaviour of cursor returning to the far left after pressing Esc
+ set diffopt+=iwhite
+ set mouse=                        " disable mouse in neovim
+
+" ---------------------------------------------------------------------------------------------------
+" Fixing Vim Auto-Complete Slowness in Large Projects
+" ---------------------------------------------------------------------------------------------------
+" set foldmethod=manual
+set foldmethod=syntax
+
+let g:snipMate = { 'snippet_version' : 1 }
+" ---------------------------------------------------------------------------------------------------
+"set colorcolumn=100,200
+"highlight ColorColumn ctermbg=235
+ set nospell
+"set autoindent
+
+:syntax on " syntax highlighting
+
+" ---------------------------------------------------------------------------------------------------
+silent! call pathogen#runtime_append_all_bundles()
+
+" ---------------------------------------------------------------------------------------------------
+" To highlight a selection on yank
+" ---------------------------------------------------------------------------------------------------
+au TextYankPost * silent! lua vim.highlight.on_yank({timeout=1000})
+
+" ---------------------------------------------------------------------------------------------------
+" To save last cursor location
+" ---------------------------------------------------------------------------------------------------
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" ---------------------------------------------------------------------------------------------------
+" To alleviate vim's problem indenting lambda functions in C++11 code
+" ---------------------------------------------------------------------------------------------------
+ autocmd FileType cpp              setlocal expandtab shiftwidth=4 softtabstop=4 cindent cino=j1,(0,ws,Ws
+ autocmd BufEnter *.html           :set noautoindent
+
+" ---------------------------------------------------------------------------------------------------
+" stopinsert when focus lost 
+" http://tech.groups.yahoo.com/group/vim/message/94986
+" ---------------------------------------------------------------------------------------------------
+autocmd FocusLost * nested silent! wa
+autocmd FocusLost * if mode()[0] =~ 'i\|R' | call feedkeys("\<Esc>") | endif
+
+
+" ---------------------------------------------------------------------------------------------------
+" Colour scheme for VIM  :)
+" ---------------------------------------------------------------------------------------------------
+"Vivid
+"colorscheme badwolf
+"colorscheme diablo3
+
+"Medium
+"colorscheme mustang_sunny
+ colorscheme xoria256_sunny
+"colorscheme 256-jungle " vimdiff hard to read
+"colorscheme fu_sunny
+"colorscheme spacegray
+"colorscheme molokai
+
+"Mild
+"colorscheme lilypink_sunny
+"colorscheme hybrid
+"colorscheme flatlandia
+"colorscheme iceberg
+"colorscheme sourcerer
+
+
+" ---------------------------------------------------------------------------------------------------
+" Status line
+" ---------------------------------------------------------------------------------------------------
+set laststatus=2
+" set noshowmode  " noshowmode makes C-x auto-completion fail for some reason
+
+function! StatusLineInsert()
+
+     set statusline=
+     set statusline+=%9*--\ INSERT\ --\                        "Insert Mode
+     set statusline+=%8*\ %=\ programming\ \                   "Vimrc type
+     set statusline+=%1*\ %<%F\                                "File+path
+     set statusline+=%2*\ %y\                                  "FileType
+     set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}\ \   "Encoding
+     set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..) 
+     set statusline+=%5*\ %l/%L\                               "Rownumber/total (%)
+     set statusline+=%6*\ Col:%c\                              "Colnr
+     set statusline+=%7*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
+
+     hi User9 ctermbg=0   ctermfg=2      cterm=bold
+
+endfunction 
+
+function! StatusLineNormal()
+
+     set statusline=
+     set statusline+=%9*--\ NORMAL\ --\                        "Normal Mode
+     set statusline+=%8*\ %=\ programming\ \                   "Vimrc type
+     set statusline+=%1*\ %<%F\                                "File+path
+     set statusline+=%2*\ %y\                                  "FileType
+     set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}\ \   "Encoding
+     set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..) 
+     set statusline+=%5*\ %l/%L\                               "Rownumber/total (%)
+     set statusline+=%6*\ Col:%c\                              "Colnr
+     set statusline+=%7*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
+
+     hi User9 ctermbg=0   ctermfg=243   cterm=bold
+
+endfunction 
+
+function! StatusLineTextChanged()
+
+     set statusline=
+     set statusline+=%9*--\ NORMAL\ --\                        "Normal Mode
+     set statusline+=%8*\ %=\ programming\ \                   "Vimrc type
+     set statusline+=%1*\ %<%F\                                "File+path
+     set statusline+=%2*\ %y\                                  "FileType
+     set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}\ \   "Encoding
+     set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..) 
+     set statusline+=%5*\ %l/%L\                               "Rownumber/total (%)
+     set statusline+=%6*\ Col:%c\                              "Colnr
+     set statusline+=%7*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
+
+     hi User9 ctermbg=0   ctermfg=202   cterm=bold
+
+endfunction 
+
+function! StatusLineTextChangedI()
+
+     set statusline=
+     set statusline+=%9*--\ INSERT\ --\                        "Insert Mode
+     set statusline+=%8*\ %=\ programming\ \                   "Vimrc type
+     set statusline+=%1*\ %<%F\                                "File+path
+     set statusline+=%2*\ %y\                                  "FileType
+     set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}\ \   "Encoding
+     set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..) 
+     set statusline+=%5*\ %l/%L\                               "Rownumber/total (%)
+     set statusline+=%6*\ Col:%c\                              "Colnr
+     set statusline+=%7*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
+
+     hi User9 ctermbg=0   ctermfg=11    cterm=bold
+
+endfunction 
+
+" My Own Colours :)
+hi User1 ctermbg=235 ctermfg=255  cterm=bold
+hi User2 ctermbg=0   ctermfg=219  cterm=bold
+hi User3 ctermbg=0   ctermfg=215  cterm=bold
+hi User4 ctermbg=0   ctermfg=11   cterm=bold
+hi User5 ctermbg=0   ctermfg=114  cterm=bold
+hi User6 ctermbg=0   ctermfg=12   cterm=bold
+hi User7 ctermbg=0   ctermfg=5    cterm=bold
+hi User8 ctermbg=235 ctermfg=243  cterm=bold
+hi User9 ctermbg=28  ctermfg=255  cterm=bold
+
+autocmd BufEnter     * call StatusLineNormal()
+autocmd InsertEnter  * call StatusLineInsert()
+autocmd InsertLeave  * call StatusLineNormal()
+autocmd TextChangedI * call StatusLineTextChangedI()
+autocmd TextChanged  * call StatusLineTextChanged()
+
+
+" ---------------------------------------------------------------------------------------------------
+" Python-specific
+" ---------------------------------------------------------------------------------------------------
+function! SetPython()
+
+    set tabstop=4
+    set softtabstop=4
+    set shiftwidth=4
+    set expandtab
+    " set autoindent
+    set fileformat=unix
+    set foldmethod=indent
+    set foldlevel=99
+    " ALEDisable
+
+endfunction 
+
+au BufNewFile,BufRead,InsertEnter,InsertLeave *.py   call SetPython()
+
+
+" ---------------------------------------------------------------------------------------------------
+source ~/.advenv/dotfiles/func_vimrc
+source ~/.advenv/dotfiles/map_vimrc

@@ -1,0 +1,2 @@
+#!/bin/bash
+tr -d ',' | awk 'BEGIN{cv="none"}{if (cv != "none") print $1-cv; cv=$1;}'

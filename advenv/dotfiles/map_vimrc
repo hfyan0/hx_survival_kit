@@ -1,0 +1,331 @@
+" ---------------------------------------------------------------------------------------------------
+" Making both , and \ leader keys
+" ---------------------------------------------------------------------------------------------------
+let mapleader = ","
+let g:mapleader = ","
+nmap \ ,
+
+" ---------------------------------------------------------------------------------------------------
+" no Ex mode
+" ---------------------------------------------------------------------------------------------------
+map q: <Nop>
+nnoremap Q <nop>
+
+" ---------------------------------------------------------------------------------------------------
+" Quitting and Saving buffers
+" ---------------------------------------------------------------------------------------------------
+   nnoremap <Leader>q      :qall<cr>
+"  nnoremap <Leader>q      :q<cr>
+"  nnoremap <Leader>,q     :qall<cr>
+ cmap     w!!            w !sudo tee %
+command!                Q q " Bind :Q to :q
+command!                Qall qall
+
+" ---------------------------------------------------------------------------------------------------
+" Reading and Saving buffers
+" ---------------------------------------------------------------------------------------------------
+ set autoread                                                                                                                                                                                    
+ set updatetime=1000
+ autocmd CursorMoved,BufLeave,FocusLost              * silent! wall
+ autocmd CursorHold,CursorHoldI,CursorMovedI         * silent! checktime
+
+" ---------------------------------------------------------------------------------------------------
+" more convenient
+" ---------------------------------------------------------------------------------------------------
+  nnoremap <Leader>m      @q
+" nnoremap 0              050l^
+
+
+" ---------------------------------------------------------------------------------------------------
+" Easy Motion
+" ---------------------------------------------------------------------------------------------------
+"map <Leader>w M0kkk<Leader><Leader>w
+"map <Leader>b M0jjj<Leader><Leader>b
+map <Leader>w <Leader><Leader>w
+" normal
+map <Leader>b <Leader><Leader>b
+" map <Leader>m H<Leader><Leader>j
+
+" map <Leader>j M<Leader><Leader>j
+" map <Leader>k M<Leader><Leader>k
+" map <Leader>h <Leader><Leader>h
+" map <Leader>l <Leader><Leader>l
+"Strange behaviour
+"map t <Leader><Leader>t
+"map T <Leader><Leader>T
+"map f <Leader><Leader>f
+"map F <Leader><Leader>F
+
+" ---------------------------------------------------------------------------------------------------
+" No Magic Search
+" ---------------------------------------------------------------------------------------------------
+"nnoremap / /\v
+"nnoremap ? ?\v
+
+
+" ---------------------------------------------------------------------------------------------------
+" Turbo keys / Red Bull keys / Superman keys
+" ---------------------------------------------------------------------------------------------------
+  nnoremap <C-h>     7h
+  nnoremap <C-l>     7l
+  nnoremap <C-k>     3k
+  nnoremap <C-j>     3j
+
+  vnoremap <C-h>     7h
+  vnoremap <C-l>     7l
+  vnoremap <C-k>     3k
+  vnoremap <C-j>     3j
+
+  nnoremap gm :call cursor(0, len(getline('.'))/2)<cr>
+  nnoremap gh :call cursor(0, len(getline('.'))/4)<cr>
+  nnoremap gl :call cursor(0, len(getline('.'))*3/4)<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" Emacs commands
+" ---------------------------------------------------------------------------------------------------
+  inoremap <C-b> <Left>
+  inoremap <C-f> <Right>
+  inoremap <M-b> <esc>b
+  inoremap <M-f> <esc>ww
+  nnoremap <M-b> b
+  nnoremap <M-f> w
+
+  inoremap <C-a> <Home>
+  inoremap <C-e> <End>
+  nnoremap <C-a> 0
+  nnoremap <C-e> $
+
+  inoremap <C-d> <Del>
+  inoremap <M-d> <esc>lcw
+  nnoremap <M-d> dw
+  inoremap <C-h> <BS>
+
+" ---------------------------------------------------------------------------------------------------
+" Tabs and opening files through plugin / sf
+" ---------------------------------------------------------------------------------------------------
+"noremap <Leader>t      <esc>:tabnew<cr>:CommandTFlush<cr>:CommandT<cr>
+"noremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
+"noremap <Leader>t      <esc>:tabnew /tmp/vim_tmp<cr>ggO-<esc>x50p5o<esc>gg<esc>:r!sf 
+"nnoremap gf            <c-w>gf<esc>:tabp<cr>:tabclose<cr><esc>
+"let g:ctrlp_map = ''   " Conflicting with CtrlP, therefore kill CtrlP's mapping
+"noremap <C-p>          <esc>:wall<cr>:tabn<cr>
+"noremap <C-u>          <esc>:wall<cr>:tabp<cr>
+
+"nnoremap <C-m>         :call MergeTabs()<cr>
+
+" not working when there is only 1 tab
+" nnoremap <Leader>t      <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
+nnoremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
+nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
+nnoremap <C-o>          <esc>:tabnext<cr>
+nnoremap <C-i>          <esc>:tabprev<cr>
+nnoremap <Tab>          <esc>:tabprev<cr>
+
+
+
+" ---------------------------------------------------------------------------------------------------
+" Clear previous search
+" ---------------------------------------------------------------------------------------------------
+nnoremap <Leader>cs        :noh<cr>
+
+
+" ---------------------------------------------------------------------------------------------------
+" comment current line and 
+" ---------------------------------------------------------------------------------------------------
+ nmap <Leader>/     <esc>yypkgcc<esc>j
+ vmap <Leader>/     ygvgcgv<esc>jP
+
+
+" ---------------------------------------------------------------------------------------------------
+" Make Y consistent with D and C (instead of yy)
+" ---------------------------------------------------------------------------------------------------
+noremap Y y$
+
+" ---------------------------------------------------------------------------------------------------
+" hjkl
+" it is more intuitive for the cursor to move by rows rather than by lines when wrap is on
+" ---------------------------------------------------------------------------------------------------
+" Conflict with DVB_Drag DVB_Duplicate
+nnoremap j gj
+nnoremap k gk
+
+" ---------------------------------------------------------------------------------------------------
+" auto centre
+" ---------------------------------------------------------------------------------------------------
+"noremap   k    kzz
+"noremap   j    jzz
+"nnoremap  G    Gzz
+"nnoremap  N    Nzz
+"nnoremap  n    nzz
+"nnoremap  {    {zz
+"nnoremap  }    }zz
+ nnoremap  ]c   ]czz
+ nnoremap  [c   [czz
+
+" ---------------------------------------------------------------------------------------------------
+" auto close brackets
+" ---------------------------------------------------------------------------------------------------
+" inoremap "        ""<left>
+" inoremap '        ''<left>
+" inoremap (        ()<left>
+" inoremap [        []<left>
+" inoremap {        {}<left>
+  inoremap {<cr>    {<cr>}<esc>O
+
+" ---------------------------------------------------------------------------------------------------
+" Visually select the text that was most recently edited/pasted.
+" Note: gv selects previously selected area.
+" ---------------------------------------------------------------------------------------------------
+nnoremap gV `[v`]
+
+" ---------------------------------------------------------------------------------------------------
+" No help
+" ---------------------------------------------------------------------------------------------------
+ noremap  <S-k> <NOP>
+
+
+" ---------------------------------------------------------------------------------------------------
+" cursor should stay in the paragraph after { }
+" ---------------------------------------------------------------------------------------------------
+vnoremap   {   k{j
+vnoremap   }   j}k
+
+" ---------------------------------------------------------------------------------------------------
+" move cursor to line front before entering visual line mode
+" ---------------------------------------------------------------------------------------------------
+nnoremap V 0V
+
+" ---------------------------------------------------------------------------------------------------
+" Correct some motion to reduce mistakes
+" ---------------------------------------------------------------------------------------------------
+ nnoremap  dip   dap
+ nnoremap  yip   yap
+ nnoremap  gcap  gcip
+
+
+" ---------------------------------------------------------------------------------------------------
+" Less clumpsy select all
+" ---------------------------------------------------------------------------------------------------
+  nnoremap <Leader>a ggVG
+
+" ---------------------------------------------------------------------------------------------------
+" some calculations with bc
+" ---------------------------------------------------------------------------------------------------
+" will affect speed of EasyMotion
+" nnoremap <Leader>bc        <esc>yypV!bc -l<cr>
+
+
+" ---------------------------------------------------------------------------------------------------
+" Formatting
+" ---------------------------------------------------------------------------------------------------
+ vnoremap <Leader>=      :!saligncode<cr>
+
+ " Remove Space before end of line
+ nnoremap <Leader>rts     :%s/\s\+$//g<cr>0:noh<cr>
+ vnoremap <Leader>rts     :s/\s\+$//g<cr>0:noh<cr>
+
+"nnoremap <Leader>\|    vap:s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
+"vnoremap <Leader>\|    :s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
+"nnoremap <Leader>\\    vap:s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
+"vnoremap <Leader>\\    :s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
+
+ " title case / sentence case
+ nnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
+ vnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
+
+
+
+" ---------------------------------------------------------------------------------------------------
+" C++
+" ---------------------------------------------------------------------------------------------------
+" Refactor the selected code to a new function
+" ---------------------------------------------------------------------------------------------------
+vnoremap <Leader>f      d<esc>IRefactoredFunction();<cr><cr><esc>Go<cr><cr>void RefactoredFunction()<cr>{<cr><esc>maPGoreturn;<cr>}<cr><esc>'a
+" ---------------------------------------------------------------------------------------------------
+" make declaration line from definition
+" ---------------------------------------------------------------------------------------------------
+" nnoremap <Leader>d      yyP0/::<cr>xxdbV:s/$/;/<cr>V:s/\s\+{//<cr><esc>:noh<cr>
+nnoremap <Leader>d        V:!smkdecl<cr>
+vnoremap <Leader>d        :!smkdecl<cr>
+" ---------------------------------------------------------------------------------------------------
+" Surround the selected block with {}
+" ---------------------------------------------------------------------------------------------------
+vnoremap  <Leader>[   dO{<cr>}<esc>kp
+nnoremap  <Leader>[   VdO{<cr>}<esc>kp
+
+" ---------------------------------------------------------------------------------------------------
+" The new comma, underscore, colon, function, uppper / lower paragragh, left / right csv, left / middle / right word motion
+" ---------------------------------------------------------------------------------------------------
+ nnoremap  ci,  f,cT,
+ nnoremap  di,  f,dT,
+ nnoremap  yi,  f,yT,
+
+ nnoremap  ca,  f,ld2F,i,<esc>a
+ nnoremap  da,  f,ld2F,i,<esc>l
+ nnoremap  ya,  f,ly2F,
+
+ nnoremap  dr,  /[)>}\]]<cr>dF,/3245876jgskjdgfsdsf<cr>
+ nnoremap  yr,  /[)>}\]]<cr>yF,/3245876jgskjdgfsdsf<cr>
+ nnoremap  cr,  F,c/[)>}\]]<cr>
+ nnoremap  dl,  ?[(<{\[]<cr>ldf,/3245876jgskjdgfsdsf<cr>
+ nnoremap  yl,  ?[(<{\[]<cr>lyf,/3245876jgskjdgfsdsf<cr>
+ nnoremap  cl,  ?[(<{\[]<cr>lcf,
+
+ nnoremap  ci/  f/cT/
+ nnoremap  di/  f/dF/
+ nnoremap  yi/  f/yT/
+ nnoremap  ca/  f/ld2F/i/<esc>a
+ nnoremap  da/  f/ld2F/i/<esc>l
+
+ nnoremap  ci\|  f\|cT\|
+ nnoremap  di\|  f\|dF\|
+ nnoremap  yi\|  f\|yT\|
+ nnoremap  ca\|  f\|ld2F\|i<esc>a
+ nnoremap  da\|  f\|ld2F\|i<esc>l
+
+ nnoremap  ci_  f_cT_
+ nnoremap  di_  f_dF_
+ nnoremap  yi_  f_yT_
+ nnoremap  ca_  f_ld2F_i<esc>a
+ nnoremap  da_  f_ld2F_i<esc>l
+
+ nnoremap  ci*  f*cT*
+ nnoremap  di*  f*dF*
+ nnoremap  yi*  f*yT*
+ nnoremap  ca*  f*ld2F*i<esc>a
+ nnoremap  da*  f*ld2F*i<esc>l
+
+ nnoremap  ci:  f:cT:
+ nnoremap  di:  f:dF:
+ nnoremap  yi:  f:yT:
+ nnoremap  ca:  f:ld2F:i<esc>a
+ nnoremap  da:  f:ld2F:i<esc>l
+
+ " the new function object
+ nnoremap  yaf  vaB<esc>mb%?(<cr>0V'by
+ nnoremap  daf  vaB<esc>mb%?(<cr>0V'bd
+ nnoremap  vaf  vaB<esc>mb%?(<cr>0V'b
+
+ nnoremap  dac  /#\+$<cr>Nvn$d<esc>:noh<cr><esc>
+ nnoremap  dic  /#\+$<cr>NjlD:noh<cr><esc>
+
+" ---------------------------------------------------------------------------------------------------
+" git rebase
+" ---------------------------------------------------------------------------------------------------
+ vnoremap <Leader>gf     :s/pick/f/<cr>
+ nnoremap <Leader>gf     V:s/pick/f/<cr>
+ nnoremap <Leader>gr     V:s/pick/r/<cr>
+ vnoremap <Leader>gs     :s/pick/s/<cr>
+ nnoremap <Leader>gs     V:s/pick/s/<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" source abbreviations
+" ---------------------------------------------------------------------------------------------------
+ nnoremap <Leader>2      <esc>:abclear<cr><esc>:source ~/.advenv/dotfiles/abbrev<cr><esc>:source ~/.advenv/dotfiles/abbrev2<cr>
+ nnoremap <Leader>3      <esc>:abclear<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" case
+" ---------------------------------------------------------------------------------------------------
+  vnoremap <Leader>cu     sHAHAHAHAHA<esc>Go<esc>pV!~/.advenv/bin/scap<cr>0d$i<backspace><esc>/HAHAHAHAHA<cr>PV:s/HAHAHAHAHA//<cr>
+  nnoremap <Leader>cu     V!~/.advenv/bin/scap<cr>

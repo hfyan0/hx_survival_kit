@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ -z $1 ]]
+then
+    tr ' ' '\n' | sed '/^$/d'
+else
+    tr ' ' '\n'
+fi

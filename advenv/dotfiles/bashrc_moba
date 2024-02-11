@@ -1,0 +1,719 @@
+# User specific aliases and functions
+VISUAL="vim"
+EDITOR="vim"
+HISTCONTROL=ignoredups:ignorespace
+unset HISTFILE
+set -o emacs
+
+unalias -a
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias h='head'
+alias t='tail'
+alias vd='nvim -d'
+alias l='ls --color=never -F'
+alias ll='ls -lh --color=never -F'
+alias lll='ls -l --color=never -F'
+alias lla='ls -lha --color=never -F'
+alias lls='ls --time-style +"%Y-%m-%d %H:%M:%S" -lh --sort=size --color=never'
+alias ltr='ls --time-style +"%Y-%m-%d %H:%M:%S" -lthr --sort=time --color=never'
+alias C='cat'
+alias ch7='chmod 755'
+alias ch6='chmod 644'
+alias ch600='chmod 600'
+alias tf='tail -500f'
+alias g='grep --color=always'
+alias gv='grep -v'
+alias eg="egrep -a --color"
+alias md='mkdir -p'
+alias tp='htop || top'
+alias ifc='ifconfig | less'
+alias wcl='wc -l'
+alias p='pwd'
+alias e='echo'
+alias th='touch'
+alias psg='ps -eo user,pid,vsize,rss,lstart,etime,fname,cmd --sort user | grep'
+alias xa='tr "\n" "\0" | xargs -0 -n 1'
+alias xak='awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill'
+alias xask='awk "{print \$2}" | tr "\n" "\0" | xargs -0 sudo kill'
+alias u='cd ..; ls --color=never -F'
+alias uu='cd ../..; ls --color=never -F'
+alias uuu='cd ../../..; ls --color=never -F'
+alias uuuu='cd ../../../..; ls --color=never -F'
+alias uuuuu='cd ../../../../..; ls --color=never -F'
+alias uuuuuu='cd ../../../../../..; ls --color=never -F'
+alias uuuuuuu='cd ../../../../../../..; ls --color=never -F'
+alias fd='find . -type d'
+alias suq='sort | uniq'
+alias les='less'
+alias dfh='df -h'
+alias mc='mc --nocolor'
+alias ctl='crontab -l | less'
+alias cte='VISUAL=vim crontab -e'
+alias rtn='route -n'
+alias xz9='xz -9'
+alias dus='du -sh .'
+alias dush='du -sh * | sort -h'
+alias lvr='ls | vidir -'
+alias lwcl="ls | wc -l"
+alias pmi='yum install -y'
+alias pms='yum search'
+alias pmr='yum remove'
+alias pmq='rpm -qa'
+
+
+unset -f print_dir_info; print_dir_info() {
+    local YELLOW="\033[0;33m"
+    local YELLOWBOLD="\033[1;33m"
+    local WHITE="\033[0;37m"
+    local NOCOLOR="\033[0m"
+
+    echo
+    pwd
+    echo "--------------------------------------------------"
+
+    ls -F
+
+    echo -e -n "$YELLOW"
+    if [[ $(ls -a | wc -l) -eq 2 ]]
+    then
+        echo "Folder is empty"
+    elif [[ $(ls | wc -l) -eq 0 ]]
+    then
+        echo "Folder only contains hidden files"
+    fi
+    echo -e -n "\033[00m"
+
+}
+unset -f c; c() {
+    ##################################################
+    # cd without any argument
+    ##################################################
+    if [[ $# -eq 0 ]]
+    then
+        if [[ $(ls | wc -l) -eq 1 && -d $(ls) ]]
+        then
+            ##################################################
+            # cd into that one and only one directory
+            ##################################################
+            cd $(ls)
+            print_dir_info
+        else
+            cd
+            print_dir_info
+        fi
+    ##################################################
+    # cd into directory if it exists
+    ##################################################
+    elif [[ -d $1 ]]
+    then
+        cd "$1" && print_dir_info
+    ##################################################
+    # cd to the directory containing the file
+    ##################################################
+    elif [[ -f $1 ]]
+    then
+        cd "$(dirname $1)"
+        print_dir_info
+    ##################################################
+    # cd directory
+    ##################################################
+    else
+        # FOLDER_LIST="$(ls -F | grep / | grep $1 | head -n 1)"
+        FOLDER_LIST="$({ find -L -path './*' -prune -type d | grep $1; ls -F | grep / | grep $1; } | head -n 1)"
+        ##################################################
+        # search on the top layer first
+        ##################################################
+        if [[ -n "$FOLDER_LIST" ]]
+        then
+            cd "$FOLDER_LIST" && print_dir_info
+        else
+            cd "$(dirname $1)" && print_dir_info
+        fi
+    fi
+}
+unset -f i; i() {
+    cd $(echo $(ls -Fd ../*$1* | grep "/$") | awk '{print $1}') && print_dir_info
+}
+unset -f rf; rf() {
+    if [[ $@ == "." ]]
+    then
+        CUR_DIR=$(pwd)
+        cd ..
+        rm -rf $CUR_DIR
+    else
+        rm -rf $@
+    fi
+    ls --color=never -F
+}
+unset -f rd; rd() {
+    if [[ $@ == "." ]]
+    then
+        CUR_DIR=$(pwd)
+        cd ..
+        rmdir $CUR_DIR
+    else
+        rmdir $@
+    fi
+    ls --color=never -F
+}
+
+unset -f ff; ff() {
+  if [[ $# -eq 0 ]]
+  then
+      find . -type f
+  else
+      tmpfile1=$(mktemp)
+      tmpfile2=$(mktemp)
+      find . -type f > $tmpfile1
+      for a in $@
+      do
+          cat $tmpfile1 | grep $a > $tmpfile2
+          cat $tmpfile2 > $tmpfile1
+      done
+      cat $tmpfile1
+      rm -f $tmpfile1
+      rm -f $tmpfile2
+  fi
+}
+unset -f pf; pf() {
+  echo $(pwd)/$(echo $@)
+}
+unset -f gsc; gsc() {
+    if [[ -e $(which rg) ]]
+    then
+        find . -type f ! -name '*.*' | xargs grep --color=always $@
+        rg -tpy -tc -tcpp -tconfig -tjs -tjava -thtml -txml -tphp -tcs -tkotlin -tjson -tyaml -tsql -tcmake -tmake -tmd -tsh $@
+    else
+        find . -type f | tr "\n" "\0" | xargs -0 grep --color=always $@
+    fi
+}
+unset -f mvb; mvb(){
+    if [[ -e $1 ]]
+    then
+        if [[ $1 == *"_bk_20"* ]]
+        then
+            ori_name=$(echo $1 | sed -e 's/_bk_20.*$//')
+            mv $1 $ori_name
+        else
+            local thisdir=$(pwd)
+            local fldr=$(dirname $1)
+            local bnm=$(basename $1)
+            cd $fldr
+            mv $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
+            ls --color=never -F
+            cd $thisdir
+        fi
+    fi
+}
+unset -f cpb; cpb(){
+    if [[ -e $1 ]]
+    then
+        local thisdir=$(pwd)
+        local fldr=$(dirname $1)
+        local bnm=$(basename $1)
+        cd $fldr
+        cp -rp $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
+        ls --color=never -F
+        cd $thisdir
+    fi
+}
+unset -f ty; ty() {
+    tmpfile1=$(mktemp)
+    python3 ~/.advenv/bin/typing_console2.py $tmpfile1
+    cat $tmpfile1
+    echo
+    echo
+    rm -f $tmpfile1
+}
+
+alias    w0='watch -n 0 '
+alias    w1='watch -n 1 '
+alias    w2='watch -n 2 '
+alias    w3='watch -n 3 '
+alias    w5='watch -n 5 '
+alias   w10='watch -n 10'
+alias   w20='watch -n 20'
+alias   w30='watch -n 30'
+alias   w50='watch -n 50'
+alias   w60='watch -n 60'
+alias  w120='watch -n 120'
+alias  w300='watch -n 300'
+
+alias   w0_='watch -n 0 '
+alias   w1_='watch -n 1 '
+alias   w2_='watch -n 2 '
+alias   w3_='watch -n 3 '
+alias   w5_='watch -n 5 '
+alias  w10_='watch -n 10'
+alias  w20_='watch -n 20'
+alias  w30_='watch -n 30'
+alias  w50_='watch -n 50'
+alias  w60_='watch -n 60'
+alias w120_='watch -n 120'
+alias w300_='watch -n 300'
+
+unset -f hold; hold() {
+    while [ 1 ]
+    do
+        date
+        echo "--------------------------------------------------"
+        pwd
+        echo "--------------------------------------------------"
+        ifconfig | grep 192
+        echo "--------------------------------------------------"
+        df -h | grep root
+        echo "--------------------------------------------------"
+        sleep 1
+        clear
+    done
+}
+
+
+
+############################################################
+# git and svn
+############################################################
+unset -f gst; gst() {
+    echo "--------------------------------------------------"
+    git remote -v
+    echo "--------------------------------------------------"
+    git log --pretty=format:"%h %as %d %s" | head -n 10 | sed -e 's/$/\n/' | sed -e '/^$/d'
+    echo "--------------------------------------------------"
+    echo "branches:"
+    echo $(git branch | sed -e 's/^* //') | fold -sw 50 | sed -e 's/^/  /'
+    echo "--------------------------------------------------"
+    git status -sb
+    echo "--------------------------------------------------"
+}
+unset -f glg; glg() {
+    # CMD="git log --oneline --decorate --all --graph"
+    # CMD="git log --decorate --all --graph"
+    CMD="git log --decorate --graph"
+    if [[ $# -gt 0 ]]
+    then
+        CMD=$CMD" --follow -- $@"
+    fi
+    $CMD
+}
+unset -f git_cmd_then_gst; git_cmd_then_gst() {
+    $@
+    echo -n "$Color_Off"
+    echo "--------------------------------------------------"
+    gst
+}
+unset -f gsthplh; gsthplh() {
+    git status -sb
+    echo
+    echo "--------------------------------------------------"
+    echo "git stash: Press [Enter] to continue..."
+    read
+    git stash
+
+    git status -sb
+    echo
+    echo "--------------------------------------------------"
+    echo "git pull --rebase -v: Press [Enter] to continue..."
+    read
+    git pull --rebase -v
+
+    git status -sb
+    echo
+    echo "--------------------------------------------------"
+    echo "git push --force-with-lease: Press [Enter] to continue..."
+    read
+    git push --force-with-lease
+
+    git status -sb
+    echo
+    echo "--------------------------------------------------"
+    echo "git stash pop: Press [Enter] to continue..."
+    read
+
+    git stash pop
+    echo
+    echo "--------------------------------------------------"
+    git status -sb
+}
+
+unset -f gai; gai() {
+    tmpfile="/tmp/rf_backup_$(whoami)/git_add.txt"
+    echo "##################################################"  > $tmpfile
+    echo "# delete files that don't have to be added"         >> $tmpfile
+    echo "# only retain files that you intend to add"         >> $tmpfile
+    echo "##################################################" >> $tmpfile
+    git status -sb | tail -n +2 >> $tmpfile
+    vim $tmpfile
+    if [[ -n $(cat $tmpfile | sed -e 's/^\s\+$//') ]]
+    then
+        echo
+        # echo "git add the following:"
+        # cat $tmpfile | grep -v "^#" | sed -e 's/^/    /'
+        # echo
+        # echo "press enter to [git add]."
+        # read
+        git add $(cat $tmpfile | grep -v "^#" | cut -c4-200)
+    else
+        echo
+        echo "Aborted"
+        echo
+    fi
+    rm -f $tmpfile
+    git status -sb
+}
+
+unset -f gdi; gdi() {
+    tmpfile="/tmp/rf_backup_$(whoami)/git_diff.txt"
+    echo "##################################################"  > $tmpfile
+    echo "# delete files that don't have to be diffed"        >> $tmpfile
+    echo "##################################################" >> $tmpfile
+    git status -sb | tail -n +2 >> $tmpfile
+    vim $tmpfile
+    if [[ -n $(cat $tmpfile | sed -e 's/^\s\+$//') ]]
+    then
+        echo
+        git d $(cat $tmpfile | grep -v "^#" | cut -c4-200)
+    else
+        echo
+        echo "Aborted"
+        echo
+    fi
+    rm -f $tmpfile
+    git status -sb
+}
+
+unset -f gslga; gslga() {
+    git status -sb | tail -n +2 | grep -v "^??" | scol w 2 | xargs git add
+    git status -sb
+}
+unset -f gsllga; gsllga() {
+    git status -sb | tail -n +2 | grep "^??" | scol w 2 | xargs git add
+    git status -sb
+}
+
+alias gs='gst'
+alias gsl='git status -sb | tail -n +2 | grep -v "^??" | scol w 2'
+alias gsll='git status -sb | tail -n +2 | grep "^??" | scol w 2'
+alias gagsl='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
+alias gagsll='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep "^??" | scol w 2)'
+alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
+alias gcogsll='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep "^??" | scol w 2)'
+alias gss='git status'
+alias gf='git_cmd_then_gst git fetch'
+alias gclone='git clone'
+alias gblame='git blame'
+alias ga='git_cmd_then_gst git add'
+alias gap='git_cmd_then_gst git add -p'
+alias gd='git d'
+alias gdc='git d --cached'
+alias gdd='git d development'
+alias gds='git d sunny'
+alias gsh='git_cmd_then_gst git show'
+alias gdnod='git diff --name-only development'
+alias gdnos='git diff --name-only sunny'
+alias gdno='git diff --name-only'
+alias gdnom='git diff --name-only master'
+alias xaga='tr "\n" "\0" | xargs -0 git add'
+alias xagco='tr "\n" "\0" | xargs -0 git checkout'
+alias xagrm='tr "\n" "\0" | xargs -0 git rm'
+alias grm='git_cmd_then_gst git rm'
+alias gcma='git_cmd_then_gst git commit -a -m WIP'
+alias gcmam='git_cmd_then_gst git commit --amend'
+unset -f gcmph; gcmph() {
+    git commit -m WIP
+    git_cmd_then_gst git push
+}
+unset -f gcmaph; gcmaph() {
+    git commit -a -m WIP
+    git_cmd_then_gst git push
+}
+unset -f gplph; gplph() {
+    git pull origin $(git branch --show-current) --rebase
+    git_cmd_then_gst git push
+}
+alias gphpl='gplph'
+alias gcp='git cherry-pick'
+alias gcmi='git_cmd_then_gst git commit'
+alias gcmai='git_cmd_then_gst git commit -a'
+alias gcm='git_cmd_then_gst git commit -m WIP'
+alias gpull='git_cmd_then_gst git pull -v'
+
+unset -f gpl; gpl() {
+    STASHED_FIRST=0
+    if [[ -n $(git stash list) ]]
+    then
+        echo "stash is not empty. Bye!"
+        return
+    fi
+    if [[ -n $(git status -sb | grep "^ M ") && -z $(git stash list) ]]
+    then
+        git stash
+        STASHED_FIRST=1
+    fi
+
+    git pull --rebase -v
+
+    if [[ $STASHED_FIRST -eq 1 ]]
+    then
+        git stash pop
+    fi
+    echo "--------------------------------------------------"
+    gst
+}
+unset -f gcod; gcod() {
+    if [[ -n $(git branch | grep development) ]]
+    then
+        git checkout development
+    elif [[ -n $(git branch | grep dev) ]]
+    then
+        git checkout dev
+    else
+        echo "No development branch"
+    fi
+}
+
+alias gph='git_cmd_then_gst git push -v'
+alias gphfwl='git_cmd_then_gst git push --force-with-lease'
+alias grb='git rebase'
+alias gco='git_cmd_then_gst git checkout'
+alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
+alias gcos='git_cmd_then_gst git checkout sunny'
+alias gcou='git_cmd_then_gst git checkout uat'
+alias gcom='git_cmd_then_gst git checkout master'
+alias gcot='git_cmd_then_gst git checkout test'
+alias gcob='git_cmd_then_gst git checkout -b'
+alias gcobt='git_cmd_then_gst git checkout -b test'
+alias gmrg='git merge'
+alias gmer='git merge'
+alias gmerd='git merge development'
+alias gmers='git merge sunny'
+alias gmeru='git merge uat'
+alias gmt='git mergetool'
+alias gsth='git stash'
+alias gstash='git stash list; echo ----------; git stash; echo ----------; git status -sb; echo ----------; git stash list'
+alias gstashpop='git stash list; echo ----------; git stash pop; echo ----------; git status -sb; echo ----------; git stash list'
+alias gstashls='git stash list'
+alias gstashdrop='git stash drop'
+alias gsthpop='git stash list; echo ----------; git stash pop; echo ----------; git status -sb; echo ----------; git stash list'
+alias gsthlist='git stash list'
+alias gsthls='git stash list'
+alias gshpop='git stash list; echo ----------; git stash pop; echo ----------; git status -sb; echo ----------; git stash list'
+alias gshlist='git stash list'
+alias gshls='git stash list'
+alias gbrh='git_cmd_then_gst git branch'
+alias gbrhdr='git_cmd_then_gst git push origin --delete'
+alias grbir='git rebase -i --root'
+alias grbi='git rebase -i'
+unset -f grbih; grbih() {
+    STASHED_FIRST=0
+    if [[ -n $(git stash list) ]]
+    then
+        return
+    fi
+    if [[ -n $(git status -sb | grep "^ M ") && -z $(git stash list) ]]
+    then
+        git stash
+        STASHED_FIRST=1
+    fi
+    if [[ $# -eq 0 ]]
+    then
+        no_of_commits=$(git log --oneline | wc -l)
+        if [[ $no_of_commits -gt 10 ]]
+        then
+            git rebase -i HEAD~10
+        else
+            git rebase -i HEAD~$((${no_of_commits}-1))
+        fi
+    elif [[ $1 == "0" || $1 == "r" ]]
+    then
+        git rebase -i --root
+    else
+        git rebase -i HEAD~$1
+    fi
+    if [[ $STASHED_FIRST -eq 1 ]]
+    then
+        git stash pop
+    fi
+    echo "--------------------------------------------------"
+    gst
+}
+alias grbih2='grbih 2'
+alias grbih3='grbih 3'
+alias grbih5='grbih 5'
+alias grbih20='grbih 20'
+alias grbim='git_cmd_then_gst git rebase -i master'
+alias grbid='git_cmd_then_gst git rebase -i dev'
+alias grbiu='git_cmd_then_gst git rebase -i uat'
+alias grbc='git_cmd_then_gst git rebase --continue'
+alias grba='git_cmd_then_gst git rebase --abort'
+alias grbs='git_cmd_then_gst git rebase --skip'
+alias gmera='git_cmd_then_gst git merge --abort'
+alias grsth='git_cmd_then_gst git reset HEAD~'
+alias grst='git_cmd_then_gst git reset'
+alias ginit='git_cmd_then_gst git init'
+alias grmc='git rm --cached'
+alias gg='git grep'
+alias gmv='git_cmd_then_gst git mv'
+alias grmt='git_cmd_then_gst git remote'
+alias gba='git branch -a'
+alias glgg='glg ol'
+alias gl='glg'
+unset -f gtag; gtag() {
+    TAG=$1
+    HASH=$2
+    echo "TAG: $TAG"
+    echo "HASH: $HASH"
+    echo "Correct? [ctrl-C to abort]"
+    read
+    git tag $1 $2
+    git push origin $1
+}
+unset -f gtagd; gtagd() {
+    git tag -d $@
+    git push origin $@
+}
+alias gtagrm='gtagd'
+alias gikt='gitk'
+alias gk='gitk'
+alias tg='gt'
+unset -f gt; gt() {
+    if [[ $# -eq 0 ]]
+    then
+        tig
+    elif [[ $# -eq 1 ]]
+    then
+        tig --follow $1
+    fi
+}
+alias gb='git blame'
+alias ggc='git gc --prune=now --aggressive'
+unset -f gmertom; gmertom() {
+    if [[ $# -eq 0 ]]
+    then
+        echo "arg1 = hash of commit"
+    else
+        cur_branch=$(git branch 2> /dev/null | grep \* | awk '{print $2}')
+        git checkout master
+        git merge $1
+        echo -n "master: pull with rebase then push? [Y/n] "
+        read user_input
+        if [[ $user_input != "n" && $user_input != "N" ]]
+        then
+            git pull --rebase
+            git push --force-with-lease
+        fi
+        git checkout $cur_branch
+    fi
+}
+alias svl="  svn status | grep -v \.git | grep -v gitignore | grep -v log$ | grep -v csv$ | grep -v txt$ | grep -v pdf$ | grep -v json$ | grep -v jar$ | grep -v ods$ | egrep '^A|^M|^D' | cut -c9-1000"
+alias svll=" svn status | grep -v \.git | grep -v gitignore | grep -v log$ | grep -v csv$ | grep -v txt$ | grep -v pdf$ | grep -v json$ | grep -v jar$ | grep -v ods$ | egrep '^\?'      | cut -c9-1000"
+alias svlll="svn status | grep -v \.git | grep -v gitignore | grep -v log$ | grep -v csv$ | grep -v txt$ | grep -v pdf$ | grep -v json$ | grep -v jar$ | grep -v ods$ | egrep '^\!'      | cut -c9-1000"
+
+alias svd='  svn diff'
+alias svmv=' svn move'
+alias svrv=' svn revert --depth infinity'
+alias svco=' svn checkout'
+alias svch7='svn propset svn:executable ON'
+alias svch6='svn propdel svn:executable'
+
+unset -f sv; sv() {
+    echo
+    git branch
+    echo
+    svn status | grep -v \.git | grep -v gitignore | grep -v log$ | grep -v csv$ | grep -v txt$ | grep -v pdf$ | grep -v json$ | grep -v jar$ | grep -v ods$
+}
+
+
+unset -f svs; svs() {
+    echo
+    svn status --show-updates
+}
+unset -f svss; svss() {
+    echo
+    svn status --verbose --show-updates
+}
+unset -f svlg; svlg() {
+    echo
+    svn log | less
+}
+
+
+unset -f svu; svu() {
+    if [[ $(git branch | grep \*) != *"master"* ]]
+    then
+        echo "Please change to git master branch first."
+    else
+        echo "--------------------------------------------------"
+        git commit -a -m "auto git commit before svn update."
+        echo "--------------------------------------------------"
+        svn update
+        echo "--------------------------------------------------"
+        git status -sb
+    fi
+}
+unset -f sva; sva() {
+    git add $@
+    echo "--------------------------------------------------"
+    git status -sb
+    echo "--------------------------------------------------"
+    svn add $@
+    echo "--------------------------------------------------"
+    svn status
+}
+unset -f svrm; svrm() {
+    git rm --cached $@
+    echo "--------------------------------------------------"
+    git status -sb
+    echo "--------------------------------------------------"
+    svn rm $@
+    echo "--------------------------------------------------"
+    svn status
+}
+unset -f svcor; svcor() {
+    if [[ -f $1 ]]
+    then
+        svn rm --keep-local $1
+        svn add $1
+        svn status
+    fi
+}
+##################################################
+
+
+
+
+# ulimit -c unlimited
+
+HOST="$(hostname)"
+
+# Regular Colors                                                                                        
+Black="\[\033[0;30m\]"        # Black                                                             
+Red="\[\033[0;31m\]"          # Red                                                               
+Green="\[\033[0;32m\]"        # Green                                                             
+Yellow="\[\033[0;33m\]"       # Yellow                                                            
+Blue="\[\033[0;34m\]"         # Blue                                                              
+Purple="\[\033[0;35m\]"       # Purple                                                            
+Cyan="\[\033[0;36m\]"         # Cyan                                                              
+White="\[\033[0;37m\]"        # White
+Color_Off="\[\033[0m\]"       # Text Reset
+# Bold                                                                                                  
+BBlack="\[\033[1;30m\]"       # Black                                                             
+BRed="\[\033[1;31m\]"         # Red                                                               
+BGreen="\[\033[1;32m\]"       # Green                                                             
+BYellow="\[\033[1;33m\]"      # Yellow                                                            
+BBlue="\[\033[1;34m\]"        # Blue                                                              
+BPurple="\[\033[1;35m\]"      # Purple                                                            
+BCyan="\[\033[1;36m\]"        # Cyan                                                              
+BWhite="\[\033[1;37m\]"       # White
+
+export PS1="\n\n$BGreen$HOST$Color_Off $BYellow\u$Color_Off \w\n\\$ "
+
+export PATH=$HOME/.advenv/bin/:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.advenv/usr/lib64/
+export TERM=screen-256color
+
+# Source global definitions
+# if [ -f /etc/bashrc ]; then
+#     . /etc/bashrc
+# fi

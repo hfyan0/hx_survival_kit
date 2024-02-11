@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# capitalize every word
+sed -e "s/\b\(.\)/\u\1/g"

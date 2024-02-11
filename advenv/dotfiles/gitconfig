@@ -1,0 +1,42 @@
+[push]
+    default = simple
+
+[diff]
+    # tool = gvimdiff
+    # tool = nvimdiff
+    # tool = meld
+    # tool = vimdiff
+      tool = myvimdiff
+
+# [difftool]
+#   prompt = true
+
+[difftool "myvimdiff"]
+    cmd = $HOME/.advenv/bin/gitdiff $LOCAL $REMOTE
+
+[alias]
+    d = difftool
+
+[merge]
+    # tool = vimdiff
+    tool = meld
+    conflictstyle = diff3
+
+[mergetool]
+    prompt = false
+
+[gui]
+    editor = gvim
+    historybrowser = gitk
+
+[cola]
+    blameviewer = git gui blame
+
+[color]
+    ui = auto
+
+[pull]
+    ff = only
+
+[core]
+    editor = ~/.advenv/bin/nvim

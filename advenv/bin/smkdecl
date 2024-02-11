@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import sys
+
+def reformat(line):
+    for i in range(20):
+        line = line.replace("  "," ")
+        line = line.replace(" (","(")
+        line = line.replace(" )",")")
+        line = line.replace("( ","(")
+        line = line.replace(") ",")")
+        line = line.replace("; ",";")
+        line = line.replace(" ;",";")
+    return line
+
+def convert_to_declaration(lines):
+    mut_lines = lines
+    
+    func_body_start = mut_lines.find('{')
+    if func_body_start > 0:
+        mut_lines = mut_lines[:func_body_start]
+    brac_begin = mut_lines.find('(')
+    front_part = mut_lines[:brac_begin]
+    end_part = mut_lines[brac_begin:]
+    flds = front_part.split()
+
+    if len(flds) == 1:
+        ret_type = ""
+        class_func_name = flds[0]
+    elif len(flds) >= 2:
+        ret_type = flds[0]
+        class_func_name = flds[1]
+
+    func_name = (class_func_name.split(':')[-1] if ':' in class_func_name else class_func_name)
+
+    out_list = [ret_type,func_name,end_part,';']
+    out_str = ' '.join(out_list)
+    out_str = reformat(out_str)
+    out_str = "    " + out_str # indent
+    print(out_str)
+
+def convert_to_definition(lines):
+    mut_lines = lines
+    brac_begin = mut_lines.find('(')
+    front_part = mut_lines[:brac_begin]
+    end_part = mut_lines[brac_begin:]
+    end_part = end_part.replace(';','')
+
+    for kw in ["static","inline","virtual"]:
+        front_part = front_part.replace(kw,"")
+
+    out_list = [front_part,end_part,"\n{\n}\n"]
+    out_str = ''.join(out_list)
+    out_str = reformat(out_str).strip()
+    print(out_str)
+
+###################################################
+ori_in_lines = sys.stdin.read().rstrip()
+in_lines = ori_in_lines.replace('\n','')
+
+if in_lines[-1] == ';':
+    convert_to_definition(in_lines)
+else:
+    convert_to_declaration(in_lines)
+
+print(ori_in_lines)

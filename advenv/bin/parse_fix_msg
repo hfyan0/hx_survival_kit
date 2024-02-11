@@ -1,0 +1,808 @@
+#!/usr/bin/env python3
+import sys
+import re
+
+# Reset
+Color_Off="\033[0m"       # Text Reset
+
+# Regular Colors
+Black="\033[0;30m"        # Black
+Red="\033[0;31m"          # Red
+Green="\033[0;32m"        # Green
+Yellow="\033[0;33m"       # Yellow
+Blue="\033[0;34m"         # Blue
+Purple="\033[0;35m"       # Purple
+Cyan="\033[0;36m"         # Cyan
+White="\033[0;37m"        # White
+
+# Bold
+BBlack="\033[1;30m"       # Black
+BRed="\033[1;31m"         # Red
+BGreen="\033[1;32m"       # Green
+BYellow="\033[1;33m"      # Yellow
+BBlue="\033[1;34m"        # Blue
+BPurple="\033[1;35m"      # Purple
+BCyan="\033[1;36m"        # Cyan
+BWhite="\033[1;37m"       # White
+
+def justify_str(s,totlen,left_right="right",padchar=' '):
+    def extra(s,totlen):
+        return ''.join([padchar]*(totlen - len(s)))
+    s = str(s)
+    if left_right == "left":
+        return s + extra(s,totlen)
+    elif left_right == "right":
+        return extra(s,totlen) + s
+    else:
+        return s
+
+def right_justify(s,totlen):
+    return justify_str(s,totlen,"right")
+def left_justify(s,totlen):
+    return justify_str(s,totlen,"left")
+
+fix_field_dict= {}
+fix_field_dict['1'] =  'Account'
+fix_field_dict['2'] =  'AdvId'
+fix_field_dict['3'] =  'AdvRefID'
+fix_field_dict['4'] =  'AdvSide'
+fix_field_dict['5'] =  'AdvTransType'
+fix_field_dict['6'] =  'AvgPx'
+fix_field_dict['7'] =  'BeginSeqNo'
+fix_field_dict['8'] =  'BeginString'
+fix_field_dict['9'] =  'BodyLength'
+fix_field_dict['10'] =  'CheckSum'
+fix_field_dict['11'] =  'ClOrdID'
+fix_field_dict['12'] =  'Commission'
+fix_field_dict['13'] =  'CommType'
+fix_field_dict['14'] =  'CumQty'
+fix_field_dict['15'] =  'Currency'
+fix_field_dict['16'] =  'EndSeqNo'
+fix_field_dict['17'] =  'ExecID'
+fix_field_dict['18'] =  'ExecInst'
+fix_field_dict['19'] =  'ExecRefID'
+fix_field_dict['20'] =  'ExecTransType'
+fix_field_dict['21'] =  'HandlInst'
+fix_field_dict['22'] =  'IDSource'
+fix_field_dict['23'] =  'IOIid'
+fix_field_dict['24'] =  'IOIOthSvc (no longer used)'
+fix_field_dict['25'] =  'IOIQltyInd'
+fix_field_dict['26'] =  'IOIRefID'
+fix_field_dict['27'] =  'IOIShares'
+fix_field_dict['28'] =  'IOITransType'
+fix_field_dict['29'] =  'LastCapacity'
+fix_field_dict['30'] =  'LastMkt'
+fix_field_dict['31'] =  'LastPx'
+fix_field_dict['32'] =  'LastShares'
+fix_field_dict['33'] =  'LinesOfText'
+fix_field_dict['34'] =  'MsgSeqNum'
+fix_field_dict['35'] =  'MsgType'
+fix_field_dict['36'] =  'NewSeqNo'
+fix_field_dict['37'] =  'OrderID'
+fix_field_dict['38'] =  'OrderQty'
+fix_field_dict['39'] =  'OrdStatus'
+fix_field_dict['40'] =  'OrdType'
+fix_field_dict['41'] =  'OrigClOrdID'
+fix_field_dict['42'] =  'OrigTime'
+fix_field_dict['43'] =  'PossDupFlag'
+fix_field_dict['44'] =  'Price'
+fix_field_dict['45'] =  'RefSeqNum'
+fix_field_dict['46'] =  'RelatdSym'
+fix_field_dict['47'] =  'Rule80A(aka OrderCapacity)'
+fix_field_dict['48'] =  'SecurityID'
+fix_field_dict['49'] =  'SenderCompID'
+fix_field_dict['50'] =  'SenderSubID'
+fix_field_dict['51'] =  'SendingDate (no longer used)'
+fix_field_dict['52'] =  'SendingTime'
+fix_field_dict['53'] =  'Shares'
+fix_field_dict['54'] =  'Side'
+fix_field_dict['55'] =  'Symbol'
+fix_field_dict['56'] =  'TargetCompID'
+fix_field_dict['57'] =  'TargetSubID'
+fix_field_dict['58'] =  'Text'
+fix_field_dict['59'] =  'TimeInForce'
+fix_field_dict['60'] =  'TransactTime'
+fix_field_dict['61'] =  'Urgency'
+fix_field_dict['62'] =  'ValidUntilTime'
+fix_field_dict['63'] =  'SettlmntTyp'
+fix_field_dict['64'] =  'FutSettDate'
+fix_field_dict['65'] =  'SymbolSfx'
+fix_field_dict['66'] =  'ListID'
+fix_field_dict['67'] =  'ListSeqNo'
+fix_field_dict['68'] =  'TotNoOrders(formerly named: ListNoOrds)'
+fix_field_dict['69'] =  'ListExecInst'
+fix_field_dict['70'] =  'AllocID'
+fix_field_dict['71'] =  'AllocTransType'
+fix_field_dict['72'] =  'RefAllocID'
+fix_field_dict['73'] =  'NoOrders'
+fix_field_dict['74'] =  'AvgPrxPrecision'
+fix_field_dict['75'] =  'TradeDate'
+fix_field_dict['76'] =  'ExecBroker'
+fix_field_dict['77'] =  'OpenClose'
+fix_field_dict['78'] =  'NoAllocs'
+fix_field_dict['79'] =  'AllocAccount'
+fix_field_dict['80'] =  'AllocShares'
+fix_field_dict['81'] =  'ProcessCode'
+fix_field_dict['82'] =  'NoRpts'
+fix_field_dict['83'] =  'RptSeq'
+fix_field_dict['84'] =  'CxlQty'
+fix_field_dict['85'] =  'NoDlvyInst(no longer used)'
+fix_field_dict['86'] =  'DlvyInst(no longer used)'
+fix_field_dict['87'] =  'AllocStatus'
+fix_field_dict['88'] =  'AllocRejCode'
+fix_field_dict['89'] =  'Signature'
+fix_field_dict['90'] =  'SecureDataLen'
+fix_field_dict['91'] =  'SecureData'
+fix_field_dict['92'] =  'BrokerOfCredit'
+fix_field_dict['93'] =  'SignatureLength'
+fix_field_dict['94'] =  'EmailType'
+fix_field_dict['95'] =  'RawDataLength'
+fix_field_dict['96'] =  'RawData'
+fix_field_dict['97'] =  'PossResend'
+fix_field_dict['98'] =  'EncryptMethod'
+fix_field_dict['99'] =  'StopPx'
+fix_field_dict['100'] =  'ExDestination'
+fix_field_dict['102'] =  'CxlRejReason'
+fix_field_dict['103'] =  'OrdRejReason'
+fix_field_dict['104'] =  'IOIQualifier'
+fix_field_dict['105'] =  'WaveNo'
+fix_field_dict['106'] =  'Issuer'
+fix_field_dict['107'] =  'SecurityDesc'
+fix_field_dict['108'] =  'HeartBtInt'
+fix_field_dict['109'] =  'ClientID'
+fix_field_dict['110'] =  'MinQty'
+fix_field_dict['111'] =  'MaxFloor'
+fix_field_dict['112'] =  'TestReqID'
+fix_field_dict['113'] =  'ReportToExch'
+fix_field_dict['114'] =  'LocateReqd'
+fix_field_dict['115'] =  'OnBehalfOfCompID'
+fix_field_dict['116'] =  'OnBehalfOfSubID'
+fix_field_dict['117'] =  'QuoteID'
+fix_field_dict['118'] =  'NetMoney'
+fix_field_dict['119'] =  'SettlCurrAmt'
+fix_field_dict['120'] =  'SettlCurrency'
+fix_field_dict['121'] =  'ForexReq'
+fix_field_dict['122'] =  'OrigSendingTime'
+fix_field_dict['123'] =  'GapFillFlag'
+fix_field_dict['124'] =  'NoExecs'
+fix_field_dict['125'] =  'CxlType(no longer used)'
+fix_field_dict['126'] =  'ExpireTime'
+fix_field_dict['127'] =  'DKReason'
+fix_field_dict['128'] =  'DeliverToCompID'
+fix_field_dict['129'] =  'DeliverToSubID'
+fix_field_dict['130'] =  'IOINaturalFlag'
+fix_field_dict['131'] =  'QuoteReqID'
+fix_field_dict['132'] =  'BidPx'
+fix_field_dict['133'] =  'OfferPx'
+fix_field_dict['134'] =  'BidSize'
+fix_field_dict['135'] =  'OfferSize'
+fix_field_dict['136'] =  'NoMiscFees'
+fix_field_dict['137'] =  'MiscFeeAmt'
+fix_field_dict['138'] =  'MiscFeeCurr'
+fix_field_dict['139'] =  'MiscFeeType'
+fix_field_dict['140'] =  'PrevClosePx'
+fix_field_dict['141'] =  'ResetSeqNumFlag'
+fix_field_dict['142'] =  'SenderLocationID'
+fix_field_dict['143'] =  'TargetLocationID'
+fix_field_dict['144'] =  'OnBehalfOfLocationID'
+fix_field_dict['145'] =  'DeliverToLocationID'
+fix_field_dict['146'] =  'NoRelatedSym'
+fix_field_dict['147'] =  'Subject'
+fix_field_dict['148'] =  'Headline'
+fix_field_dict['149'] =  'URLLink'
+fix_field_dict['150'] =  'ExecType'
+fix_field_dict['151'] =  'LeavesQty'
+fix_field_dict['152'] =  'CashOrderQty'
+fix_field_dict['153'] =  'AllocAvgPx'
+fix_field_dict['154'] =  'AllocNetMoney'
+fix_field_dict['155'] =  'SettlCurrFxRate'
+fix_field_dict['156'] =  'SettlCurrFxRateCalc'
+fix_field_dict['157'] =  'NumDaysInterest'
+fix_field_dict['158'] =  'AccruedInterestRate'
+fix_field_dict['159'] =  'AccruedInterestAmt'
+fix_field_dict['160'] =  'SettlInstMode'
+fix_field_dict['161'] =  'AllocText'
+fix_field_dict['162'] =  'SettlInstID'
+fix_field_dict['163'] =  'SettlInstTransType'
+fix_field_dict['164'] =  'EmailThreadID'
+fix_field_dict['165'] =  'SettlInstSource'
+fix_field_dict['166'] =  'SettlLocation'
+fix_field_dict['167'] =  'SecurityType'
+fix_field_dict['168'] =  'EffectiveTime'
+fix_field_dict['169'] =  'StandInstDbType'
+fix_field_dict['170'] =  'StandInstDbName'
+fix_field_dict['171'] =  'StandInstDbID'
+fix_field_dict['172'] =  'SettlDeliveryType'
+fix_field_dict['173'] =  'SettlDepositoryCode'
+fix_field_dict['174'] =  'SettlBrkrCode'
+fix_field_dict['175'] =  'SettlInstCode'
+fix_field_dict['176'] =  'SecuritySettlAgentName'
+fix_field_dict['177'] =  'SecuritySettlAgentCode'
+fix_field_dict['178'] =  'SecuritySettlAgentAcctNum'
+fix_field_dict['179'] =  'SecuritySettlAgentAcctName'
+fix_field_dict['180'] =  'SecuritySettlAgentContactName'
+fix_field_dict['181'] =  'SecuritySettlAgentContactPhone'
+fix_field_dict['182'] =  'CashSettlAgentName'
+fix_field_dict['183'] =  'CashSettlAgentCode'
+fix_field_dict['184'] =  'CashSettlAgentAcctNum'
+fix_field_dict['185'] =  'CashSettlAgentAcctName'
+fix_field_dict['186'] =  'CashSettlAgentContactName'
+fix_field_dict['187'] =  'CashSettlAgentContactPhone'
+fix_field_dict['188'] =  'BidSpotRate'
+fix_field_dict['189'] =  'BidForwardPoints'
+fix_field_dict['190'] =  'OfferSpotRate'
+fix_field_dict['191'] =  'OfferForwardPoints'
+fix_field_dict['192'] =  'OrderQty2'
+fix_field_dict['193'] =  'FutSettDate2'
+fix_field_dict['194'] =  'LastSpotRate'
+fix_field_dict['195'] =  'LastForwardPoints'
+fix_field_dict['196'] =  'AllocLinkID'
+fix_field_dict['197'] =  'AllocLinkType'
+fix_field_dict['198'] =  'SecondaryOrderID'
+fix_field_dict['199'] =  'NoIOIQualifiers'
+fix_field_dict['200'] =  'MaturityMonthYear'
+fix_field_dict['201'] =  'PutOrCall'
+fix_field_dict['202'] =  'StrikePrice'
+fix_field_dict['203'] =  'CoveredOrUncovered'
+fix_field_dict['204'] =  'CustomerOrFirm'
+fix_field_dict['205'] =  'MaturityDay'
+fix_field_dict['206'] =  'OptAttribute'
+fix_field_dict['207'] =  'SecurityExchange'
+fix_field_dict['208'] =  'NotifyBrokerOfCredit'
+fix_field_dict['209'] =  'AllocHandlInst'
+fix_field_dict['210'] =  'MaxShow'
+fix_field_dict['211'] =  'PegDifference'
+fix_field_dict['212'] =  'XmlDataLen'
+fix_field_dict['213'] =  'XmlData'
+fix_field_dict['214'] =  'SettlInstRefID'
+fix_field_dict['215'] =  'NoRoutingIDs'
+fix_field_dict['216'] =  'RoutingType'
+fix_field_dict['217'] =  'RoutingID'
+fix_field_dict['218'] =  'SpreadToBenchmark'
+fix_field_dict['219'] =  'Benchmark'
+fix_field_dict['223'] =  'CouponRate'
+fix_field_dict['231'] =  'ContractMultiplier'
+fix_field_dict['262'] =  'MDReqID'
+fix_field_dict['263'] =  'SubscriptionRequestType'
+fix_field_dict['264'] =  'MarketDepth'
+fix_field_dict['265'] =  'MDUpdateType'
+fix_field_dict['266'] =  'AggregatedBook'
+fix_field_dict['267'] =  'NoMDEntryTypes'
+fix_field_dict['268'] =  'NoMDEntries'
+fix_field_dict['269'] =  'MDEntryType'
+fix_field_dict['270'] =  'MDEntryPx'
+fix_field_dict['271'] =  'MDEntrySize'
+fix_field_dict['272'] =  'MDEntryDate'
+fix_field_dict['273'] =  'MDEntryTime'
+fix_field_dict['274'] =  'TickDirection'
+fix_field_dict['275'] =  'MDMkt'
+fix_field_dict['276'] =  'QuoteCondition'
+fix_field_dict['277'] =  'TradeCondition'
+fix_field_dict['278'] =  'MDEntryID'
+fix_field_dict['279'] =  'MDUpdateAction'
+fix_field_dict['280'] =  'MDEntryRefID'
+fix_field_dict['281'] =  'MDReqRejReason'
+fix_field_dict['282'] =  'MDEntryOriginator'
+fix_field_dict['283'] =  'LocationID'
+fix_field_dict['284'] =  'DeskID'
+fix_field_dict['285'] =  'DeleteReason'
+fix_field_dict['286'] =  'OpenCloseSettleFlag'
+fix_field_dict['287'] =  'SellerDays'
+fix_field_dict['288'] =  'MDEntryBuyer'
+fix_field_dict['289'] =  'MDEntrySeller'
+fix_field_dict['290'] =  'MDEntryPositionNo'
+fix_field_dict['291'] =  'FinancialStatus'
+fix_field_dict['292'] =  'CorporateAction'
+fix_field_dict['293'] =  'DefBidSize'
+fix_field_dict['294'] =  'DefOfferSize'
+fix_field_dict['295'] =  'NoQuoteEntries'
+fix_field_dict['296'] =  'NoQuoteSets'
+fix_field_dict['297'] =  'QuoteAckStatus'
+fix_field_dict['298'] =  'QuoteCancelType'
+fix_field_dict['299'] =  'QuoteEntryID'
+fix_field_dict['300'] =  'QuoteRejectReason'
+fix_field_dict['301'] =  'QuoteResponseLevel'
+fix_field_dict['302'] =  'QuoteSetID'
+fix_field_dict['303'] =  'QuoteRequestType'
+fix_field_dict['304'] =  'TotQuoteEntries'
+fix_field_dict['305'] =  'UnderlyingIDSource'
+fix_field_dict['306'] =  'UnderlyingIssuer'
+fix_field_dict['307'] =  'UnderlyingSecurityDesc'
+fix_field_dict['308'] =  'UnderlyingSecurityExchange'
+fix_field_dict['309'] =  'UnderlyingSecurityID'
+fix_field_dict['310'] =  'UnderlyingSecurityType'
+fix_field_dict['311'] =  'UnderlyingSymbol'
+fix_field_dict['312'] =  'UnderlyingSymbolSfx'
+fix_field_dict['313'] =  'UnderlyingMaturityMonthYear'
+fix_field_dict['314'] =  'UnderlyingMaturityDay'
+fix_field_dict['315'] =  'UnderlyingPutOrCall'
+fix_field_dict['316'] =  'UnderlyingStrikePrice'
+fix_field_dict['317'] =  'UnderlyingOptAttribute'
+fix_field_dict['318'] =  'Underlying Currency'
+fix_field_dict['319'] =  'RatioQty'
+fix_field_dict['320'] =  'SecurityReqID'
+fix_field_dict['321'] =  'SecurityRequestType'
+fix_field_dict['322'] =  'SecurityResponseID'
+fix_field_dict['323'] =  'SecurityResponseType'
+fix_field_dict['324'] =  'SecurityStatusReqID'
+fix_field_dict['325'] =  'UnsolicitedIndicator'
+fix_field_dict['326'] =  'SecurityTradingStatus'
+fix_field_dict['327'] =  'HaltReason'
+fix_field_dict['328'] =  'InViewOfCommon'
+fix_field_dict['329'] =  'DueToRelated'
+fix_field_dict['330'] =  'BuyVolume'
+fix_field_dict['331'] =  'SellVolume'
+fix_field_dict['332'] =  'HighPx'
+fix_field_dict['333'] =  'LowPx'
+fix_field_dict['334'] =  'Adjustment'
+fix_field_dict['335'] =  'TradSesReqID'
+fix_field_dict['336'] =  'TradingSessionID'
+fix_field_dict['337'] =  'ContraTrader'
+fix_field_dict['338'] =  'TradSesMethod'
+fix_field_dict['339'] =  'TradSesMode'
+fix_field_dict['340'] =  'TradSesStatus'
+fix_field_dict['341'] =  'TradSesStartTime'
+fix_field_dict['342'] =  'TradSesOpenTime'
+fix_field_dict['343'] =  'TradSesPreCloseTime'
+fix_field_dict['344'] =  'TradSesCloseTime'
+fix_field_dict['345'] =  'TradSesEndTime'
+fix_field_dict['346'] =  'NumberOfOrders'
+fix_field_dict['347'] =  'MessageEncoding'
+fix_field_dict['348'] =  'EncodedIssuerLen'
+fix_field_dict['349'] =  'EncodedIssuer'
+fix_field_dict['350'] =  'EncodedSecurityDescLen'
+fix_field_dict['351'] =  'EncodedSecurityDesc'
+fix_field_dict['352'] =  'EncodedListExecInstLen'
+fix_field_dict['353'] =  'EncodedListExecInst'
+fix_field_dict['354'] =  'EncodedTextLen'
+fix_field_dict['355'] =  'EncodedText'
+fix_field_dict['356'] =  'EncodedSubjectLen'
+fix_field_dict['357'] =  'EncodedSubject'
+fix_field_dict['358'] =  'EncodedHeadlineLen'
+fix_field_dict['359'] =  'EncodedHeadline'
+fix_field_dict['360'] =  'EncodedAllocTextLen'
+fix_field_dict['361'] =  'EncodedAllocText'
+fix_field_dict['362'] =  'EncodedUnderlyingIssuerLen'
+fix_field_dict['363'] =  'EncodedUnderlyingIssuer'
+fix_field_dict['364'] =  'EncodedUnderlyingSecurityDescLen'
+fix_field_dict['365'] =  'EncodedUnderlyingSecurityDesc'
+fix_field_dict['366'] =  'AllocPrice'
+fix_field_dict['367'] =  'QuoteSetValidUntilTime'
+fix_field_dict['368'] =  'QuoteEntryRejectReason'
+fix_field_dict['369'] =  'LastMsgSeqNumProcessed'
+fix_field_dict['370'] =  'OnBehalfOfSendingTime'
+fix_field_dict['371'] =  'RefTagID'
+fix_field_dict['372'] =  'RefMsgType'
+fix_field_dict['373'] =  'SessionRejectReason'
+fix_field_dict['374'] =  'BidRequestTransType'
+fix_field_dict['375'] =  'ContraBroker'
+fix_field_dict['376'] =  'ComplianceID'
+fix_field_dict['377'] =  'SolicitedFlag'
+fix_field_dict['378'] =  'ExecRestatementReason'
+fix_field_dict['379'] =  'BusinessRejectRefID'
+fix_field_dict['380'] =  'BusinessRejectReason'
+fix_field_dict['381'] =  'GrossTradeAmt'
+fix_field_dict['382'] =  'NoContraBrokers'
+fix_field_dict['383'] =  'MaxMessageSize'
+fix_field_dict['384'] =  'NoMsgTypes'
+fix_field_dict['385'] =  'MsgDirection'
+fix_field_dict['386'] =  'NoTradingSessions'
+fix_field_dict['387'] =  'TotalVolumeTraded'
+fix_field_dict['388'] =  'DiscretionInst'
+fix_field_dict['389'] =  'DiscretionOffset'
+fix_field_dict['390'] =  'BidID'
+fix_field_dict['391'] =  'ClientBidID'
+fix_field_dict['392'] =  'ListName'
+fix_field_dict['393'] =  'TotalNumSecurities'
+fix_field_dict['394'] =  'BidType'
+fix_field_dict['395'] =  'NumTickets'
+fix_field_dict['396'] =  'SideValue1'
+fix_field_dict['397'] =  'SideValue2'
+fix_field_dict['398'] =  'NoBidDescriptors'
+fix_field_dict['399'] =  'BidDescriptorType'
+fix_field_dict['400'] =  'BidDescriptor'
+fix_field_dict['401'] =  'SideValueInd'
+fix_field_dict['402'] =  'LiquidityPctLow'
+fix_field_dict['403'] =  'LiquidityPctHigh'
+fix_field_dict['404'] =  'LiquidityValue'
+fix_field_dict['405'] =  'EFPTrackingError'
+fix_field_dict['406'] =  'FairValue'
+fix_field_dict['407'] =  'OutsideIndexPct'
+fix_field_dict['408'] =  'ValueOfFutures'
+fix_field_dict['409'] =  'LiquidityIndType'
+fix_field_dict['410'] =  'WtAverageLiquidity'
+fix_field_dict['411'] =  'ExchangeForPhysical'
+fix_field_dict['412'] =  'OutMainCntryUIndex'
+fix_field_dict['413'] =  'CrossPercent'
+fix_field_dict['414'] =  'ProgRptReqs'
+fix_field_dict['415'] =  'ProgPeriodInterval'
+fix_field_dict['416'] =  'IncTaxInd'
+fix_field_dict['417'] =  'NumBidders'
+fix_field_dict['418'] =  'TradeType'
+fix_field_dict['419'] =  'BasisPxType'
+fix_field_dict['420'] =  'NoBidComponents'
+fix_field_dict['421'] =  'Country'
+fix_field_dict['422'] =  'TotNoStrikes'
+fix_field_dict['423'] =  'PriceType'
+fix_field_dict['424'] =  'DayOrderQty'
+fix_field_dict['425'] =  'DayCumQty'
+fix_field_dict['426'] =  'DayAvgPx'
+fix_field_dict['427'] =  'GTBookingInst'
+fix_field_dict['428'] =  'NoStrikes'
+fix_field_dict['429'] =  'ListStatusType'
+fix_field_dict['430'] =  'NetGrossInd'
+fix_field_dict['431'] =  'ListOrderStatus'
+fix_field_dict['432'] =  'ExpireDate'
+fix_field_dict['433'] =  'ListExecInstType'
+fix_field_dict['434'] =  'CxlRejResponseTo'
+fix_field_dict['435'] =  'UnderlyingCouponRate'
+fix_field_dict['436'] =  'UnderlyingContractMultiplier'
+fix_field_dict['437'] =  'ContraTradeQty'
+fix_field_dict['438'] =  'ContraTradeTime'
+fix_field_dict['439'] =  'ClearingFirm'
+fix_field_dict['440'] =  'ClearingAccount'
+fix_field_dict['441'] =  'LiquidityNumSecurities'
+fix_field_dict['442'] =  'MultiLegReportingType'
+fix_field_dict['443'] =  'StrikeTime'
+fix_field_dict['444'] =  'ListStatusText'
+fix_field_dict['445'] =  'EncodedListStatusTextLen'
+fix_field_dict['446'] =  'EncodedListStatusText'
+fix_field_dict['461'] =  '(*NE*) CFICode'
+fix_field_dict['526'] =  '(*NE*) SecondaryClOrdID'
+msg_type_dict = {}
+msg_type_dict['0'] = "Heartbeat"
+msg_type_dict['1'] = "Test Request"
+msg_type_dict['2'] = "Resend Request"
+msg_type_dict['3'] = "Reject"
+msg_type_dict['4'] = "Sequence Reset"
+msg_type_dict['5'] = "Logout"
+msg_type_dict['6'] = "Indication of Interest"
+msg_type_dict['7'] = "Advertisement"
+msg_type_dict['8'] = "Execution Report"
+msg_type_dict['9'] = "Order Cancel Reject"
+msg_type_dict['A'] = "Logon"
+msg_type_dict['B'] = "News"
+msg_type_dict['C'] = "Email"
+msg_type_dict['D'] = "Order - Single"
+msg_type_dict['E'] = "Order - List"
+msg_type_dict['F'] = "Order Cancel Request"
+msg_type_dict['G'] = "Order Cancel/Replace Request"
+msg_type_dict['H'] = "Order Status Request"
+msg_type_dict['J'] = "Allocation"
+msg_type_dict['K'] = "List Cancel Request"
+msg_type_dict['L'] = "List Execute"
+msg_type_dict['M'] = "List Status Request"
+msg_type_dict['N'] = "List Status"
+msg_type_dict['P'] = "Allocation ACK"
+msg_type_dict['Q'] = "Don't Know Trade (DK)"
+msg_type_dict['R'] = "Quote Request"
+msg_type_dict['S'] = "Quote"
+msg_type_dict['T'] = "Settlement Instructions"
+msg_type_dict['V'] = "Market Data Request"
+msg_type_dict['W'] = "Market Data-Snapshot/Full Refresh"
+msg_type_dict['X'] = "Market Data-Incremental Refresh"
+msg_type_dict['Y'] = "Market Data Request Reject"
+msg_type_dict['Z'] = "Quote Cancel"
+msg_type_dict['a'] = "Quote Status Request"
+msg_type_dict['b'] = "Quote Acknowledgement"
+msg_type_dict['c'] = "Security Definition Request"
+msg_type_dict['d'] = "Security Definition"
+msg_type_dict['e'] = "Security Status Request"
+msg_type_dict['f'] = "Security Status"
+msg_type_dict['g'] = "Trading Session Status Request"
+msg_type_dict['h'] = "Trading Session Status"
+msg_type_dict['i'] = "Mass Quote"
+msg_type_dict['j'] = "Business Message Reject"
+msg_type_dict['k'] = "Bid Request"
+msg_type_dict['l'] = "Bid Response (lowercase L)"
+msg_type_dict['m'] = "List Strike Price"
+msg_type_dict['q'] = "Order Mass Cancel Request"
+msg_type_dict['r'] = "Order Mass Cancel Report"
+ordType_dict = {}
+ordType_dict['1'] = "Market"
+ordType_dict['2'] = "Limit"
+ordType_dict['3'] = "Stop"
+ordType_dict['4'] = "Stop limit"
+ordType_dict['5'] = "Market on close"
+ordType_dict['6'] = "With or without"
+ordType_dict['7'] = "Limit or better"
+ordType_dict['8'] = "Limit with or without"
+ordType_dict['9'] = "On basis"
+ordType_dict['A'] = "On close"
+ordType_dict['B'] = "Limit on close"
+ordType_dict['C'] = "Forex - Market"
+ordType_dict['D'] = "Previously quoted"
+ordType_dict['E'] = "Previously indicated"
+ordType_dict['F'] = "Forex - Limit"
+ordType_dict['G'] = "Forex - Swap"
+ordType_dict['H'] = "Forex - Previously Quoted"
+ordType_dict['I'] = "Funari (Limit Day Order with unexecuted portion handled as Market On Close. e.g. Japan)"
+ordType_dict['P'] = "Pegged"
+idSource_dict = {}
+idSource_dict['1'] = "CUSIP"
+idSource_dict['2'] = "SEDOL"
+idSource_dict['3'] = "QUIK"
+idSource_dict['4'] = "ISIN number"
+idSource_dict['5'] = "RIC code"
+idSource_dict['6'] = "ISO Currency <15> Code"
+idSource_dict['7'] = "ISO Country <421> Code"
+idSource_dict['8'] = "Exchange Symbol <55>"
+idSource_dict['9'] = "Consolidated Tape Association (CTA) Symbol <55> (SIAC CTS/CQS line format)"
+idSource_dict['A'] = "Bloomberg Symbol <55>"
+idSource_dict['B'] = "Wertpapier"
+idSource_dict['C'] = "Dutch"
+idSource_dict['D'] = "Valoren"
+idSource_dict['E'] = "Sicovam"
+idSource_dict['F'] = "Belgian"
+idSource_dict['G'] = "Common (Clearstream and Euroclear)"
+idSource_dict['H'] = "Clearing House / Clearing Organization"
+idSource_dict['I'] = "ISDA/FpML Product <460> Specification"
+idSource_dict['J'] = "Options Price <44> Reporting Authority "
+side_dict = {}
+side_dict['1'] = "Buy"
+side_dict['2'] = "Sell"
+side_dict['3'] = "Buy minus"
+side_dict['4'] = "Sell plus"
+side_dict['5'] = "Sell short"
+side_dict['6'] = "Sell short exempt"
+side_dict['7'] = "Undisclosed (valid for IOI and List Order messages only)"
+side_dict['8'] = "Cross (orders where counterparty is an exchange, valid for all messages except IOIs)"
+side_dict['9'] = "Cross short"
+timeInForce_dict = {}
+timeInForce_dict['0'] = "Day (or session)"
+timeInForce_dict['1'] = "Good Till Cancel (GTC)"
+timeInForce_dict['2'] = "At the Opening (OPG)"
+timeInForce_dict['3'] = "Immediate or Cancel (IOC)"
+timeInForce_dict['4'] = "Fill or Kill (FOK)"
+timeInForce_dict['5'] = "Good Till Crossing (GTX)"
+timeInForce_dict['6'] = "Good Till Date"
+timeInForce_dict['7'] = "At the Close"
+securityType_dict = {}
+securityType_dict['EUSUPRA'] = "Euro Supranational Coupons "
+securityType_dict['FAC'] = "Federal Agency Coupon"
+securityType_dict['FADN'] = "Federal Agency Discount Note"
+securityType_dict['PEF'] = "Private Export Funding "
+securityType_dict['SUPRA'] = "USD Supranational Coupons "
+securityType_dict['FUT'] = "Future"
+securityType_dict['OPT'] = "Option"
+securityType_dict['CORP'] = "Corporate Bond"
+securityType_dict['CPP'] = "Corporate Private Placement"
+securityType_dict['CB'] = "Convertible Bond"
+securityType_dict['DUAL'] = "Dual Currency <15>"
+securityType_dict['EUCORP'] = "Euro Corporate Bond"
+securityType_dict['XLINKD'] = "Indexed Linked"
+securityType_dict['STRUCT'] = "Structured Notes"
+securityType_dict['YANK'] = "Yankee Corporate Bond"
+securityType_dict['FOR'] = "Foreign Exchange Contract"
+securityType_dict['CS'] = "Common Stock"
+securityType_dict['PS'] = "Preferred Stock"
+securityType_dict['BRADY'] = "Brady Bond"
+securityType_dict['EUSOV'] = "Euro Sovereigns "
+securityType_dict['TBOND'] = "US Treasury Bond"
+securityType_dict['TINT'] = "Interest strip from any bond or note"
+securityType_dict['TIPS'] = "Treasury Inflation Protected Securities"
+securityType_dict['TCAL'] = "Principal strip of a callable bond or note"
+securityType_dict['TPRN'] = "Principal strip from a non-callable bond or note"
+securityType_dict['UST'] = "US Treasury Note"
+securityType_dict['USTB'] = "US Treasury Bill"
+securityType_dict['TNOTE'] = "US Treasury Note"
+securityType_dict['TBILL'] = "US Treasury Bill"
+securityType_dict['REPO'] = "Repurchase"
+securityType_dict['FORWARD'] = "Forward"
+securityType_dict['BUYSELL'] = "Buy Sellback"
+securityType_dict['SECLOAN'] = "Securities Loan"
+securityType_dict['SECPLEDGE'] = "Securities Pledge"
+securityType_dict['TERM'] = "Term Loan"
+securityType_dict['RVLV'] = "Revolver Loan"
+securityType_dict['RVLVTRM'] = "Revolver/Term Loan"
+securityType_dict['BRIDGE'] = "Bridge Loan"
+securityType_dict['LOFC'] = "Letter of Credit"
+securityType_dict['SWING'] = "Swing Line Facility"
+securityType_dict['DINP'] = "Debtor in Possession"
+securityType_dict['DEFLTED'] = "Defaulted"
+securityType_dict['WITHDRN'] = "Withdrawn"
+securityType_dict['REPLACD'] = "Replaced"
+securityType_dict['MATURED'] = "Matured"
+securityType_dict['AMENDED'] = "Amended & Restated"
+securityType_dict['RETIRED'] = "Retired"
+securityType_dict['BA'] = "Bankers Acceptance"
+securityType_dict['BN'] = "Bank Notes"
+securityType_dict['BOX'] = "Bill of Exchanges"
+securityType_dict['CD'] = "Certificate of Deposit"
+securityType_dict['CL'] = "Call Loans"
+securityType_dict['CP'] = "Commercial Paper"
+securityType_dict['DN'] = "Deposit Notes"
+securityType_dict['EUCD'] = "Euro Certificate of Deposit"
+securityType_dict['EUCP'] = "Euro Commercial Paper"
+securityType_dict['LQN'] = "Liquidity Note"
+securityType_dict['MTN'] = "Medium Term Notes"
+securityType_dict['ONITE'] = "Overnight"
+securityType_dict['PN'] = "Promissory Note"
+securityType_dict['PZFJ'] = "Plazos Fijos"
+securityType_dict['STN'] = "Short Term Loan Note"
+securityType_dict['TD'] = "Time Deposit"
+securityType_dict['XCN'] = "Extended Comm Note"
+securityType_dict['YCD'] = "Yankee Certificate of Deposit"
+securityType_dict['ABS'] = "Asset-backed Securities"
+securityType_dict['CMBS'] = "Corp. Mortgage-backed Securities"
+securityType_dict['CMO'] = "Collateralized Mortgage Obligation"
+securityType_dict['IET'] = "IOETTE Mortgage"
+securityType_dict['MBS'] = "Mortgage-backed Securities"
+securityType_dict['MIO'] = "Mortgage Interest Only"
+securityType_dict['MPO'] = "Mortgage Principal Only"
+securityType_dict['MPP'] = "Mortgage Private Placement"
+securityType_dict['MPT'] = "Miscellaneous Pass-through"
+securityType_dict['PFAND'] = "Pfandbriefe"
+securityType_dict['TBA'] = "To be Announced"
+securityType_dict['AN'] = "Other Anticipation Notes BAN, GAN, etc."
+securityType_dict['COFO'] = "Certificate of Obligation"
+securityType_dict['COFP'] = "Certificate of Participation"
+securityType_dict['GO'] = "General Obligation Bonds"
+securityType_dict['MT'] = "Mandatory Tender"
+securityType_dict['RAN'] = "Revenue Anticipation Note"
+securityType_dict['REV'] = "Revenue Bonds"
+securityType_dict['SPCLA'] = "Special Assessment"
+securityType_dict['SPCLO'] = "Special Obligation"
+securityType_dict['SPCLT'] = "Special Tax"
+securityType_dict['TAN'] = "Tax Anticipation Note"
+securityType_dict['TAXA'] = "Tax Allocation"
+securityType_dict['TECP'] = "Tax Exempt Commercial Paper"
+securityType_dict['TRAN'] = "Tax & Revenue Anticipation Note"
+securityType_dict['VRDN'] = "Variable Rate Demand Note"
+securityType_dict['WAR'] = "Warrant"
+securityType_dict['MF'] = "Mutual Fund"
+securityType_dict['MLEG'] = "Multi-leg instrument"
+securityType_dict['NONE'] = "No Security Type"
+handlInst_dict = {}
+handlInst_dict['1'] = "Automated execution order, private, no Broker intervention"
+handlInst_dict['2'] = "Automated execution order, public, Broker intervention OK"
+handlInst_dict['3'] = "Manual order, best execution"
+ordStatus_dict = {}
+ordStatus_dict['0'] = "New"
+ordStatus_dict['1'] = "Partially filled"
+ordStatus_dict['2'] = "Filled"
+ordStatus_dict['3'] = "Done for day"
+ordStatus_dict['4'] = "Canceled"
+ordStatus_dict['5'] = "Replaced"
+ordStatus_dict['6'] = "Pending Cancel"
+ordStatus_dict['8'] = "Rejected"
+ordStatus_dict['9'] = "Suspended"
+ordStatus_dict['A'] = "Pending New"
+ordStatus_dict['B'] = "Calculated"
+ordStatus_dict['C'] = "Expired"
+ordStatus_dict['D'] = "Accepted for bidding"
+ordStatus_dict['E'] = "Pending Replace"
+timeinforce_dict = {}
+timeinforce_dict['0'] = "Day"
+timeinforce_dict['1'] = "Good Till Cancel (GTC)"
+timeinforce_dict['2'] = "At the Opening (OPG)"
+timeinforce_dict['3'] = "Immediate or Cancel (IOC)"
+timeinforce_dict['4'] = "Fill or Kill (FOK)"
+timeinforce_dict['5'] = "Good Till Crossing (GTX)"
+timeinforce_dict['6'] = "Good Till Date"
+execType_dict = {}
+execType_dict['0'] = "New"
+execType_dict['1'] = "Partial fill (Replaced)"
+execType_dict['2'] = "Fill (Replaced)"
+execType_dict['3'] = "Done for day"
+execType_dict['4'] = "Canceled"
+execType_dict['5'] = "Replace"
+execType_dict['6'] = "Pending Cancel"
+execType_dict['7'] = "Stopped"
+execType_dict['8'] = "Rejected"
+execType_dict['9'] = "Suspended"
+execType_dict['A'] = "Pending New"
+execType_dict['B'] = "Calculated"
+execType_dict['C'] = "Expired"
+execType_dict['D'] = "Restated (ExecutionRpt sent unsolicited by sellside)"
+execType_dict['E'] = "Pending Replace"
+execType_dict['F'] = "Trade (partial fill or fill)"
+execType_dict['G'] = "Trade Correct"
+execType_dict['H'] = "Trade Cancel"
+execType_dict['I'] = "Order Status"
+busnRejReason = {}
+busnRejReason['0'] = "Other"
+busnRejReason['1'] = "Unkown ID"
+busnRejReason['2'] = "Unknown Security"
+busnRejReason['3'] = "Unsupported Message Type"
+busnRejReason['4'] = "Application not available"
+busnRejReason['5'] = "Conditionally Required Field Missing"
+###################################################
+
+def lookup_meaning(k,v):
+    if int(k) == 38 or int(k) == 44 or int(k) == 151 or int(k) == 14:
+        sRtn = BYellow + str(v) + Color_Off
+    elif int(k) == 48:
+        sRtn = BBlue + str(v) + Color_Off
+    elif int(k) == 11:
+        sRtn = BWhite + str(v) + Color_Off
+    else:
+        sRtn = str(v)
+
+    if int(k) == 21:
+        sRtn += " [" + handlInst_dict.get(v,"") + "]"
+    elif int(k) == 22:
+        sRtn += " [" + idSource_dict.get(v,"") + "]"
+    elif int(k) == 35:
+        sRtn += BGreen + " [" + msg_type_dict.get(v,"") + "]" + Color_Off
+    elif int(k) == 39:
+        sRtn += BRed + " [" + ordStatus_dict.get(v,"") + "]" + Color_Off
+    elif int(k) == 40:
+        sRtn += BCyan + " [" + ordType_dict.get(v,"") + "]" + Color_Off
+    elif int(k) == 54:
+        sRtn += BCyan + " [" + side_dict.get(v,"") + "]" + Color_Off
+    elif int(k) == 59:
+        sRtn += " [" + timeinforce_dict.get(v,"") + "]"
+    elif int(k) == 150:
+        sRtn += BRed + " [" + execType_dict.get(v,"") + "]" + Color_Off
+    elif int(k) == 167:
+        sRtn += " [" + securityType_dict.get(v,"") + "]"
+    elif int(k) == 380:
+        sRtn += " [" + busnRejReason.get(v,"") + "]"
+
+    return sRtn
+
+
+def gen_output(x):
+    if '=' in x:
+        fields = x.split('=')
+        if fields[0] in ["PV","URef"]:
+            return None
+        return (fields[0], fix_field_dict.get(fields[0],"(*BSS*) "+fields[0]), lookup_meaning(fields[0],fields[1]))
+    else:
+        return None
+
+def tabularize(x):
+    return right_justify(x[0],5) + "= " + right_justify(x[1],25) + "   " + left_justify(x[2],50)
+
+
+def printHelp():
+    print("Usage: parse_fix_msg [--show-all|-sa]")
+    sys.exit(0)
+
+ignore_heartbeat = True
+
+if len(sys.argv) > 1:
+    with open(sys.argv[1],'r') as f:
+        lines = [line.strip() for line in f]
+else:
+    lines = [line for line in sys.stdin]
+
+for line in lines:
+
+    if line.find("\018=FIX") >= 0:
+        ###################################################
+        # FIX as a single string with control char
+        ###################################################
+        raw_msg_list = map(lambda x: "8=FIX" + x, line.split("\018=FIX"))
+    elif line.find("PV=1") >= 0:
+        raw_msg_list = line.strip().split("PV=1|")
+    else:
+        raw_msg_list = [line]
+
+    for raw_msg in raw_msg_list:
+        if "8=FIX" in raw_msg:
+            raw_msg = raw_msg[int(raw_msg.find("8=FIX")):].replace('\'','')
+
+        # if ignore_heartbeat and any(["35=0" in raw_msg,"35=1" in raw_msg,"35=A" in raw_msg,"35=5" in raw_msg]):
+        if ignore_heartbeat and any(["35=0" in raw_msg,"35=1" in raw_msg]):
+            continue
+
+        if "x01" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split('\\x01'))))))
+        elif "|" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split('|'))))))
+        elif "\01" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split('\01'))))))
+        elif ";" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split(';'))))))
+        elif "^A" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split('^A'))))))
+        elif "" in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split(''))))))
+        elif chr(1) in raw_msg:
+            print("\n".join(map(lambda x: tabularize(x), filter(lambda x: x is not None, map(lambda x: gen_output(x), raw_msg.split(chr(1)))))))
+        else:
+            continue
+        print("--------------------------------------------------")
+        print()

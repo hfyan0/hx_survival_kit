@@ -1,0 +1,35 @@
+#!/bin/bash
+# sunny clean filename
+
+if [[ $# -eq 0 ]]
+then
+    echo "NAME:  scf - sunny clean filename"
+    echo "USAGE: scf [(optional) -n] dirtyfilename"
+    echo "       -n means not doing the filename change"
+    exit
+
+else
+
+    echo "Processing: $@"
+    NEW_NAME="$(scfn "$@")"
+
+    if [[ -d "$@" ]]
+    then
+        cd "$@"
+        while IFS= read -d $'\0' -r file ; do 
+            scf "$file"
+        done < <(find . -mindepth 1 -maxdepth 1 -print0)
+
+    elif [[ -f "$@" ]]
+    then
+        if [[ $NEW_NAME == "$@" ]]
+        then
+            echo "Same: $NEW_NAME"
+        else
+            echo "Move: $NEW_NAME"
+            mv "$@" "$NEW_NAME"
+        fi
+
+    fi
+
+fi

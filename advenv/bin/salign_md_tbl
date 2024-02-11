@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+import sys
+
+
+def centre_justify(s, i):
+    space_len = i-len(s)
+    front_space_len = int(space_len / 2)
+    back_space_len = space_len - front_space_len
+    return ' '*front_space_len + str(s) + ' '*back_space_len
+
+
+def left_justify(s, i):
+    return str(s) + ' '*(i-len(s))
+
+
+def right_justify(s, i):
+    return ' '*(i-len(s)) + str(s)
+
+
+def proc(entry, width, align):
+    if align.startswith(":") and not align.endswith(":"):
+        if entry == align and entry:
+            return ":" + "-"*(width-1)
+        else:
+            return left_justify(entry, width)
+    elif align.endswith(":") and not align.startswith(":"):
+        if entry == align and entry:
+            return "-"*(width-1) + ":"
+        else:
+            return right_justify(entry, width)
+    elif align.endswith(":") and align.startswith(":"):
+        if entry == align and entry:
+            return ":" + "-"*(width-2) + ":"
+        else:
+            return centre_justify(entry, width)
+    else:
+        if entry == align and entry:
+            return ":" + "-"*(width-1)
+        else:
+            return left_justify(entry, width)
+
+
+input_lines = [row for row in sys.stdin]
+initial_indentation = len(input_lines[0]) - len(input_lines[0].lstrip())
+
+rows = [[el.strip() for el in row.split('|')] for row in input_lines if row.strip()]
+
+
+if len(sys.argv) == 1:
+    rows_excl_line = rows[:1] + rows[2:]
+else:
+    rows_excl_line = rows
+    rows = rows[:1] + [[""]+[":---" for x in rows[0]][1:-1]+[""]] + rows[1:]
+
+col_widths = [max(max(map(len, column)),2) for column in zip(*rows_excl_line)] # make sure there is a minimum width of 2 to prevent the logic going wild
+
+for row in rows:
+    out_list = [proc(entry,width,align) for entry,width,align in zip(row, col_widths, rows[1])]
+
+    s = " | ".join(out_list)
+    s = ' '*initial_indentation + s.lstrip().rstrip()
+    print(s)

@@ -1,0 +1,367 @@
+#!/usr/bin/env python3
+import sys
+import math
+from datetime import datetime,timedelta,date
+
+# http://markets.on.nytimes.com/research/markets/holidays/holidays.asp?display=market&exchange=NYQ
+hk_holiday_list = [
+                    date(2017, 12, 25),
+                    date(2017, 12, 26),
+                    date(2018, 1, 1),
+                    date(2018, 2, 16),
+                    date(2018, 2, 17),
+                    date(2018, 2, 19),
+                    date(2018, 3, 30),
+                    date(2018, 3, 31),
+                    date(2018, 4, 2),
+                    date(2018, 4, 5),
+                    date(2018, 5, 1),
+                    date(2018, 5, 22),
+                    date(2018, 6, 18),
+                    date(2018, 7, 2),
+                    date(2018, 9, 25),
+                    date(2018, 10, 1),
+                    date(2018, 10, 17),
+                    date(2018, 12, 25),
+                    date(2018, 12, 26),
+                    date(2019, 1, 1),
+                    date(2019, 2, 5),
+                    date(2019, 2, 6),
+                    date(2019, 2, 7),
+                    date(2019, 4, 5),
+                    date(2019, 4,19),
+                    date(2019, 4,20),
+                    date(2019, 4,22),
+                    date(2019, 5, 1),
+                    date(2019, 5,13),
+                    date(2019, 6, 7),
+                    date(2019, 7, 1),
+                    date(2019, 9,14),
+                    date(2019,10, 1),
+                    date(2019,10, 7),
+                    date(2019,12,25),
+                    date(2019,12,26),
+                    date(2020, 1, 1),
+                    date(2020, 1,25),
+                    date(2020, 1,27),
+                    date(2020, 1,28),
+                    date(2020, 4, 4),
+                    date(2020, 4,10),
+                    date(2020, 4,11),
+                    date(2020, 4,13),
+                    date(2020, 4,30),
+                    date(2020, 5, 1),
+                    date(2020, 6,25),
+                    date(2020, 7, 1),
+                    date(2020,10, 1),
+                    date(2020,10, 2),
+                    date(2020,10,26),
+                    date(2020,12,25),
+                    date(2020,12,26),
+                    date(2021, 1, 1),
+                    date(2021, 2,12),
+                    date(2021, 2,13),
+                    date(2021, 2,15),
+                    date(2021, 4, 2),
+                    date(2021, 4, 3),
+                    date(2021, 4, 5),
+                    date(2021, 4, 6),
+                    date(2021, 5, 1),
+                    date(2021, 5,19),
+                    date(2021, 6,14),
+                    date(2021, 7, 1),
+                    date(2021, 9,22),
+                    date(2021,10, 1),
+                    date(2021,10,14),
+                    date(2021,12,25),
+                    date(2021,12,27),
+                    date(2022, 1, 1),
+                    date(2022, 2, 1),
+                    date(2022, 2, 2),
+                    date(2022, 2, 3),
+                    date(2022, 4, 5),
+                    date(2022, 4,15),
+                    date(2022, 4,16),
+                    date(2022, 4,18),
+                    date(2022, 5, 2),
+                    date(2022, 5, 9),
+                    date(2022, 6, 3),
+                    date(2022, 7, 1),
+                    date(2022, 9,12),
+                    date(2022,10, 1),
+                    date(2022,10, 4),
+                    date(2022,12,26),
+                    date(2022,12,27),
+                    date(2023, 1, 2),
+                    date(2023, 1,23),
+                    date(2023, 1,24),
+                    date(2023, 1,25),
+                    date(2023, 4, 5),
+                    date(2023, 4, 7),
+                    date(2023, 4, 8),
+                    date(2023, 4,10),
+                    date(2023, 5, 1),
+                    date(2023, 5,26),
+                    date(2023, 6,22),
+                    date(2023, 7, 1),
+                    date(2023, 9,30),
+                    date(2023,10, 2),
+                    date(2023,10,23),
+                    date(2023,12,25),
+                    date(2023,12,26),
+                    date(2024, 1, 1),
+                    date(2024, 2,10),
+                    date(2024, 2,12),
+                    date(2024, 2,13),
+                    date(2024, 3,29),
+                    date(2024, 3,30),
+                    date(2024, 4, 1),
+                    date(2024, 4, 4),
+                    date(2024, 5, 1),
+                    date(2024, 5,15),
+                    date(2024, 6,10),
+                    date(2024, 7, 1),
+                    date(2024, 9,18),
+                    date(2024,10, 1),
+                    date(2024,10,11),
+                    date(2024,12,25),
+                    date(2024,12,26),
+                    ]
+
+cn_holiday_list = [ date(2018,  1,  1),
+                    date(2018,  2, 15),
+                    date(2018,  2, 16),
+                    date(2018,  2, 19),
+                    date(2018,  2, 20),
+                    date(2018,  2, 21),
+                    date(2018,  4,  5),
+                    date(2018,  4,  6),
+                    date(2018,  4, 30),
+                    date(2018,  5,  1),
+                    date(2018,  6, 18),
+                    date(2018,  9, 24),
+                    date(2018, 10,  1),
+                    date(2018, 10,  2),
+                    date(2018, 10,  3),
+                    date(2018, 10,  4),
+                    date(2018, 10,  5),
+                    date(2019,  1,  1),
+                    date(2019,  2,  4),
+                    date(2019,  2,  5),
+                    date(2019,  2,  6),
+                    date(2019,  2,  7),
+                    date(2019,  2,  8),
+                    date(2019,  2,  9),
+                    date(2019,  2, 10),
+                    date(2019,  3,  8),
+                    date(2019,  4,  5),
+                    date(2019,  5,  1),
+                    date(2019,  6,  7),
+                    date(2019,  9, 13),
+                    date(2019, 10,  1),
+                    date(2019, 10,  2),
+                    date(2019, 10,  3),
+                    date(2019, 10,  4),
+                    date(2019, 10,  7),
+                    date(2019, 10,  7)
+                    ]
+
+us_holiday_list = [ date(2018,  1,  1),
+                    date(2018,  1, 15),
+                    date(2018,  2, 19),
+                    date(2018,  3, 30),
+                    date(2018,  5, 28),
+                    date(2018,  7,  4),
+                    date(2018,  9,  3),
+                    date(2018, 11, 22),
+                    date(2018, 12, 25),
+                    date(2019,  1,  1),
+                    date(2019,  1, 21),
+                    date(2019,  2, 18),
+                    date(2019,  4, 19),
+                    date(2019,  5, 27),
+                    date(2019,  7,  4),
+                    date(2019,  9,  2),
+                    date(2019, 11, 28),
+                    date(2019, 12, 25),
+                    date(2020,  1,  1),
+                    date(2020,  1, 20),
+                    date(2020,  2, 17),
+                    date(2020,  4, 10),
+                    date(2020,  5, 25),
+                    date(2020,  7,  3),
+                    date(2020,  9,  7),
+                    date(2020, 11, 26),
+                    date(2020, 12, 25),
+                    date(2021,  1,  1),
+                    date(2021,  1, 18),
+                    date(2021,  2, 15),
+                    date(2021,  4,  2),
+                    date(2021,  5, 31),
+                    date(2021,  7,  5),
+                    date(2021,  9,  6),
+                    date(2021, 11, 25),
+                    date(2021, 12, 24),
+                    date(2022,  1, 17),
+                    date(2022,  2, 21),
+                    date(2022,  4, 15),
+                    date(2022,  5, 30),
+                    date(2022,  7,  4),
+                    date(2022,  9,  5),
+                    date(2022, 11, 24),
+                    date(2022, 12, 26),
+                    date(2022,  1,  2),
+                    date(2022,  1, 16),
+                    date(2022,  2, 20),
+                    date(2022,  4,  7),
+                    date(2022,  5, 29),
+                    date(2022,  6, 19),
+                    date(2022,  7,  4),
+                    date(2022,  9,  4),
+                    date(2022, 11, 23),
+                    date(2022, 12, 25),
+                    date(2023,  1,  2),
+                    date(2023,  1, 16),
+                    date(2023,  2, 20),
+                    date(2023,  4,  7),
+                    date(2023,  5, 29),
+                    date(2023,  6, 19),
+                    date(2023,  7,  4),
+                    date(2023,  9,  4),
+                    date(2023, 11, 23),
+                    date(2023, 12, 25),
+                    date(2024,  1,  1),
+                    date(2024,  1, 15),
+                    date(2024,  2, 19),
+                    date(2024,  3, 29),
+                    date(2024,  5, 27),
+                    date(2024,  6, 19),
+                    date(2024,  7,  4),
+                    date(2024,  9,  2),
+                    date(2024, 11, 28),
+                    date(2024, 12, 25),
+                    ]
+
+###################################################
+# colour
+###################################################
+Color_Off="\033[0m"       # Text Reset
+
+# Regular Colors
+Black="\033[0;30m"        # Black
+Red="\033[0;31m"          # Red
+Green="\033[0;32m"        # Green
+Yellow="\033[0;33m"       # Yellow
+Blue="\033[0;34m"         # Blue
+Purple="\033[0;35m"       # Purple
+Cyan="\033[0;36m"         # Cyan
+White="\033[0;37m"        # White
+
+# Bold
+BBlack="\033[1;30m"       # Black
+BRed="\033[1;31m"         # Red
+BGreen="\033[1;32m"       # Green
+BYellow="\033[1;33m"      # Yellow
+BBlue="\033[1;34m"        # Blue
+BPurple="\033[1;35m"      # Purple
+BCyan="\033[1;36m"        # Cyan
+BWhite="\033[1;37m"       # White
+
+# Background
+On_Black="\033[40m"       # Black
+On_Red="\033[41m"         # Red
+On_Green="\033[42m"       # Green
+On_Yellow="\033[43m"      # Yellow
+On_Blue="\033[44m"        # Blue
+On_Purple="\033[45m"      # Purple
+On_Cyan="\033[46m"        # Cyan
+On_White="\033[47m"       # White
+
+def in_colour(s,colour):
+    return colour + str(s) + Color_Off
+###################################################
+
+def justify_str(s,totlen,left_right="right",padchar=' '):
+    def extra(s,totlen):
+        return ''.join([padchar]*(totlen - len(s)))
+    s = str(s)
+    if left_right == "left":
+        return s + extra(s,totlen)
+    elif left_right == "right":
+        return extra(s,totlen) + s
+    else:
+        return s
+
+def right_justify(s,totlen):
+    return justify_str(s,totlen,"right")
+
+def scal_format(dt, tdy):
+    wkd = dt.isoweekday() % 7
+    # output_str = ("=" if dt.day == 1 else "") + str(dt.day)
+    output_str = str(dt.day)
+    output_str = right_justify(output_str,2)
+    holiday = False
+    if wkd == 0:
+        output_str = in_colour(output_str,Red)
+        holiday = True
+    if dt in hk_holiday_list:
+        output_str = in_colour(output_str,BRed)
+        holiday = True
+    if dt in cn_holiday_list:
+        output_str = in_colour(output_str,Cyan)
+        holiday = True
+    if dt in us_holiday_list:
+        output_str = in_colour(output_str,Blue)
+        holiday = True
+    if dt == tdy:
+        if not holiday:
+            output_str = in_colour(output_str,On_White)
+            output_str = in_colour(output_str,Black) # default to black first
+            output_str = output_str + " "
+        else:
+            output_str = output_str + in_colour('<',BYellow)
+    else:
+        output_str = output_str + in_colour(' ',White)
+
+    if wkd == 6:
+        wks_from_now = in_colour(right_justify(int(math.floor((dt - tdy).total_seconds() / 86400 / 7)),3)+" w",BBlack)
+        if dt >= tdy and dt < tdy + timedelta(days = 7):
+            mth = in_colour(right_justify(dt.month,5),BYellow)
+        else:
+            mth = in_colour(right_justify(dt.month,5),Color_Off)
+        output_str = output_str + wks_from_now + mth + "\n"
+
+    return output_str
+
+if len(sys.argv) == 1:
+    mode = "current"
+elif len(sys.argv) == 2:
+    mode = "year"
+elif len(sys.argv) == 3:
+    mode = "specific_month"
+
+if mode == "current":
+    today = datetime.now().date()
+    begindate = today - timedelta(days = 62)
+    date_list = [ begindate + timedelta(days = x) for x in range(160)]
+if mode == "year":
+    today = date(int(sys.argv[1]),1,1)
+    begindate = today - timedelta(days = 31)
+    date_list = [ begindate + timedelta(days = x) for x in range(365+31*2)]
+elif mode == "specific_month":
+    today = date(int(sys.argv[1]),int(sys.argv[2]),15)
+    begindate = today - timedelta(days = 62)
+    date_list = [ begindate + timedelta(days = x) for x in range(160)]
+
+init_list = [ right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
+body_str = ''.join(init_list + [ scal_format(x, today)  for x in  date_list ])
+print (''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
+print
+print (body_str)
+
+# elif mode == "year":
+#     bashCommand = "cal " + sys.argv[1]
+#     import subprocess
+#     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+#     output, error = process.communicate()
+#     print (str(output).replace("\\n","\n"))

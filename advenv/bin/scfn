@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+import sys
+
+def clean_filename(fn):
+    def clean_filename_impl(fn,clean_fn,last_c):
+        if not fn:
+            return clean_fn
+        new_fn = fn[1:]
+        c = fn[0]
+        uc = c.upper() if last_c == ' ' else c
+        nuc = {
+                ' ' : '',
+                '^' : '',
+                '-' : '_',
+                ',' : '.',
+                '(' : '.',
+                '[' : '.',
+                '{' : '.',
+                ')' : '.',
+                ']' : '.',
+                '}' : '.',
+                '&' : '_',
+                '\"': '',
+                '\'': '',
+                '\n': '',
+            }.get(uc, uc)
+
+        if nuc and clean_fn[-1:] == nuc:
+
+            if (ord(nuc) >= 48 and ord(nuc) <= 57) or \
+               (ord(nuc) >= 65 and ord(nuc) <= 90) or \
+               (ord(nuc) >= 97 and ord(nuc) <= 122):
+                isAlphaNum = True
+            else:
+                isAlphaNum = False
+
+            if isAlphaNum:
+                new_clean_fn = clean_fn + nuc
+            else:
+                new_clean_fn = clean_fn
+        else:
+            new_clean_fn = clean_fn + nuc
+
+        return clean_filename_impl(
+                   new_fn,
+                   new_clean_fn,
+                   c)
+
+    return clean_filename_impl(fn,"",'')
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) == 1: # if no arg
+        fname = sys.stdin.read().strip()
+    else:
+        fname = ' '.join(sys.argv[1:]).strip()
+
+    print(clean_filename(fname))

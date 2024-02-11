@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import sys
+
+def make_line(field, max_len):
+    pad_len = max_len - len(field)
+    pad_str = ' '*pad_len
+    return f"        << \"{field}\"{pad_str} <<  \" [\" << {field}{pad_str} << \"] \""
+
+fields = [x.strip() for x in sys.stdin]
+max_len = max([len(x) for x in fields])
+
+out_lines = [make_line(x,max_len) for x in fields]
+
+body = '\n'.join(out_lines)
+body = "    ss" + "  << \"NAME: \"\n" + body + "\n    ;"
+
+out_str =  "string ToString() const {\n"
+out_str += "    stringstream ss;\n"
+out_str += body
+out_str += "\n    return ss.str();\n}"
+
+print(out_str)

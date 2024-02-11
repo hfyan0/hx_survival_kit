@@ -1,0 +1,241 @@
+# main()
+snippet main
+	int main(int argc, const char *argv[])
+	int main(void)
+	{
+		${1}
+		return 0;
+	}
+# #include <...>
+snippet #inc
+	#include <${1:stdio}.h>
+# #include "..."
+# #ifndef ... #define ... #endif
+snippet #def
+	#define
+snippet #ifdef
+	#ifdef ${1:FOO}
+		${2:#define }
+	#endif
+snippet #if
+	#if ${1:FOO}
+		${2}
+	#endif
+# Header Include-Guard
+# If Condition
+snippet if
+	if (${1}) {
+	} else {
+	}
+# Ternary conditional
+snippet t
+	(${1} ? ${2:a} : ${3:b})
+# Do While Loop
+snippet do
+	do {
+		${2}
+	} while (${1});
+# While Loop
+snippet while
+	while (true) {
+		${1}
+	}
+# While Loop
+snippet wh
+	while (true) {
+		${1}
+	}
+# For Loop
+snippet forr
+	for (;;) {
+		${1}
+	}
+snippet fora
+	for (const auto & [k,v] : ${1}) {
+		${4}
+	}
+snippet forca
+	for (const auto & [k,v] : ${1}) {
+		${4}
+	}
+snippet fori
+	for (int i = 0;
+	     i < ${1:count};
+	     ++i) {
+		${2}
+	}
+# For Loop
+snippet forj
+	for (int j = 0;
+	     j < ${1:count};
+	     ++j) {
+		${2}
+	}
+# For Loop
+snippet fork
+	for (int k = 0;
+	     k < ${1:count};
+	     ++k) {
+		${2}
+	}
+# For Loop
+snippet forn
+	for (int n = 0;
+	     n < ${1:count};
+	     ++n) {
+		${2}
+	}
+# Custom For Loop
+snippet for
+	for (int ${1:i} = ${2:0};
+	     $1 < ${3};
+	     $1${4:++}) {
+		${5}
+	}
+# printf
+# unfortunately version this isn't as nice as TextMates's, given the lack of a
+# dynamic `...`
+snippet pr
+	printf("${1:%s}\n"${2});${3}
+# fprintf (again, this isn't as nice as TextMate's version, but it works)
+snippet fpr
+	fprintf(${1:stderr}, "${2:%s}\n"${3});${4}
+# sprintf
+snippet spr
+	sprintf(${1:s}, "${2:%s}",${3});${4}
+snippet coutl
+	cout << __FILE__ << ": " << __FUNCTION__ << " (" << __LINE__ << ") " << ${1} << endl << flush;${2}
+# Eddid
+snippet clg
+	LogManager::Print(LogManager::INFO, "%s ", __FUNCTION__);
+	CLogManager::GetInstance()->WriteLogX(LOG_INFO_FILE, nanolog::LogLevel::INFO, "%s ", __FUNCTION__);
+# comment
+snippet cmt
+	//--------------------------------------------------
+snippet cb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+snippet cmb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+snippet cmtb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+# try catch
+snippet try
+	try {
+	  ${1}
+	}
+	catch (Exception e) {
+	  cout << __FILE__ << ": " << __FUNCTION__ << " (" << __LINE__ << ") " << e.what()${1} << endl << flush;${2}
+	}
+
+snippet	swh
+	switch (${1}) {
+	    case ${2}: { break; }
+	    default: { break; }
+	}
+snippet	swhr
+	const = [=]() {
+	switch (${1}) {
+	    case ${2}: { return; }
+	    default: { return; }
+	}
+	}();
+snippet	class
+	class ${1:`Filename("$1")`} {
+	    public:
+	    $1() = default;
+	    virtual ~$1() = default;
+	    private:
+	};
+snippet	lam
+	[]() {}
+snippet	usleep
+	#include <unistd.h>
+	usleep(${1});
+snippet ca
+	const auto
+snippet cs
+	const string &
+snippet acc
+	#include <numeric>
+	typedef xxx AccumulationType;
+	const auto =
+	    accumulate(
+	        begin(),
+	        end(),
+	        AccumulationType(),
+	        [](AccumulationType acc, auto e) {
+	            const auto [] = acc;
+	            return;
+	        });
+snippet tmp
+	template <typename T>
+snippet rng
+	#include <range/v3/all.hpp>
+	namespace rng = ranges::v3;
+	// namespace rng = ranges;
+snippet rnga
+	const auto =
+	    rng::accumulate(
+	        ,
+	        // ,
+	        // [](const auto acc, const auto e) {
+	        // }
+	        );
+snippet rngc
+	rng::count();
+	rng::chunk(2); // group every 2 elements
+	const auto signs = {1,-1}; rng::cycle(signs);
+snippet rnge
+	rng::enumerate();
+snippet rngf
+	| rng::view::filter([](const auto & ${1}) {${2}})
+snippet rngfe
+	rng::for_each(
+	,
+	[&](const auto ) {
+	});
+snippet rngi
+	rng::view::iota(1) | rng::view::take(9)
+	rng::view::iota(1,n) | ...
+snippet rngj
+	vector<string> xxx; xxx | rng::view::join(',') | rng::to<string>();
+	| rng::action::join
+snippet rngv
+	| rng::to_vector;
+snippet rngr
+	| rng::view::reverse;
+snippet rngs
+	| rng::to<string>();
+snippet rngt
+	| rng::view::transform([](const auto & ${1}) {${2}})
+snippet rngtk
+	| rng::view::take(10)
+snippet rngz
+	| rng::view::zip_with(
+	    [](auto a, auto b){ return a + b; },
+	    view1,
+	    view2);
+	);
+snippet op
+	void operator= (const Car& c1)
+	bool operator==(const Car& c1, const Car& c2) const
+	bool operator!=(const Car& c1, const Car& c2) const
+	bool operator> (const Car& c1, const Car& c2) const
+	bool operator< (const Car& c1, const Car& c2) const
+	bool operator==(const Car& c2) const
+	bool operator!=(const Car& c2) const
+	bool operator> (const Car& c2) const
+	bool operator< (const Car& c2) const
+snippet struct
+	typedef struct NAME {
+	} NAME;
+snippet fixme
+	// FIXME
+snippet todo
+	// TODO

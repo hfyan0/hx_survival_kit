@@ -1,0 +1,2 @@
+origin	https://github.com/garbas/vim-snipmate.git (fetch)
+origin	https://github.com/garbas/vim-snipmate.git (push)

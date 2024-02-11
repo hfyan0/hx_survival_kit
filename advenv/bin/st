@@ -1,0 +1,67 @@
+#!/bin/bash
+
+TMPFOLDER="$HOME/.advenv/tmp/"
+TMP_PREFIX="$TMPFOLDER/stmp_$(whoami)_"
+
+[[ ! -d $TMPFOLDER ]] && mkdir -p $TMPFOLDER
+
+fx_arg=""
+for arg in $@
+do
+    if [[ ! -z "${arg##*[!0-9]*}" ]]
+    then
+        ACTIVEBUFFERS=$ACTIVEBUFFERS" "$TMP_PREFIX"$arg"
+    else
+        fx_arg=$arg
+    fi
+done
+
+if [[ -z $ACTIVEBUFFERS ]]
+then
+    ACTIVEBUFFERS=$TMP_PREFIX"1"
+fi
+
+touch $ACTIVEBUFFERS
+
+if [[ -z $fx_arg ]]
+then
+    cat $ACTIVEBUFFERS
+    exit
+fi
+
+if [[ $fx_arg == "o" ]]
+then
+    awk '{print}' > $ACTIVEBUFFERS
+    exit
+fi
+
+if [[ $fx_arg == "a" ]]
+then
+    awk '{print}' >> $ACTIVEBUFFERS
+    exit
+fi
+
+if [[ $fx_arg == "e" ]]
+then
+    nvim $ACTIVEBUFFERS
+    exit
+fi
+
+if [[ $fx_arg == "v" ]]
+then
+    nvim -p $(cat $ACTIVEBUFFERS)
+    exit
+fi
+
+if [[ $fx_arg == "s" ]]
+then
+    source $ACTIVEBUFFERS
+    exit
+fi
+
+if [[ $fx_arg == "n" ]]
+then
+    echo $ACTIVEBUFFERS
+    exit
+fi
+

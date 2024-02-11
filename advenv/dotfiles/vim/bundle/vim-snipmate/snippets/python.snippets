@@ -1,0 +1,151 @@
+snippet imp
+	import ${1:module}
+# Module Docstring
+snippet docs
+	'''
+	File: ${1:`Filename('$1.py', 'foo.py')`}
+	Author: ${2:`g:snips_author`}
+	Description: ${3}
+	'''
+snippet wh
+	while ${1:True}:
+		${2}
+snippet for
+	for ${1:i} in ${2:your_list}:
+		${3}
+# New Class
+snippet cl
+	class ${1:ClassName}(${2:object}):
+		"""${3:docstring for $1}"""
+		def __init__(self, ${4:arg}):
+			${5:super($1, self).__init__()}
+			self.$4 = $4
+			${6}
+# New Function
+snippet def
+	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):
+		"""${3:docstring for $1}"""
+		${4:pass}
+snippet deff
+	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):
+		${3}
+# New Method
+snippet defs
+	def ${1:mname}(self, ${2:arg}):
+		${3:pass}
+# New Property
+snippet property
+	def ${1:foo}():
+		doc = "${2:The $1 property.}"
+		def fget(self):
+			${3:return self._$1}
+		def fset(self, value):
+			${4:self._$1 = value}
+# Lambda
+snippet ld
+	${1:var} = lambda ${2:vars} : ${3:action}
+snippet .
+	self.
+snippet try Try/Except
+	try:
+		${1:pass}
+	except ${2:Exception} as ${3:e}:
+		${4:raise $3}
+snippet try Try/Except/Else
+	try:
+		${1:pass}
+	except ${2:Exception} as ${3:e}:
+		${4:raise $3}
+	else:
+		${5:pass}
+snippet try Try/Except/Finally
+	try:
+		${1:pass}
+	except ${2:Exception} as ${3:e}:
+		${4:raise $3}
+	finally:
+		${5:pass}
+snippet try Try/Except/Else/Finally
+	try:
+		${1:pass}
+	except ${2:Exception} as ${3:e}:
+		${4:raise $3}
+	else:
+		${5:pass}
+	finally:
+		${6:pass}
+# if __name__ == '__main__':
+snippet ifmain
+	if __name__ == '__main__':
+		${1:main()}
+# __magic__
+snippet _
+	__${1:init}__${2}
+snippet cmt
+	###################################################
+	${1}
+snippet cb
+	###################################################
+	# ${1}
+	###################################################
+snippet cmb
+	###################################################
+	# ${1}
+	###################################################
+snippet cmtb
+	###################################################
+	# ${1}
+	###################################################
+snippet sab
+	###################################################
+	# Sunny added # [start]
+	###################################################
+	###################################################
+	# Sunny added # [end]
+	###################################################
+snippet smb
+	###################################################
+	# Sunny modified # [start]
+	###################################################
+	###################################################
+	# Sunny modified # [end]
+	###################################################
+snippet scb
+	###################################################
+	# Sunny commented: ${1}
+	###################################################
+snippet print
+	print(${1})
+snippet p
+	print(${1})
+snippet pr
+	print(${1})
+snippet map
+	[ ${2} for x in ${1} ]
+snippet filter
+	filter(lambda x: ${2}, ${1})
+snippet reduce
+	reduce(lambda a, x: a + x, ${1})
+snippet stdin
+	import sys
+	[line for line in sys.stdin]
+snippet rf
+	with open(file_loc,'r') as f:
+	    # f.next # skip header
+	    # line = line.strip()
+	    return [line.strip() for line in f]
+snippet wf
+	with open(file_loc,'w+') as f:
+	    f.write("")
+snippet thread
+	from threading import Thread
+	def parse_server_msg():
+	    ...
+	your_thd = Thread(target=self.parse_server_msg)
+	your_thd = Thread(target=processData, args=(your_arguments,))  # <- note extra ','
+	your_thd = Thread(target=processLine, args=[dRecieved]))  # <- 1 element list
+	your_thd.daemon = True
+	your_thd.start()
+	your_thd.join()
+	while True:
+	    time.sleep(1)

@@ -1,0 +1,45 @@
+#!/bin/bash
+# sunny search and replace
+
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
+if [[ ! $# -eq 3 ]]
+then
+    echo "NAME     sunny mass search and replace (whole word)"
+    echo "USAGE    smassreplace [old string] [new string] [w|a]"
+    echo
+    echo "         arg 1 : search string to be replaced"
+    echo "         arg 2 : new string as replacement"
+    echo "         arg 3 : [w|a] w = whole word; a = all matches"
+    echo
+    echo "EXAMPLES"
+    echo "         smassreplace search_phrase replace_phrase < filelist"
+    echo "         cat filelist | smassreplace search_phrase replace_phrase"
+    echo "         find . -name \"*cpp\" | smassreplace search_phrase replace_phrase"
+    echo "         Or even..."
+    echo "         sf . sth r | smassreplace search_phrase replace_phrase"
+    echo "         ls | grep ini | smassreplace search_phrase replace_phrase"
+    exit
+fi
+
+TMPFILE=$(mktemp)
+ORIBKUP=$(mktemp -d)
+
+while read line
+do
+    if [[ ! -d $line && -n $line ]]
+    then
+        cp -p $line $ORIBKUP/
+        if [[ $3 == "w" ]]
+        then
+            cat $line | sed -e "s/\b$1\b/$2/g" > $TMPFILE
+        elif [[ $3 == "a" ]]
+        then
+            cat $line | sed -e "s/$1/$2/g" > $TMPFILE
+        fi
+        cat $TMPFILE > $line
+    fi
+done
+
+IFS=$SAVEIFS

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TMPFILE=$(mktemp)
+
+if [[ $# -eq 0 ]]
+then
+    cat - > $TMPFILE
+    cat $TMPFILE | vidir -
+elif [[ $# -gt 0 ]]
+then
+    STR=$(echo $@ | tr ' ' '|' | tr -d '/')
+    ls | egrep "$STR" | vidir -
+fi
+
+rm -f $TMPFILE
+
+ls --time-style +"%Y-%m-%d %H:%M:%S" -lh --group-directories-first

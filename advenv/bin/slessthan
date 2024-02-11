@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+import sys
+
+if len(sys.argv) == 1:
+  sys.exit(0)
+
+print ('\n'.join(filter(lambda x: x < sys.argv[1], [line.strip() for line in sys.stdin])))

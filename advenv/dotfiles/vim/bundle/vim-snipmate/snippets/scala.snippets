@@ -1,0 +1,202 @@
+# Global snippets
+
+snippet def
+	def ${1}(${2}: ${3}): ${4} {
+		${5}
+	}
+snippet val
+	val ${1} = ${2}
+snippet var
+	var ${1} = ${2}
+snippet cc
+	case class ${1} (${2}: ${3})
+snippet pu
+	public
+snippet po
+	protected
+snippet pr
+	private
+snippet st
+	static
+snippet fi
+	final
+snippet ab
+	abstract
+snippet re
+	return
+snippet br
+	break;
+snippet de
+	default:
+		${1}
+snippet ca
+	catch(${1:Exception} ${2:e}) ${3}
+snippet th
+	throw 
+snippet sy
+	synchronized
+snippet im
+	import
+snippet imp
+	implements
+snippet ext
+	extends 
+snippet j.u
+	java.util
+snippet j.i
+	java.io.
+snippet j.b
+	java.beans.
+snippet j.n
+	java.net.
+snippet j.m
+	java.math.
+snippet tc
+	public class ${1:`Filename()`} extends ${2:TestCase}
+snippet t
+	public void test${1:Name}() throws Exception ${2}
+snippet cl
+	class ${1:`Filename("", "untitled")`} ${2}
+snippet in
+	interface ${1:`Filename("", "untitled")`} ${2:extends Parent}${3}
+snippet m
+	${1:void} ${2:method}(${3}) ${4:throws }${5}
+snippet v
+	${1:String} ${2:var}${3: = null}${4};${5}
+snippet co
+	static public final ${1:String} ${2:var} = ${3};${4}
+snippet cos
+	static public final String ${1:var} = "${2}";${3}
+snippet as
+	assert ${1:test} : "${2:Failure message}";${3}
+snippet try
+	try {
+		${3}
+	} catch(${1:Exception} ${2:e}) {
+	}
+snippet tryf
+	try {
+		${3}
+	} catch(${1:Exception} ${2:e}) {
+	} finally {
+	}
+snippet rst
+	ResultSet ${1:rst}${2: = null}${3};${4}
+
+
+
+
+snippet main
+	public static void main(String [] args)
+	{
+		${1}
+	}
+snippet if
+	if (${1})
+	{
+		${2}
+	}
+snippet el
+	else {
+		${1}
+	}
+snippet do
+	do {
+		${2}
+	} while (${1});
+# While Loop
+snippet while
+	while (${1})
+	{
+		${2}
+	}
+# While Loop
+snippet wh
+	while (${1})
+	{
+		${2}
+	}
+snippet fori
+	for (i <- 0 to ${1:count})
+	{
+		${2}
+	}
+# Function
+snippet fx
+	${1:void} ${2:function_name}(${3})
+	{
+		${4}
+	}
+# Quick pairs
+snippet [
+	[${1}]${2}
+snippet (
+	(${1})${2}
+# pattern matching
+snippet match
+	match {
+		case ${1} =>
+		case x :: xs =>
+		case _ =>
+	}
+# comment
+snippet cmt
+	//--------------------------------------------------
+snippet cb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+snippet cmb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+snippet cmtb
+	//--------------------------------------------------
+	// ${1}
+	//--------------------------------------------------
+snippet sab
+	//--------------------------------------------------
+	// Sunny added - [start]
+	//--------------------------------------------------
+	//--------------------------------------------------
+	// Sunny added - [end]
+	//--------------------------------------------------
+snippet smb
+	//--------------------------------------------------
+	// Sunny modified - [start]
+	//--------------------------------------------------
+	//--------------------------------------------------
+	// Sunny modified - [end]
+	//--------------------------------------------------
+snippet scb
+	//--------------------------------------------------
+	// Sunny commented: ${1}
+	//--------------------------------------------------
+snippet	class
+	public class ${1:`Filename("$1")`}
+	{
+	}
+
+snippet	incl
+	#include <boost/scoped_ptr.hpp>
+	#include <boost/shared_ptr.hpp>
+	#include <boost/cstdint.hpp>
+	#include <cstdio>
+	#include <cstdlib>
+	#include <cstring>
+	#include <iostream>
+	#include <cmath>
+	#include <memory>
+	#include <vector>
+	#include <boost/ptr_container/ptr_deque.hpp>
+	#include <string>
+	
+	using namespace std;
+	using namespace boost;
+
+snippet phdr
+	//**************************************************
+	//  Author:      Sunny Yan
+	//  Description: ${1}
+	//
+	//**************************************************

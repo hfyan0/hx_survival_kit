@@ -1,0 +1,104 @@
+#!/bin/bash
+
+source $HOME/.advenv/bin/ok_failed.sh
+
+
+ls_exit() {
+    echo "--------------------------------------------------"
+    ls --color=auto --group-directories-first
+    exit
+}
+
+echo "This command is threadsafe..."
+
+if [[ $# -eq 0 ]]
+then
+    echo "Usage: $(basename $0) [file name] [(optional) gz|xz]"
+    echo "       [file name]"
+    echo "       1. folder name, or"
+    echo "       2. tar.gz tgz file."
+    echo "       3. tar.xz txz file."
+    exit
+elif [[ -d $1 ]]
+then
+    FOLDERNAME=$(echo $1 | tr -d '/')
+
+    if [[ -z $2 ]]
+    then
+        echo -n "Which format? [gz|xz] "
+        read fmt
+    fi
+    if [[ $fmt == "gz" || $fmt == "g" ]]
+    then
+        find $FOLDERNAME -name "*.gz" | grep -v tar.gz | xargs gunzip 2> /dev/null
+        exec_print_result "tar zcf ${FOLDERNAME}.tgz ${FOLDERNAME} --warning=file-changed" "Compressing folder..."
+        if [[ $? -eq 0 ]]
+        then
+            exec_print_result "rm -rf $FOLDERNAME" "Removing the original folder."
+            exec_print_result "tar ztf ${FOLDERNAME}.tgz" "Testing the compressed file."
+        fi
+    else
+        XZ_OPT=-9
+        for i in $(find $FOLDERNAME -name "*.xz" | grep -v tar.xz)
+        do
+            xz -d $i 2> /dev/null
+        done
+        exec_print_result "tar Jcf ${FOLDERNAME}.txz ${FOLDERNAME} --warning=file-changed" "Compressing folder..."
+
+        if [[ $? -eq 0 ]]
+        then
+            exec_print_result "rm -rf $FOLDERNAME" "Removing the original folder."
+            exec_print_result "tar Jtf $FOLDERNAME.txz" "Testing the compressed file."
+        fi
+    fi
+    ls_exit
+else
+    ARG1="$1"
+
+    if [[ ! -f $ARG1 ]]
+    then
+        echo "--------------------------------------------------"
+        echo "$ARG1 does not exist."
+        echo "--------------------------------------------------"
+        ls_exit
+    fi
+    if [[ ${ARG1: -4} == ".tgz" || ${ARG1: -7} == ".tar.gz" || ${ARG1: -4} == ".txz" || ${ARG1: -7} == ".tar.xz" || ${ARG1: -8} == ".tar.bz2" ]]
+    then
+        PREFIX=$(echo $ARG1 | cut -d'.' -f 1)
+        FOLDER_NOMESS=$PREFIX"_"$(date +'%Y%m%d_%H%M%S')
+        mkdir $FOLDER_NOMESS
+        mv $ARG1 $FOLDER_NOMESS
+        cd $FOLDER_NOMESS
+
+        if [[ ${ARG1: -2} == "gz" ]]
+        then
+            exec_print_result "tar zxf $ARG1" "Uncompressing file..."
+        elif [[ ${ARG1: -2} == "xz" ]]
+        then
+            exec_print_result "tar Jxf $ARG1" "Uncompressing file..."
+        elif [[ ${ARG1: -3} == "bz2" ]]
+        then
+            exec_print_result "tar jxf $ARG1" "Uncompressing file..."
+        else
+            echo "Unknown file type. Exiting..."
+            ls_exit
+        fi
+
+        if [[ $? -eq 0 ]]
+        then
+            exec_print_result "rm -f $ARG1" "Removing the original file."
+
+            if [[ $(ls | wc -l) -eq 1 ]]
+            then
+                mv * ..
+                cd ..
+                rmdir $FOLDER_NOMESS
+            else
+                cd ..
+            fi
+
+        fi
+
+    fi
+    ls_exit
+fi

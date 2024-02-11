@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import sys
+
+print(sum([ float(line.replace(',','')) for line in sys.stdin if line.strip() ]))
+
+# this has precision problem
+# #!/bin/bash
+# tr -d ',' | sed 's/[a-zA-Z]//g' | awk 'BEGIN{s=0}{s=s+$1;}END{printf "%.2f\n",s}'
