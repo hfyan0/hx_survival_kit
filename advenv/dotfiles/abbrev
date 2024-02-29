@@ -1616,6 +1616,7 @@ ia cmplct complicated
 ia cmpld compiled
 ia cmple complete
 ia comple complete
+ia compleg completing
 ia cmpled completed
 ia cmpleg completing
 ia cmplen completion
@@ -7192,7 +7193,7 @@ ia rcpnt recipient
 ia rcp recipe
 ia rcptn reception
 ia rcpt receipt
-ia rc resource
+ia rc rice
 ia rcrt recruit
 ia rcsm racism
 ia rcssn recession
@@ -12158,7 +12159,6 @@ ia critm criticism
 ia critzm criticism
 ia delg dealing
 ia irspv irresponsive
-ia X NOT
 ia routg routing
 ia ops operations
 ia pourg pouring
@@ -12499,10 +12499,6 @@ ia nvgtd navigated
 ia fmwr firmware
 ia svrs servers
 ia cblg cabling
-ia rh9 RedHat 9
-ia rh8 RedHat 8
-ia rh7 RedHat 7
-ia rh6 RedHat 6
 ia shhd shareholder
 ia schma schema
 ia mbrs members
@@ -12529,3 +12525,14 @@ ia xml XML
 ia cmm comma
 ia ylwh yellowish
 ia wtry watery
+ia rcyclg recycling
+ia nsl nasal
+ia occnl occasional
+ia occnly occasionally
+ia rnwd renewed
+ia dspptd disappointed
+ia dsppt disappoint
+ia Jv Java
+ia secdy secondary
+ia eveng evening
+ia chkp checkpoint
