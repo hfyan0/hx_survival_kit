@@ -1,0 +1,196 @@
+# User specific aliases and functions
+VISUAL="vim"
+EDITOR="vim"
+HISTCONTROL=ignoredups:ignorespace
+unset HISTFILE
+
+unalias -a
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias h='head'
+alias t='tail'
+alias vd='vimdiff'
+alias l='ls --color=no -F'
+alias ll='ls -lh --color=no -F'
+alias lll='ls -l --color=no -F'
+alias lla='ls -lha --color=no -F'
+alias C='cat'
+alias ch7='chmod 755'
+alias ch6='chmod 644'
+alias ch600='chmod 600'
+alias rf='rm -ri'
+alias tf='tail -500f'
+alias g='grep --color=auto'
+alias gv='grep -v'
+alias eg="egrep -a --color"
+alias md='mkdir -p'
+alias md5='md5sum'
+alias tp='htop || top'
+alias ifc='ifconfig | less'
+alias wcl='wc -l'
+alias p='pwd'
+alias e='echo'
+alias psg='ps -eo user,pid,vsize,rss,lstart,etime,fname,cmd --sort user | grep'
+alias xa='tr "\n" "\0" | xargs -0 -n 1'
+alias xak='awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill'
+alias xask='awk "{print \$2}" | tr "\n" "\0" | xargs -0 sudo kill'
+alias u='cd ..; ls --color=no -F'
+alias uu='cd ../..; ls --color=no -F'
+alias uuu='cd ../../..; ls --color=no -F'
+alias uuuu='cd ../../../..; ls --color=no -F'
+alias uuuuu='cd ../../../../..; ls --color=no -F'
+alias f='find .'
+alias ff='find . -type f'
+alias fd='find . -type d'
+alias suq='sort | uniq'
+alias les='less'
+alias ltr='ls -lhtrF --color=no'
+alias dfh='df -h'
+alias mc='mc --nocolor'
+alias ctl='crontab -l | less'
+alias cte='VISUAL=vim crontab -e'
+alias rtn='route -n'
+alias dus='du -sh .'
+alias dush='du -sh * | sort -h'
+alias vw='vim -R'
+alias rd='rmdir'
+alias gt='tig'
+alias pmi='yum install'
+alias pms='yum search'
+alias pmr='yum remove'
+alias pmq='rpm -qa'
+unset -f c; c() {
+  cd $@
+  ls --color=no -F
+}
+unset -f i; i() {
+  cd $(echo $(ls -Fd ../*$1* | grep "/$") | awk '{print $1}')
+  ls --color=no -F
+}
+
+unset -f v; v() {
+  if [[ -n $(which vim 2> /dev/null) ]]
+  then
+      vim -p $@
+  else
+      vi $@
+  fi
+}
+
+unset -f pf; pf() {
+  echo $(pwd)/$(echo $@)
+}
+unset -f gsc; gsc() {
+    if [[ -e $(which rg) ]]
+    then
+        find . -type f ! -name '*.*' | xargs grep --color=auto $@
+        rg -tpy -tc -tcpp -tconfig -tjs -tjava -thtml -txml -tphp -tcs -tkotlin -tjson -tyaml -tsql -tcmake -tmake -tmd -tsh $@
+    else
+        find . -type f | tr "\n" "\0" | xargs -0 grep --color=auto $@
+    fi
+}
+unset -f mvb; mvb(){
+    if [[ -e $1 ]]
+    then
+        if [[ $1 == *"_bk_20"* ]]
+        then
+            ori_name=$(echo $1 | sed -e 's/_bk_20.*$//')
+            mv $1 $ori_name
+        else
+            local thisdir=$(pwd)
+            local fldr=$(dirname $1)
+            local bnm=$(basename $1)
+            cd $fldr
+            mv $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
+            ls --color=no -F --group-directories-first
+            cd $thisdir
+        fi
+    fi
+}
+unset -f lg; lg(){
+    ls *"$@"*
+}
+unset -f cpb; cpb(){
+    if [[ -e $1 ]]
+    then
+        local thisdir=$(pwd)
+        local fldr=$(dirname $1)
+        local bnm=$(basename $1)
+        cd $fldr
+        cp -rp $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
+        ls --color=no -F --group-directories-first
+        cd $thisdir
+    fi
+}
+unset -f m5; m5() {
+    if [[ $# -eq 0 ]]
+    then
+        ls -p | grep -v / | xargs md5sum
+    else
+        md5sum $@
+    fi
+}
+
+alias    w0='watch --color -n 0 '
+alias    w1='watch --color -n 1 '
+alias    w2='watch --color -n 2 '
+alias    w3='watch --color -n 3 '
+alias    w5='watch --color -n 5 '
+alias   w10='watch --color -n 10'
+alias   w20='watch --color -n 20'
+alias   w30='watch --color -n 30'
+alias   w50='watch --color -n 50'
+alias   w60='watch --color -n 60'
+alias  w120='watch --color -n 120'
+alias  w300='watch --color -n 300'
+
+alias   w0_='watch --color -n 0 '
+alias   w1_='watch --color -n 1 '
+alias   w2_='watch --color -n 2 '
+alias   w3_='watch --color -n 3 '
+alias   w5_='watch --color -n 5 '
+alias  w10_='watch --color -n 10'
+alias  w20_='watch --color -n 20'
+alias  w30_='watch --color -n 30'
+alias  w50_='watch --color -n 50'
+alias  w60_='watch --color -n 60'
+alias w120_='watch --color -n 120'
+alias w300_='watch --color -n 300'
+
+unset -f gs; gs() {
+    git remote -v
+    echo
+    git branch -a
+    echo
+    git status -sb
+}
+
+unset -f hold; hold() {
+    while [ 1 ]
+    do
+        date
+        echo "--------------------------------------------------"
+        pwd
+        echo "--------------------------------------------------"
+        ifconfig | grep 192
+        echo "--------------------------------------------------"
+        df -h | grep root
+        echo "--------------------------------------------------"
+        sleep 1
+        clear
+    done
+}
+
+if [[ -e /sbin/ifconfig ]]
+then
+    HOSTIP=$(/sbin/ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -E '192|139|128|10.0|10.126.|172.17.0|45.126.126|103.195' | grep -v '127.0.0.1' | grep -v '172.17.0.1' | head -1)
+else
+    HOSTIP=""
+fi
+export PS1="\n$HOSTIP \u \w\n\\$ "
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
