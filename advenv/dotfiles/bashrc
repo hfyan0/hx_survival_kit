@@ -68,6 +68,7 @@ alias pmi='yum install -y'
 alias pms='yum search'
 alias pmr='yum remove'
 alias pmq='rpm -qa'
+alias poormeld="sed -e 's/ differ$//' | sed -e 's/^Files/Files differ: /g' | sed -e 's/ and / | /' | column -t -s'|' | sort"
 
 
 unset -f print_dir_info; print_dir_info() {
