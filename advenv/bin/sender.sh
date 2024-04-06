@@ -8,7 +8,10 @@ file_list=file_list.txt
 mkdir $tmpfolder
 
 while read line; do
-    cp -p "${line}" ${tmpfolder}
+    if [[ -n ${line} ]]
+    then
+        cp -p "${line}" ${tmpfolder}
+    fi
 done < $file_list
 
 tar Jcf - ${tmpfolder} | base64 > ${b64txt}
