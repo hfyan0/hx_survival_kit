@@ -69,6 +69,7 @@ alias pms='yum search'
 alias pmr='yum remove'
 alias pmq='rpm -qa'
 alias poormeld="sed -e 's/ differ$//' | sed -e 's/^Files/Files differ: /g' | sed -e 's/ and / | /' | column -t -s'|' | sort"
+alias xn='v ~/sunny/note.txt ~/sunny/work_plan.org ~/sunny/work_plan_old.org'
 
 
 unset -f print_dir_info; print_dir_info() {
@@ -273,6 +274,42 @@ unset -f ty; ty() {
     echo
     echo
     rm -f $tmpfile1
+}
+
+
+unset -f xsi; xsi() {
+    xs_base 2 $@
+}
+unset -f xs; xs() {
+    xs_base 1 $@
+}
+unset -f xs_base; xs_base() {
+    if [[ $1 -eq 1 ]]
+    then
+        local GOPT="-r -B 3 -A 5 --color=always"
+    elif [[ $1 -eq 2 ]]
+    then
+        local GOPT="-i -r -B 3 -A 5 --color=always"
+    fi
+    argm=${@:2:999}
+
+    if [[ -n $argm ]]
+    then
+        {
+            cd ~/sunny/
+                grep "$argm" \
+                *.org \
+                note.txt \
+                $GOPT; \
+            cd ~/sunny/doc; \
+                grep "$argm" \
+                *.txt \
+                $GOPT; \
+        } | \
+        sed -e 's/.txt//' | \
+        sed -e 's/.org//' | \
+        less -R
+    fi
 }
 
 alias    w0='watch --color -n 0 '
