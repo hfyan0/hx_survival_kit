@@ -70,6 +70,7 @@ alias pmr='yum remove'
 alias pmq='rpm -qa'
 alias poormeld="sed -e 's/ differ$//' | sed -e 's/^Files/Files differ: /g' | sed -e 's/ and / | /' | column -t -s'|' | sort"
 alias xn='v ~/sunny/note.txt ~/sunny/work_plan.org ~/sunny/work_plan_old.org'
+alias xp='xn'
 
 
 unset -f print_dir_info; print_dir_info() {
