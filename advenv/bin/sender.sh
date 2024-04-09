@@ -14,6 +14,6 @@ while read line; do
     fi
 done < $file_list
 
-tar Jcf - ${tmpfolder} | base64 > ${b64txt}
+tar Jcf - ${tmpfolder} | base64 | ./encrypt_b64.py e > ${b64txt}
 rm -rf ${tmpfolder}
 echo ${b64txt}
