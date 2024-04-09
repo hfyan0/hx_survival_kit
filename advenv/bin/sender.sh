@@ -16,3 +16,4 @@ done < $file_list
 
 tar Jcf - ${tmpfolder} | base64 > ${b64txt}
 rm -rf ${tmpfolder}
+echo ${b64txt}

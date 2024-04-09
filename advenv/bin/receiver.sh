@@ -1,9 +1,7 @@
 #!/bin/bash
 
-if [[ $# -eq 0 ]]
-then
-    echo "Usage: $(basename $0) [base64 file]"
-    exit
-fi
+tmpfile=$(mktemp)
+vim $tmpfile
 
-cat $1 | base64 --decode | tar Jxf -
+cat $tmpfile | base64 --decode | tar Jxf -
+rm -f $tmpfile
