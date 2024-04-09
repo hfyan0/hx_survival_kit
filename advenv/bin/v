@@ -25,7 +25,13 @@ else
         then
             filelist="${filelist} $f"
         else
-            filelist="${filelist} $(ls | grep $f)"
+            try="$(ls | grep $f)"
+            if [[ -n $try ]]
+            then
+                filelist="${filelist} ${try}"
+            else
+                filelist="${filelist} $f"
+            fi
         fi
     done
     $OURVIM -p $filelist
