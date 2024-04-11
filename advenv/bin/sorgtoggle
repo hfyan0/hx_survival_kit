@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+import sys
+from datetime import datetime
+
+s = ''.join([line for line in sys.stdin])
+
+if "TODO" in s:
+    sys.stdout.write(s.replace("TODO","DONE"))
+elif "DONE" in s:
+    sys.stdout.write(s.replace("DONE","TODO"))
+else:
+    fields = [x for x in s.strip().split() if x[0] != '*']
+    print(f"* TODO {' '.join(fields[1:])} :{fields[0]}:")
+    print(f"  SCHEDULED: <{datetime.strftime(datetime.now(), '%Y-%m-%d %a %H:%M')}>")

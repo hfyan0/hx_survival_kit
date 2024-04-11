@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import sys
+
+
+def proc_line(s):
+    def proc_line_impl(sin, sout, mem):
+        if not sin:
+            # final touch
+            soutltrimmed = sout.lstrip()
+            if soutltrimmed[0] != '-':
+                return ' '*(len(sout)-len(soutltrimmed)) + "- [ ] " + soutltrimmed
+            else:
+                return sout
+        c = sin[0]
+
+        if mem[-2:] == "- " and c != '[':
+            return proc_line_impl(sin[1:], sout + "[ ] " + c, "")
+        elif mem[-3:] == "- [" and c in ['x','o']:
+            return proc_line_impl(sin[1:], sout + c.upper(), "")
+        else:
+            return proc_line_impl(sin[1:], sout + c, mem + c)
+
+    return proc_line_impl(s, "", "")
+
+
+for line in sys.stdin:
+    sys.stdout.write(proc_line(line))
