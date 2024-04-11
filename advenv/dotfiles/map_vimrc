@@ -333,7 +333,7 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
 " ---------------------------------------------------------------------------------------------------
 " org-mode
 " ---------------------------------------------------------------------------------------------------
- nnoremap <Leader>ct     V:!~/.advend/bin/sorgtoggle<cr>
- vnoremap <Leader>ct     :!~/.advend/bin/sorgtoggle<cr>
- nnoremap <Leader>ck     V:!~/.advend/bin/sorgcheckbox<cr>
- vnoremap <Leader>ck     :!~/.advend/bin/sorgcheckbox<cr>
+ nnoremap <Leader>ct     V:!~/.advenv/bin/sorgtoggle<cr>
+ vnoremap <Leader>ct     :!~/.advenv/bin/sorgtoggle<cr>
+ nnoremap <Leader>ck     V:!~/.advenv/bin/sorgcheckbox<cr>
+ vnoremap <Leader>ck     :!~/.advenv/bin/sorgcheckbox<cr>
