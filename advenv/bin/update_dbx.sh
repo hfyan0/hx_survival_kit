@@ -14,7 +14,9 @@ do
     echo
     md5sum $file1 $file2
     echo
-    if [[ $(md5sum $file1 | awk '{print $1}') != $(md5sum $file1 | awk '{print $1}') ]]
+    vimdiff $file1 $file2
+
+    if [[ $(md5sum $file1 | awk '{print $1}') != $(md5sum $file2 | awk '{print $1}') ]]
     then
         echo "Overwrite with $file1 ? [yes|N]"
         read user_input
@@ -25,5 +27,4 @@ do
             md5sum $file1 $file2
         fi
     fi
-    vimdiff $file1 $file2
 done
