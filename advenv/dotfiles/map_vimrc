@@ -321,7 +321,7 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
 " ---------------------------------------------------------------------------------------------------
 " source abbreviations
 " ---------------------------------------------------------------------------------------------------
- nnoremap <Leader>2      <esc>:abclear<cr><esc>:source ~/.advenv/dotfiles/abbrev<cr><esc>:source ~/.advenv/dotfiles/abbrev2<cr>
+ nnoremap <Leader>2      <esc>:abclear<cr><esc>:source ~/.advenv/dotfiles/abbrev<cr>
  nnoremap <Leader>3      <esc>:abclear<cr>
 
 " ---------------------------------------------------------------------------------------------------
@@ -329,3 +329,11 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
 " ---------------------------------------------------------------------------------------------------
   vnoremap <Leader>cu     sHAHAHAHAHA<esc>Go<esc>pV!~/.advenv/bin/scap<cr>0d$i<backspace><esc>/HAHAHAHAHA<cr>PV:s/HAHAHAHAHA//<cr>
   nnoremap <Leader>cu     V!~/.advenv/bin/scap<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" org-mode
+" ---------------------------------------------------------------------------------------------------
+ nnoremap <Leader>ct     V:!~/.advend/bin/sorgtoggle<cr>
+ vnoremap <Leader>ct     :!~/.advend/bin/sorgtoggle<cr>
+ nnoremap <Leader>ck     V:!~/.advend/bin/sorgcheckbox<cr>
+ vnoremap <Leader>ck     :!~/.advend/bin/sorgcheckbox<cr>
