@@ -12,6 +12,7 @@ do
     file1=$f
     file2=$(cat file_list.txt | grep $(basename $f))
     echo
+    echo "=============================="
     md5sum $file1 $file2
     echo
     vimdiff $file1 $file2
@@ -23,8 +24,10 @@ do
         if [[ $user_input == "yes" || $user_input == "YES" ]]
         then
             cat $file1 > $file2
-            echo "$file2 was Overwritten"
+            echo "$file2 was overwritten"
             md5sum $file1 $file2
+            echo "Press Enter to continue..."
+            read
         fi
     fi
 done
