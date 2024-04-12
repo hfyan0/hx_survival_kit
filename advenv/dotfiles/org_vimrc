@@ -1,0 +1,4 @@
+source ~/.advenv/dotfiles/vimrc
+set norelativenumber
+set nonumber
+set nowrap
