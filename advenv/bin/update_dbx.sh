@@ -19,9 +19,9 @@ do
 
     if [[ $(md5sum $file1 | awk '{print $1}') != $(md5sum $file2 | awk '{print $1}') ]]
     then
-        echo "Overwrite with $file1 ? [yes|N]"
+        echo "Overwrite with $file1 ? [y|N]"
         read user_input
-        if [[ $user_input == "yes" || $user_input == "YES" ]]
+        if [[ $user_input == "y" || $user_input == "Y" ]]
         then
             cat $file1 > $file2
             echo "$file2 was overwritten"
