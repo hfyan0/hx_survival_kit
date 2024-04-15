@@ -43,6 +43,9 @@ def proc(entry, width, align):
 input_lines = [row for row in sys.stdin]
 initial_indentation = len(input_lines[0]) - len(input_lines[0].lstrip())
 
+if input_lines[0].lstrip()[0] != '|' and input_lines[0].rstrip()[-1] != '|':
+    input_lines = [ '|'+row+'|' for row in input_lines ]
+
 rows = [[el.strip() for el in row.split('|')] for row in input_lines if row.strip()]
 
 
