@@ -192,6 +192,9 @@ unset -f ff; ff() {
       rm -f $tmpfile2
   fi
 }
+unset -f gg; gg() {                                                                                                 
+    grep --color=auto "$@" . -r
+}
 unset -f pf; pf() {
   echo $(pwd)/$(echo $@)
 }
