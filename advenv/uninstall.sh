@@ -12,5 +12,6 @@ unlink $HOME/.vim
 unlink $HOME/.tigrc
 unlink $HOME/.tmux.conf
 unlink $HOME/.gitconfig
+unlink $HOME/.ctagsrc
 
 rm -rf $HOME/.advenv

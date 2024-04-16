@@ -1,0 +1,4 @@
+--languages=C,C++
+--langmap=C:.c.h
+--regex-C=/^[ \t]*#[ \t]*include[ \t]*<([^>]+)>/\1/h,headers/
+--regex-C=/^[ \t]*#[ \t]*include[ \t]*"([^"]+)"/\1/h,headers/

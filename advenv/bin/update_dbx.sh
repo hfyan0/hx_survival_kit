@@ -11,6 +11,12 @@ for f in $folder/*
 do
     file1=$f
     file2=$(cat file_list.txt | grep $(basename $f))
+
+    if [[ -z $file2 ]]
+    then
+        continue
+    fi
+
     echo
     echo "=============================="
     md5sum $file1 $file2
