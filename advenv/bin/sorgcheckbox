@@ -15,8 +15,15 @@ def proc_line(s):
 
         if mem[-2:] == "- " and c != '[':
             return proc_line_impl(sin[1:], sout + "[ ] " + c, "")
-        elif mem[-3:] == "- [" and c in ['x','o']:
-            return proc_line_impl(sin[1:], sout + c.upper(), "")
+        elif mem[-3:] == "- [":
+            if c in ['x','o']:
+                return proc_line_impl(sin[1:], sout + c.upper(), "")
+            elif c == 'X':
+                return proc_line_impl(sin[1:], sout + " ", "")
+            elif c == ' ':
+                return proc_line_impl(sin[1:], sout + "X", "")
+            else:
+                return proc_line_impl(sin[1:], sout + c, mem + c)
         else:
             return proc_line_impl(sin[1:], sout + c, mem + c)
 
