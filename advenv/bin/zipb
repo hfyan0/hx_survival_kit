@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source "$HOME/.advenv/bin/ok_failed.sh"
+
+FILENAME=$(basename $1)_$(date +'%Y%m%d_%H%M%S').zip
+if [[ -e $1 ]]
+then
+    exec_print_result "zip -9r $FILENAME $1" "Compressing file: "
+    exec_print_result "unzip -t $FILENAME"   "Testing file: "
+    echo
+    echo "--------------------------------------------------"
+    ls --color=no --group-directories-first
+fi
