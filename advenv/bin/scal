@@ -297,29 +297,32 @@ def right_justify(s,totlen):
 
 def scal_format(dt, tdy):
     wkd = dt.isoweekday() % 7
-    # output_str = ("=" if dt.day == 1 else "") + str(dt.day)
-    output_str = str(dt.day)
-    output_str = right_justify(output_str,2)
+    fmt_day = right_justify(str(dt.day),2)
     holiday = False
-    if wkd == 0:
-        output_str = in_colour(output_str,Red)
-        holiday = True
-    if dt in hk_holiday_list:
-        output_str = in_colour(output_str,BRed)
-        holiday = True
-    if dt in cn_holiday_list:
-        output_str = in_colour(output_str,Cyan)
-        holiday = True
-    if dt in us_holiday_list:
-        output_str = in_colour(output_str,Blue)
-        holiday = True
+    output_str = ""
+
     if dt == tdy:
-        if not holiday:
-            output_str = in_colour(output_str,On_White)
-            output_str = in_colour(output_str,Black) # default to black first
-            output_str = output_str + " "
-        else:
-            output_str = output_str + in_colour('<',BYellow)
+        output_str = in_colour('[',BYellow) + output_str
+    else:
+        output_str = in_colour(' ',White) + output_str
+
+    if wkd == 0:
+        output_str += in_colour(fmt_day,Red)
+        holiday = True
+    elif dt in hk_holiday_list:
+        output_str += in_colour(fmt_day,BRed)
+        holiday = True
+    elif dt in cn_holiday_list:
+        output_str += in_colour(fmt_day,Cyan)
+        holiday = True
+    elif dt in us_holiday_list:
+        output_str += in_colour(fmt_day,Blue)
+        holiday = True
+    else:
+        output_str += fmt_day
+
+    if dt == tdy:
+        output_str = output_str + in_colour(']',BYellow)
     else:
         output_str = output_str + in_colour(' ',White)
 
@@ -353,9 +356,9 @@ elif mode == "specific_month":
     begindate = today - timedelta(days = 62)
     date_list = [ begindate + timedelta(days = x) for x in range(160)]
 
-init_list = [ right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
+init_list = [ right_justify("",4) for x in range(begindate.isoweekday() % 7) ]
 body_str = ''.join(init_list + [ scal_format(x, today)  for x in  date_list ])
-print (''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
+print (''.join([ right_justify(x,3)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
 print
 print (body_str)
 
