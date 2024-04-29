@@ -295,7 +295,7 @@ def justify_str(s,totlen,left_right="right",padchar=' '):
 def right_justify(s,totlen):
     return justify_str(s,totlen,"right")
 
-def scal_format(dt, tdy):
+def scal_format(dt, next_dt, tdy):
     wkd = dt.isoweekday() % 7
     fmt_day = right_justify(str(dt.day),2)
     holiday = False
@@ -304,7 +304,7 @@ def scal_format(dt, tdy):
     if dt == tdy:
         output_str = in_colour('[',BYellow) + output_str
     else:
-        output_str = in_colour(' ',White) + output_str
+        output_str = output_str
 
     if wkd == 0:
         output_str += in_colour(fmt_day,Red)
@@ -323,7 +323,7 @@ def scal_format(dt, tdy):
 
     if dt == tdy:
         output_str = output_str + in_colour(']',BYellow)
-    else:
+    elif next_dt != tdy:
         output_str = output_str + in_colour(' ',White)
 
     if wkd == 6:
@@ -356,9 +356,11 @@ elif mode == "specific_month":
     begindate = today - timedelta(days = 62)
     date_list = [ begindate + timedelta(days = x) for x in range(160)]
 
-init_list = [ right_justify("",4) for x in range(begindate.isoweekday() % 7) ]
-body_str = ''.join(init_list + [ scal_format(x, today)  for x in  date_list ])
-print (''.join([ right_justify(x,3)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
+date_list = zip(date_list[:-1],date_list[1:])
+
+init_list = [ right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
+body_str = ''.join(init_list + [ scal_format(x, y, today)  for x,y in  date_list ])
+print (''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
 print
 print (body_str)
 
