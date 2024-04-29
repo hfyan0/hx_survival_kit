@@ -1,6 +1,7 @@
 #!/bin/bash
 
 tmpfile=$(mktemp)
+tmpfile2=$(mktemp).gpg
 
 if [[ $# -eq 0 ]]
 then
@@ -9,6 +10,7 @@ else
     cat $1 > $tmpfile
 fi
 
-cat $tmpfile | ./encrypt.py d | base64 --decode | tar Jxf -
+cat $tmpfile | ./encrypt.py d | base64 --decode > $tmpfile2
+gpg -d $tmpfile2 | tar Jxf -
 
-rm -f $tmpfile
+rm -f $tmpfile $tmpfile2
