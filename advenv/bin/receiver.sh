@@ -11,6 +11,6 @@ else
 fi
 
 cat $tmpfile | ./encrypt.py d | base64 --decode > $tmpfile2
-gpg -d $tmpfile2 | tar Jxf -
+gpg --ignore-mdc-error -d $tmpfile2 | tar Jxf -
 
 rm -f $tmpfile $tmpfile2
