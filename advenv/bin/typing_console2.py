@@ -110,6 +110,25 @@ def update_state(state,k,width,height,abbrev_dict):
     elif k == 11: # C-k
         ns = s[:pos]
         npos = pos
+    elif k == 14: # C-n
+        loc = s[:pos].rfind(' ', 0, pos-1)
+        cur_prefix = s[:pos].strip() \
+                     if loc < 0 \
+                     else s[loc:pos].strip()
+        if not cur_prefix:
+            ns = s
+            npos = pos
+        else:
+            words = [ (x[:len(cur_prefix)].strip(),
+                       x[len(cur_prefix):].strip())
+                       for x in s.split(' ') ]
+            ns = s
+            npos = pos
+            for prefix,suffix in words:
+                if prefix == cur_prefix:
+                    ns = s[:pos] + suffix + s[pos:]
+                    npos = pos + len(suffix)
+                    break
     elif k == 21: # C-u
         ns = s[pos:]
         npos = 0
