@@ -126,6 +126,23 @@ hk_holiday_list = [
                     date(2024,10,11),
                     date(2024,12,25),
                     date(2024,12,26),
+                    date(2025, 1, 1),
+                    date(2025, 1,29),
+                    date(2025, 1,30),
+                    date(2025, 1,31),
+                    date(2025, 4, 4),
+                    date(2025, 4,18),
+                    date(2025, 4,19),
+                    date(2025, 4,21),
+                    date(2025, 5, 1),
+                    date(2025, 5, 5),
+                    date(2025, 5,31),
+                    date(2025, 7, 1),
+                    date(2025,10, 1),
+                    date(2025,10, 7),
+                    date(2025,10,29),
+                    date(2025,12,25),
+                    date(2025,12,26),
                     ]
 
 cn_holiday_list = [ date(2018,  1,  1),
@@ -163,7 +180,7 @@ cn_holiday_list = [ date(2018,  1,  1),
                     date(2019, 10,  3),
                     date(2019, 10,  4),
                     date(2019, 10,  7),
-                    date(2019, 10,  7)
+                    date(2019, 10,  7),
                     ]
 
 us_holiday_list = [ date(2018,  1,  1),
@@ -240,7 +257,30 @@ us_holiday_list = [ date(2018,  1,  1),
                     date(2024,  9,  2),
                     date(2024, 11, 28),
                     date(2024, 12, 25),
+                    date(2025,  1,  1),
+                    date(2025,  1, 20),
+                    date(2025,  2, 17),
+                    date(2025,  4, 18),
+                    date(2025,  5, 26),
+                    date(2025,  6, 26),
+                    date(2025,  7,  4),
+                    date(2025,  9,  1),
+                    date(2025, 11, 27),
+                    date(2025, 12, 25),
                     ]
+
+mth_code = {  1 : "Jan",
+              2 : "Feb",
+              3 : "Mar",
+              4 : "Apr",
+              5 : "May",
+              6 : "Jun",
+              7 : "Jul",
+              8 : "Aug",
+              9 : "Sep",
+             10 : "Oct",
+             11 : "Nov",
+             12 : "Dec"  }
 
 ###################################################
 # colour
@@ -303,6 +343,8 @@ def scal_format(dt, next_dt, tdy):
 
     if dt == tdy:
         output_str = in_colour('[',BYellow) + output_str
+    elif wkd == 0:
+        output_str = ' ' + output_str
     else:
         output_str = output_str
 
@@ -327,46 +369,40 @@ def scal_format(dt, next_dt, tdy):
         output_str = output_str + in_colour(' ',White)
 
     if wkd == 6:
-        wks_from_now = in_colour(right_justify(int(math.floor((dt - tdy).total_seconds() / 86400 / 7)),3)+" w",BBlack)
+        # wks_from_now_int = int(math.floor((dt - tdy).total_seconds() / 86400 / 7))
+        # if wks_from_now_int <= 12:
+        #     wks_from_now = right_justify(wks_from_now_int,3)+" w"
+        # else:
+        #     wks_from_now = ""
         if dt >= tdy and dt < tdy + timedelta(days = 7):
-            mth = in_colour(right_justify(dt.month,5),BYellow)
+            mth = in_colour(right_justify(mth_code[dt.month],3),BYellow)
         else:
-            mth = in_colour(right_justify(dt.month,5),Color_Off)
-        output_str = output_str + wks_from_now + mth + "\n"
+            mth = in_colour(right_justify(mth_code[dt.month],3),BBlack)
+        output_str = output_str + mth + "\n"
 
     return output_str
 
 if len(sys.argv) == 1:
-    mode = "current"
-elif len(sys.argv) == 2:
-    mode = "year"
-elif len(sys.argv) == 3:
-    mode = "specific_month"
-
-if mode == "current":
+    # current
     today = datetime.now().date()
-    begindate = today - timedelta(days = 62)
+    begindate = today - timedelta(days = 77)
     date_list = [ begindate + timedelta(days = x) for x in range(160)]
-if mode == "year":
-    today = date(int(sys.argv[1]),1,1)
-    begindate = today - timedelta(days = 31)
-    date_list = [ begindate + timedelta(days = x) for x in range(365+31*2)]
-elif mode == "specific_month":
-    today = date(int(sys.argv[1]),int(sys.argv[2]),15)
-    begindate = today - timedelta(days = 62)
-    date_list = [ begindate + timedelta(days = x) for x in range(160)]
+elif len(sys.argv) == 2:
+    if int(sys.argv[1]) > 1900:
+        # year
+        today = date(1900,1,1)
+        begindate = date(int(sys.argv[1]),1,1) - timedelta(days = 31)
+        date_list = [ begindate + timedelta(days = x) for x in range(365+31*2)]
+    else:
+        # specific_month
+        today = date(1900,1,1)
+        begindate = date(datetime.now().date().year,int(sys.argv[1]),15) - timedelta(days = 62)
+        date_list = [ begindate + timedelta(days = x) for x in range(160)]
 
 date_list = zip(date_list[:-1],date_list[1:])
 
-init_list = [ right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
+init_list = [ (' ' if x == 0 else '') + right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
 body_str = ''.join(init_list + [ scal_format(x, y, today)  for x,y in  date_list ])
-print (''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]))
+print (in_colour(' ' + ''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]), BWhite))
 print
 print (body_str)
-
-# elif mode == "year":
-#     bashCommand = "cal " + sys.argv[1]
-#     import subprocess
-#     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-#     output, error = process.communicate()
-#     print (str(output).replace("\\n","\n"))
