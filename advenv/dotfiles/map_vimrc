@@ -337,3 +337,10 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
  vnoremap <Leader>ct     :!~/.advenv/bin/sorgtoggle<cr>
  nnoremap <Leader>ck     V:!~/.advenv/bin/sorgcheckbox<cr>
  vnoremap <Leader>ck     :!~/.advenv/bin/sorgcheckbox<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" our own clipboard that can be shared anywhere, through Dropbox
+" ---------------------------------------------------------------------------------------------------
+ nmap <Leader>y     V!~/.advenv/bin/st 9 y<cr>
+ vmap <Leader>y      !~/.advenv/bin/st 9 y<cr>
+ nmap <Leader>p     <esc>o<esc>:r!~/.advenv/bin/st 9<cr>
