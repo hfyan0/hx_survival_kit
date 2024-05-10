@@ -35,6 +35,13 @@ then
     exit
 fi
 
+if [[ $fx_arg == "y" ]]
+then
+    awk '{print}' > $ACTIVEBUFFERS
+    cat $ACTIVEBUFFERS
+    exit
+fi
+
 if [[ $fx_arg == "a" ]]
 then
     awk '{print}' >> $ACTIVEBUFFERS
