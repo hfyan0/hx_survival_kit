@@ -272,9 +272,11 @@ unset -f t; t() {
     fi     
 }
 unset -f ty; ty() {
+    st_tmpfile1="~/.advenv/tmp/stmp_$(whoami)_1"
     tmpfile1=$(mktemp)
     python3 ~/.advenv/bin/typing_console2.py $tmpfile1
-    cat $tmpfile1
+    cat $tmpfile1 >> $st_tmpfile1
+    cat $st_tmpfile1
     echo
     echo
     rm -f $tmpfile1
