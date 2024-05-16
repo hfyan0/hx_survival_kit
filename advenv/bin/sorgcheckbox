@@ -3,31 +3,31 @@ import sys
 
 
 def proc_line(s):
-    def proc_line_impl(sin, sout, mem):
+    def proc_line_impl(sin, sout, mem, applied):
         if not sin:
             # final touch
             soutltrimmed = sout.lstrip()
-            if soutltrimmed[0] != '-':
+            if not applied and soutltrimmed[0] != '-':
                 return ' '*(len(sout)-len(soutltrimmed)) + "- [ ] " + soutltrimmed
             else:
                 return sout
         c = sin[0]
 
-        if mem[-2:] == "- " and c != '[':
-            return proc_line_impl(sin[1:], sout + "[ ] " + c, "")
-        elif mem[-3:] == "- [":
+        if not applied and mem[-2:] == "- " and c != '[':
+            return proc_line_impl(sin[1:], sout + "[ ] " + c, "", True)
+        elif not applied and mem[-3:] == "- [":
             if c in ['x','o']:
-                return proc_line_impl(sin[1:], sout + c.upper(), "")
+                return proc_line_impl(sin[1:], sout + c.upper(), "", True)
             elif c == 'X':
-                return proc_line_impl(sin[1:], sout + " ", "")
+                return proc_line_impl(sin[1:], sout + " ", "", True)
             elif c == ' ':
-                return proc_line_impl(sin[1:], sout + "X", "")
+                return proc_line_impl(sin[1:], sout + "X", "", True)
             else:
-                return proc_line_impl(sin[1:], sout + c, mem + c)
+                return proc_line_impl(sin[1:], sout + c, mem + c, applied)
         else:
-            return proc_line_impl(sin[1:], sout + c, mem + c)
+            return proc_line_impl(sin[1:], sout + c, mem + c, applied)
 
-    return proc_line_impl(s, "", "")
+    return proc_line_impl(s, "", "", False)
 
 
 for line in sys.stdin:
