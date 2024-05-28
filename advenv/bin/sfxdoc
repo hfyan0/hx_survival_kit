@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+import sys
+
+declaration = ' '.join([line.strip() for line in sys.stdin])
+
+function_name = declaration[0:declaration.find('(')].split()[-1]
+param_decl_list = declaration[(declaration.find('(')+1):declaration.find(')')].split(',')
+param_list = [ x.split()[-1] for x in param_decl_list ]
+
+len_param = max([ len(p) for p in param_list ])
+
+
+print()
+print("/"*80)
+print(f"//  Function: {function_name}")
+print("//")
+print("//  Description:")
+print("//  ..........")
+print("//")
+print("//  Parameters:")
+
+for p in param_list:
+    print(f"//      {p} {' '*(len_param-len(p))}(IN/OUT) - ..........")
+
+print("//")
+print("//  Return Value:")
+print("//      ..........")
+print("/"*80)
+
+print(declaration)

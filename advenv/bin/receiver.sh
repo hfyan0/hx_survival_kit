@@ -10,6 +10,12 @@ else
     cat $1 > $tmpfile
 fi
 
+if [[ -z $(cat $tmpfile) ]]
+then
+    echo "Missing data. Exiting..."
+    exit
+fi
+
 cat $tmpfile | ./encrypt.py d | base64 --decode > $tmpfile2
 gpg --ignore-mdc-error -d $tmpfile2 | tar Jxf -
 
