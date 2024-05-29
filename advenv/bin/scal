@@ -369,15 +369,15 @@ def scal_format(dt, next_dt, tdy):
         output_str = output_str + in_colour(' ',White)
 
     if wkd == 6:
-        # wks_from_now_int = int(math.floor((dt - tdy).total_seconds() / 86400 / 7))
-        # if wks_from_now_int <= 12:
-        #     wks_from_now = right_justify(wks_from_now_int,3)+" w"
-        # else:
-        #     wks_from_now = ""
-        if dt >= tdy and dt < tdy + timedelta(days = 7):
-            mth = in_colour(right_justify(mth_code[dt.month],3),BYellow)
+        if dt.day >= 14 and dt.day <= 20:
+            if dt.month == tdy.month:
+                mth = in_colour(right_justify(mth_code[dt.month],3),BYellow)
+            else:
+                mth = in_colour(right_justify(mth_code[dt.month],3),BWhite)
+        elif dt.day <= 7:
+            mth = "---"
         else:
-            mth = in_colour(right_justify(mth_code[dt.month],3),BBlack)
+            mth = ""
         output_str = output_str + mth + "\n"
 
     return output_str
