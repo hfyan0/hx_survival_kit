@@ -8,7 +8,7 @@ from collections import namedtuple
 State = namedtuple('State', 'text pos')
 
 def expand_last_word(s,abbrev_dict):
-    risa = reversed([(c.isalpha() or c.isdigit()) for c in s])
+    risa = reversed([(c.isalpha() or c.isdigit() or c == '_') for c in s])
     risnota = [i for i,a in enumerate(risa) if not a]
 
     if not risnota:
