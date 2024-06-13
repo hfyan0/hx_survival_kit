@@ -18,4 +18,5 @@ grep -v "Uploading zip to" | \
 grep -v "Unzipping changed files..." | \
 grep -v "Checking exec permissions..." | \
 grep -v "Uploading changed files finished successfully." | \
-grep -v "Entering directory"
+grep -v "Entering directory" | \
+sed -e 's/"\/usr\/bin\/gmake"/\/usr\/bin\/gmake/'
