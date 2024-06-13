@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cat - | \
+grep -v " in the future" | \
+grep -v " Clock skew detected" | \
+grep -v "BUILD SUCCESSFUL" | \
+grep -v "CLEAN SUCCESSFUL" | \
+grep -v "^cd " | \
+grep -v "Leaving directory" | \
+grep -v "Copying project files to" | \
+grep -v "Building project files list..." | \
+grep -v "Checking directory structure..." | \
+grep -v "Checking previously uploaded files..." | \
+grep -v "Checking links..." | \
+grep -v "Uploading changed files:" | \
+grep -v "changed files..." | \
+grep -v "Uploading zip to" | \
+grep -v "Unzipping changed files..." | \
+grep -v "Checking exec permissions..." | \
+grep -v "Uploading changed files finished successfully." | \
+grep -v "Entering directory"
