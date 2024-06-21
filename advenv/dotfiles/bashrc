@@ -193,7 +193,7 @@ unset -f ff; ff() {
   fi
 }
 unset -f gg; gg() {                                                                                                 
-    grep --color=auto "$@" . -r
+    grep -B 1 -A 1 --color=auto "$@" . -r
 }
 unset -f pf; pf() {
   echo $(pwd)/$(echo $@)
