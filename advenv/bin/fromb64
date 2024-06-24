@@ -1,0 +1,28 @@
+#!/bin/bash
+
+echo -n "Enter original type [1=zip|2=file]: "
+read resp
+
+if [[ $resp -eq 1 ]]
+then
+    b64=$1
+    pwd=$(pwd)
+    tmpfolder=$(mktemp -d)
+    mv ${b64} ${tmpfolder}
+    cd ${tmpfolder}
+    cat ${b64} | base64 --decode > tmp.zip
+    unzip tmp.zip
+    rm -rf tmp.zip
+    cd ..
+    mv ${tmpfolder} ${pwd}
+    echo ${tmpfolder}
+elif [[ $resp -eq 2 ]]
+then
+    echo -n "Enter Output Filename: "
+    read outfile
+    if [[ -n $outfile ]]
+    then
+        b64=$1
+        cat ${b64} | base64 --decode > $outfile
+    fi
+fi

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -d $1 ]]
+then
+    indir=${1%/}
+    zip -r ${indir}.zip ${indir} > /dev/null 2>&1
+    cat ${indir}.zip | base64 > ${indir}.b64.txt
+    echo ${indir}.b64.txt
+    rm -f ${indir}.zip
+elif [[ -f $1 ]]
+then
+    infile=$1
+    cat ${infile} | base64 > ${infile}.b64.txt
+    echo ${infile}.b64.txt
+fi
