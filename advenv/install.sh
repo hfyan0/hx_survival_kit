@@ -17,6 +17,7 @@ ln -s $HOME/.advenv/dotfiles/tigrc $HOME/.tigrc
 ln -s $HOME/.advenv/dotfiles/tmux.conf $HOME/.tmux.conf
 ln -s $HOME/.advenv/dotfiles/gitconfig $HOME/.gitconfig
 ln -s $HOME/.advenv/dotfiles/ctagsrc $HOME/.ctagsrc
+ln -s $HOME/.advenv/dotfiles/dir_colors $HOME/.dir_colors
 ln -s $HOME/.advenv/local/git_2.30.2/bin/git $HOME/.advenv/bin/git
 ln -s $HOME/.advenv/local/pandoc-3.1.11.1/bin/pandoc $HOME/.advenv/bin/pandoc
 ln -s $HOME/.advenv/bin/fromdos $HOME/.advenv/bin/todoes

@@ -13,5 +13,6 @@ unlink $HOME/.tigrc
 unlink $HOME/.tmux.conf
 unlink $HOME/.gitconfig
 unlink $HOME/.ctagsrc
+unlink $HOME/.dir_colors
 
 rm -rf $HOME/.advenv
