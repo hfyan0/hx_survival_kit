@@ -14,4 +14,4 @@ fi
 
 rm -f $TMPFILE
 
-ls --time-style +"%Y-%m-%d %H:%M:%S" -lh --group-directories-first
+ls --color=auto --time-style +"%Y-%m-%d %H:%M:%S" -lh --group-directories-first

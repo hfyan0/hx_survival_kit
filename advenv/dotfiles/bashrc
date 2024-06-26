@@ -12,12 +12,12 @@ alias mv='mv -i'
 alias h='head'
 alias t='tail'
 alias vd='nvim -d'
-alias l='ls --color=never -F --group-directories-first'
-alias ll='ls -lh --color=never -F --group-directories-first'
-alias lll='ls -l --color=never -F --group-directories-first'
-alias lla='ls -lha --color=never -F --group-directories-first'
-alias lls='ls --time-style +"%Y-%m-%d %H:%M:%S" -lh --sort=size --color=never --group-directories-first'
-alias ltr='ls --time-style +"%Y-%m-%d %H:%M:%S" -lthr --sort=time --color=never --group-directories-first'
+alias l='ls --color=auto --group-directories-first'
+alias ll='ls -lh --color=auto --group-directories-first'
+alias lll='ls -l --color=auto --group-directories-first'
+alias lla='ls -lha --color=auto --group-directories-first'
+alias lls='ls --time-style +"%Y-%m-%d %H:%M:%S" -lh --sort=size --color=auto --group-directories-first'
+alias ltr='ls --time-style +"%Y-%m-%d %H:%M:%S" -lthr --sort=time --color=auto --group-directories-first'
 alias C='cat'
 alias ch7='chmod 755'
 alias ch6='chmod 644'
@@ -44,13 +44,13 @@ alias xask9='awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill -9'
 alias xall='sed -e "s/^\s\+//" | tr "\n" "\0" | xargs -0 ls -lh --color=auto'
 alias xalll='sed -e "s/^\s\+//" | tr "\n" "\0" | xargs -0 ls -ll --color=auto'
 alias xal='tr "\n" "\0" | xargs -0 ls -lh --color=auto'
-alias u='cd ..; ls --color=never -F --group-directories-first'
-alias uu='cd ../..; ls --color=never -F --group-directories-first'
-alias uuu='cd ../../..; ls --color=never -F --group-directories-first'
-alias uuuu='cd ../../../..; ls --color=never -F --group-directories-first'
-alias uuuuu='cd ../../../../..; ls --color=never -F --group-directories-first'
-alias uuuuuu='cd ../../../../../..; ls --color=never -F --group-directories-first'
-alias uuuuuuu='cd ../../../../../../..; ls --color=never -F --group-directories-first'
+alias u='cd ..; ls --color=auto --group-directories-first'
+alias uu='cd ../..; ls --color=auto --group-directories-first'
+alias uuu='cd ../../..; ls --color=auto --group-directories-first'
+alias uuuu='cd ../../../..; ls --color=auto --group-directories-first'
+alias uuuuu='cd ../../../../..; ls --color=auto --group-directories-first'
+alias uuuuuu='cd ../../../../../..; ls --color=auto --group-directories-first'
+alias uuuuuuu='cd ../../../../../../..; ls --color=auto --group-directories-first'
 alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
@@ -85,9 +85,9 @@ unset -f print_dir_info; print_dir_info() {
 
     if [[ $(ls | wc -l) -lt 100 ]]
     then
-        ls -F --color=never --group-directories-first
+        ls --color=auto --group-directories-first
     else
-        ls -F --group-directories-first
+        ls --group-directories-first
     fi
 
     echo -e -n "$YELLOW"
@@ -160,7 +160,7 @@ unset -f rf; rf() {
     else
         rm -rf $@
     fi
-    ls --color=never -F --group-directories-first
+    ls --color=auto --group-directories-first
 }
 unset -f rd; rd() {
     if [[ $@ == "." ]]
@@ -171,7 +171,7 @@ unset -f rd; rd() {
     else
         rmdir $@
     fi
-    ls --color=never -F --group-directories-first
+    ls --color=auto --group-directories-first
 }
 
 unset -f ff; ff() {
@@ -220,7 +220,7 @@ unset -f mvb; mvb(){
             local bnm=$(basename $1)
             cd $fldr
             mv $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
-            ls --color=never -F --group-directories-first
+            ls --color=auto --group-directories-first
             cd $thisdir
         fi
     fi
@@ -233,7 +233,7 @@ unset -f cpb; cpb(){
         local bnm=$(basename $1)
         cd $fldr
         cp -rp $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
-        ls --color=never -F --group-directories-first
+        ls --color=auto --group-directories-first
         cd $thisdir
     fi
 }

@@ -8,7 +8,7 @@ def main():
 
     is_encrypt = sys.argv[1].upper() == 'E'
 
-    cipher_file = "cipher_file.csv"
+    cipher_file = "cipher_file.txt"
     cipher_dict = {}
 
     with open(cipher_file,'r') as f:
