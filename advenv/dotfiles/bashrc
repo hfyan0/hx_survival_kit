@@ -192,7 +192,7 @@ unset -f ff; ff() {
       rm -f $tmpfile2
   fi
 }
-unset -f gg; gg() {                                                                                                 
+unset -f gg; gg() {
     grep -B 1 -A 1 --color=auto "$@" . -r
 }
 unset -f pf; pf() {
@@ -237,42 +237,42 @@ unset -f cpb; cpb(){
         cd $thisdir
     fi
 }
-unset -f h; h() {     
-    if [[ $# -eq 0 ]]     
-    then     
-        awk '{print}' | head -n 1     
-    elif [[ $# -gt 3 ]]     
-    then     
-        head $@     
-    elif [[ -f "$1" ]]     
-    then     
-        head -n 1 "$1"     
-    elif [[ ! -f "$1" && -f "$2" ]]     
-    then     
-        head -n "$1" "$2"     
-    else     
-        head -n $@     
-    fi     
-}     
-unset -f t; t() {                                                                                                
-    if [[ $# -eq 0 ]]     
-    then     
-        awk '{print}' | tail -n 1     
-    elif [[ $# -gt 3 ]]     
-    then     
-        tail $@     
-    elif [[ -f "$1" ]]     
-    then     
-        tail -n 1 "$1"     
-    elif [[ ! -f "$1" && -f "$2" ]]     
-    then     
-        tail -n "$1" "$2"     
-    else     
-        tail -n $@     
-    fi     
+unset -f h; h() {
+    if [[ $# -eq 0 ]]
+    then
+        awk '{print}' | head -n 1
+    elif [[ $# -gt 3 ]]
+    then
+        head $@
+    elif [[ -f "$1" ]]
+    then
+        head -n 1 "$1"
+    elif [[ ! -f "$1" && -f "$2" ]]
+    then
+        head -n "$1" "$2"
+    else
+        head -n $@
+    fi
+}
+unset -f t; t() {
+    if [[ $# -eq 0 ]]
+    then
+        awk '{print}' | tail -n 1
+    elif [[ $# -gt 3 ]]
+    then
+        tail $@
+    elif [[ -f "$1" ]]
+    then
+        tail -n 1 "$1"
+    elif [[ ! -f "$1" && -f "$2" ]]
+    then
+        tail -n "$1" "$2"
+    else
+        tail -n $@
+    fi
 }
 unset -f ty; ty() {
-    st_tmpfile1="~/.advenv/tmp/stmp_$(whoami)_1"
+    st_tmpfile1=~/.advenv/tmp/stmp_$(whoami)_1
     tmpfile1=$(mktemp)
     python3 ~/.advenv/bin/typing_console2.py $tmpfile1
     echo >> $st_tmpfile1
@@ -282,7 +282,6 @@ unset -f ty; ty() {
     echo
     rm -f $tmpfile1
 }
-
 
 unset -f xsi; xsi() {
     xs_base 2 $@
@@ -306,7 +305,7 @@ unset -f xs_base; xs_base() {
             cd ~/sunny/
                 grep "$argm" \
                 *.org \
-                note.txt \
+                *.txt \
                 $GOPT; \
             cd ~/sunny/doc; \
                 grep "$argm" \
@@ -370,7 +369,8 @@ unset -f gst; gst() {
     echo "--------------------------------------------------"
     git remote -v
     echo "--------------------------------------------------"
-    git log --pretty=format:"%h %as %d %s" | head -n 10 | sed -e 's/$/\n/' | sed -e '/^$/d'
+    # git log --pretty=format:"%h %as %d %s" | head -n 10 | sed -e 's/$/\n/' | sed -e '/^$/d'
+    # git log --pretty=format:"%h %as %d %s" | sed -e 's/$/\n/' | sed -e '/^$/d'
     echo "--------------------------------------------------"
     echo "branches:"
     echo $(git branch | sed -e 's/^* //') | fold -sw 50 | sed -e 's/^/  /'
@@ -503,7 +503,7 @@ alias gds='git d sunny'
 alias gsh='git_cmd_then_gst git show'
 alias gdnod='git diff --name-only development'
 alias gdnos='git diff --name-only sunny'
-alias gdno='git diff --name-only'
+alias gdno='echo; git diff --name-only'
 alias gdnom='git diff --name-only master'
 alias xaga='tr "\n" "\0" | xargs -0 git add'
 alias xagco='tr "\n" "\0" | xargs -0 git checkout'
@@ -644,7 +644,6 @@ alias grsth='git_cmd_then_gst git reset HEAD~'
 alias grst='git_cmd_then_gst git reset'
 alias ginit='git_cmd_then_gst git init'
 alias grmc='git rm --cached'
-alias gg='git grep'
 alias gmv='git_cmd_then_gst git mv'
 alias grmt='git_cmd_then_gst git remote'
 alias gba='git branch -a'
@@ -778,25 +777,25 @@ unset -f svcor; svcor() {
 
 HOST="$(hostname)"
 
-# Regular Colors                                                                                        
-Black="\[\033[0;30m\]"        # Black                                                             
-Red="\[\033[0;31m\]"          # Red                                                               
-Green="\[\033[0;32m\]"        # Green                                                             
-Yellow="\[\033[0;33m\]"       # Yellow                                                            
-Blue="\[\033[0;34m\]"         # Blue                                                              
-Purple="\[\033[0;35m\]"       # Purple                                                            
-Cyan="\[\033[0;36m\]"         # Cyan                                                              
+# Regular Colors
+Black="\[\033[0;30m\]"        # Black
+Red="\[\033[0;31m\]"          # Red
+Green="\[\033[0;32m\]"        # Green
+Yellow="\[\033[0;33m\]"       # Yellow
+Blue="\[\033[0;34m\]"         # Blue
+Purple="\[\033[0;35m\]"       # Purple
+Cyan="\[\033[0;36m\]"         # Cyan
 White="\[\033[0;37m\]"        # White
 Color_Off="\[\033[0m\]"       # Text Reset
 Color_OffRaw="\033[0m"        # Text Reset
-# Bold                                                                                                  
-BBlack="\[\033[1;30m\]"       # Black                                                             
-BRed="\[\033[1;31m\]"         # Red                                                               
-BGreen="\[\033[1;32m\]"       # Green                                                             
-BYellow="\[\033[1;33m\]"      # Yellow                                                            
-BBlue="\[\033[1;34m\]"        # Blue                                                              
-BPurple="\[\033[1;35m\]"      # Purple                                                            
-BCyan="\[\033[1;36m\]"        # Cyan                                                              
+# Bold
+BBlack="\[\033[1;30m\]"       # Black
+BRed="\[\033[1;31m\]"         # Red
+BGreen="\[\033[1;32m\]"       # Green
+BYellow="\[\033[1;33m\]"      # Yellow
+BBlue="\[\033[1;34m\]"        # Blue
+BPurple="\[\033[1;35m\]"      # Purple
+BCyan="\[\033[1;36m\]"        # Cyan
 BWhite="\[\033[1;37m\]"       # White
 
 export PS1="\n\n$BGreen$HOST$Color_Off $BYellow\u$Color_Off \w\n\\$ "
