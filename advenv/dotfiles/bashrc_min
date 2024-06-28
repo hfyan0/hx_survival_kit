@@ -175,7 +175,7 @@ unset -f fromb64; fromb64() {
         echo ${tmpfolder}
     elif [[ $resp -eq 2 ]]
     then
-        if [[ $# -eq 2 ]]
+        if [[ -n $2 ]]
         then
             outfile=$2
         else
