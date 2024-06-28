@@ -277,7 +277,7 @@ unset -f ty; ty() {
     python3 ~/.advenv/bin/typing_console2.py $tmpfile1
     echo >> $st_tmpfile1
     cat $tmpfile1 >> $st_tmpfile1
-    cat $st_tmpfile1
+    cat $st_tmpfile1 | sed -e 's/@@/\n/g'
     echo
     echo
     rm -f $tmpfile1
