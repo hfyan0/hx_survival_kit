@@ -1,0 +1,14 @@
+#!/bin/bash
+
+tmpfile=$(mktemp)
+
+cat - > $tmpfile
+
+if [[ $# -eq 1 ]]
+then
+    cat $tmpfile | sed -e 's/^| //' | sed -e 's/^|//' | fold -s | sed -e 's/^/| /'
+else
+    cat $tmpfile | fold -s
+fi
+
+rm -f $tmpfile
