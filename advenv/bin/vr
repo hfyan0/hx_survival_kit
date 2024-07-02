@@ -9,7 +9,7 @@ then
 elif [[ $# -gt 0 ]]
 then
     STR=$(echo $@ | tr ' ' '|' | tr -d '/')
-    ls | egrep "$STR" | vidir -
+    ls | grep -E "$STR" | vidir -
 fi
 
 rm -f $TMPFILE
