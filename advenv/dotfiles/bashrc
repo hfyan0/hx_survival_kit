@@ -135,17 +135,18 @@ unset -f c; c() {
     # cd directory
     ##################################################
     else
-        # FOLDER_LIST="$(ls -F | grep / | grep $1 | head -n 1)"
-        FOLDER_LIST="$({ find -L -path './*' -prune -type d | grep $1; ls -F | grep / | grep $1; } | head -n 1)"
+        tmpfile=$(mktemp)
+        bash -c "{ find -L -path './*' -prune -type d | grep $1; ls -F | grep / | grep $1; } | head -n 1" > $tmpfile
         ##################################################
         # search on the top layer first
         ##################################################
-        if [[ -n "$FOLDER_LIST" ]]
+        if [[ -n $(cat $tmpfile) ]]
         then
-            cd "$FOLDER_LIST" && print_dir_info
+            cd "$(cat $tmpfile)" && print_dir_info
         else
             cd "$(dirname $1)" && print_dir_info
         fi
+        rm -f $tmpfile
     fi
 }
 unset -f i; i() {
@@ -240,35 +241,35 @@ unset -f cpb; cpb(){
 unset -f h; h() {
     if [[ $# -eq 0 ]]
     then
-        awk '{print}' | head -n 1
+        bash -c "awk '{print}' | head -n 1"
     elif [[ $# -gt 3 ]]
     then
-        head $@
+        bash -c "head $@"
     elif [[ -f "$1" ]]
     then
-        head -n 1 "$1"
+        bash -c "head -n 1 $1"
     elif [[ ! -f "$1" && -f "$2" ]]
     then
-        head -n "$1" "$2"
+        bash -c "head -n $1 $2"
     else
-        head -n $@
+        bash -c "head -n $@"
     fi
 }
 unset -f t; t() {
     if [[ $# -eq 0 ]]
     then
-        awk '{print}' | tail -n 1
+        bash -c "awk '{print}' | tail -n 1"
     elif [[ $# -gt 3 ]]
     then
-        tail $@
+        bash -c "tail $@"
     elif [[ -f "$1" ]]
     then
-        tail -n 1 "$1"
+        bash -c "tail -n 1 $1"
     elif [[ ! -f "$1" && -f "$2" ]]
     then
-        tail -n "$1" "$2"
+        bash -c "tail -n $1 $2"
     else
-        tail -n $@
+        bash -c "tail -n $@"
     fi
 }
 unset -f ty; ty() {
@@ -369,8 +370,7 @@ unset -f gst; gst() {
     echo "--------------------------------------------------"
     git remote -v
     echo "--------------------------------------------------"
-    # git log --pretty=format:"%h %as %d %s" | head -n 10 | sed -e 's/$/\n/' | sed -e '/^$/d'
-    # git log --pretty=format:"%h %as %d %s" | sed -e 's/$/\n/' | sed -e '/^$/d'
+    bash -c "git log --pretty=format:'%h %as %d %s' | head -n 10 | sed -e 's/$/\n/' | sed -e '/^$/d'"
     echo "--------------------------------------------------"
     echo "branches:"
     echo $(git branch | sed -e 's/^* //') | fold -sw 50 | sed -e 's/^/  /'
