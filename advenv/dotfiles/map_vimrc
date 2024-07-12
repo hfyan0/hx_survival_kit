@@ -116,7 +116,8 @@ map <Leader>b <Leader><Leader>b
 " not working when there is only 1 tab
 " nnoremap <Leader>t      <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
 nnoremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
-nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
+nnoremap <C-p>          <esc>:tabnew<cr>:CtrlP<cr>
+"nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
 nnoremap <C-o>          <esc>:tabnext<cr>
 nnoremap <C-i>          <esc>:tabprev<cr>
 nnoremap <Tab>          <esc>:tabprev<cr>
@@ -327,7 +328,7 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
 " ---------------------------------------------------------------------------------------------------
 " case
 " ---------------------------------------------------------------------------------------------------
-  vnoremap <Leader>cu     sHAHAHAHAHA<esc>Go<esc>pV!~/.advenv/bin/scap<cr>0d$i<backspace><esc>/HAHAHAHAHA<cr>PV:s/HAHAHAHAHA//<cr>
+  vnoremap <Leader>cu     !~/.advenv/bin/scap<cr>
   nnoremap <Leader>cu     V!~/.advenv/bin/scap<cr>
 
 " ---------------------------------------------------------------------------------------------------
