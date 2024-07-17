@@ -312,9 +312,14 @@ unset -f xs_base; xs_base() {
                 grep "$argm" \
                 *.txt \
                 $GOPT; \
+            cd ~/sunny/doc/2024_si; \
+                grep "$argm" \
+                *.txt \
+                $GOPT; \
         } | \
         sed -e 's/.txt//' | \
         sed -e 's/.org//' | \
+        grep -v "dat_202" | \
         less -R
     fi
 }

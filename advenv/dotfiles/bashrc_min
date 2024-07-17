@@ -4,7 +4,7 @@ EDITOR="vim"
 HISTCONTROL=ignoredups:ignorespace
 unset HISTFILE
 
-unalias -a
+#unalias -a
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
