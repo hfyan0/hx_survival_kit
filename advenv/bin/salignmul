@@ -1,0 +1,15 @@
+#!/bin/bash
+
+tmpfile1=$(mktemp)
+tmpfile2=$(mktemp)
+
+cat - > $tmpfile1
+
+for s in $@
+do
+    cat $tmpfile1 | sed -e "s/$s/~/" | column -t -s \~ -o \~ | sed -e "s/~/$s/" > $tmpfile2
+    cat $tmpfile2 > $tmpfile1
+done
+
+cat $tmpfile1
+rm -f $tmpfile1 $tmpfile2
