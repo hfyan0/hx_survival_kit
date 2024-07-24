@@ -18,8 +18,7 @@
     d = difftool
 
 [merge]
-    # tool = vimdiff
-    tool = meld
+    tool = vimdiff
     conflictstyle = diff3
 
 [mergetool]
@@ -39,4 +38,4 @@
     ff = only
 
 [core]
-    editor = ~/.advenv/bin/nvim
+	editor = ~/.advenv/bin/nvim

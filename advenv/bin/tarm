@@ -5,7 +5,7 @@ source $HOME/.advenv/bin/ok_failed.sh
 
 ls_exit() {
     echo "--------------------------------------------------"
-    ls --color=no --group-directories-first
+    ls --color=auto --group-directories-first
     exit
 }
 
