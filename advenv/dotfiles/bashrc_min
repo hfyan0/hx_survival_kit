@@ -145,8 +145,8 @@ unset -f tob64; tob64() {
     then
         indir=${1%/}
         zip -9r ${indir}.zip ${indir} > /dev/null 2>&1
-        cat ${indir}.zip | base64 > ${indir}.b64.txt
-        echo ${indir}.b64.txt
+        cat ${indir}.zip | base64 > ${indir}.zip.b64.txt
+        echo ${indir}.zip.b64.txt
         rm -f ${indir}.zip
     elif [[ -f $1 ]]
     then
