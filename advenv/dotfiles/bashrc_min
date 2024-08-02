@@ -151,16 +151,31 @@ unset -f tob64; tob64() {
         rm -f ${indir}.zip
     elif [[ -f $1 ]]
     then
+        tmpdir=$(mktemp -d)
         infile=$1
-        cat ${infile} | base64 > ${infile}.b64.txt
-        echo ${infile}.b64.txt
+        cp ${infile} ${tmpdir}
+        zip -9r ${infile}.zip ${tmpdir} > /dev/null 2>&1
+        cat ${infile}.zip | base64 > ${infile}.zip.b64.txt
+        echo ${infile}.zip.b64.txt
+        rm -rf ${tmpdir}
     fi
 }
 
 unset -f fromb64; fromb64() {
     pwd=$(pwd)
-    b64input=$(mktemp)
-    vi -u NONE $b64input
+
+    if [[ -n $1 ]]
+    then
+        if [[ -f $(pwd)/$1 ]]
+        then
+            b64input=$(pwd)/$1
+        else
+            b64input=$1
+        fi
+    else
+        b64input=$(mktemp)
+        vi -u NONE $b64input
+    fi
 
     echo -n "Enter original type [1=zip|2=file]: "
     read resp
@@ -185,7 +200,11 @@ unset -f fromb64; fromb64() {
         fi
     fi
 
-    rm -f $b64input
+    if [[ -n $1 ]]
+    then
+        rm -f $b64input
+    fi
+
     cd $pwd
 }
 

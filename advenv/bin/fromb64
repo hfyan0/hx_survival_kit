@@ -1,7 +1,17 @@
 #!/bin/bash
 
-b64input=$(mktemp)
-vi -u NONE $b64input
+if [[ -n $1 ]]
+then
+    if [[ -f $(pwd)/$1 ]]
+    then
+        b64input=$(pwd)/$1
+    else
+        b64input=$1
+    fi
+else
+    b64input=$(mktemp)
+    vi -u NONE $b64input
+fi
 
 echo -n "Enter original type [1=zip|2=file]: "
 read resp
@@ -27,4 +37,7 @@ then
     fi
 fi
 
-rm -f $b64input
+if [[ -n $1 ]]
+then
+    rm -f $b64input
+fi

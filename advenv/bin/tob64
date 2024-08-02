@@ -3,13 +3,17 @@
 if [[ -d $1 ]]
 then
     indir=${1%/}
-    zip -r ${indir}.zip ${indir} > /dev/null 2>&1
+    zip -9r ${indir}.zip ${indir} > /dev/null 2>&1
     cat ${indir}.zip | base64 > ${indir}.zip.b64.txt
     echo ${indir}.zip.b64.txt
     rm -f ${indir}.zip
 elif [[ -f $1 ]]
 then
+    tmpdir=$(mktemp -d)
     infile=$1
-    cat ${infile} | base64 > ${infile}.b64.txt
-    echo ${infile}.b64.txt
+    cp ${infile} ${tmpdir}
+    zip -9r ${infile}.zip ${tmpdir} > /dev/null 2>&1
+    cat ${infile}.zip | base64 > ${infile}.zip.b64.txt
+    echo ${infile}.zip.b64.txt
+    rm -rf ${tmpdir}
 fi
