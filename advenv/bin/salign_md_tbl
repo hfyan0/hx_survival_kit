@@ -43,6 +43,15 @@ def proc(entry, width, align):
 input_lines = [row for row in sys.stdin]
 initial_indentation = len(input_lines[0]) - len(input_lines[0].lstrip())
 
+# convert tab to |
+input_lines = [row.replace('\t','|') for row in input_lines]
+
+# add beginning and ending |
+if input_lines[0].rstrip()[-1] != '|':
+    input_lines = [ x + '|' for x in input_lines ]
+if input_lines[0].lstrip()[0] != '|':
+    input_lines = [ '|' + x for x in input_lines ]
+
 # normalized the number of delimitors in all lines
 num_of_delim = max([ x.count('|') for x in input_lines ])
 input_lines = [ x + '|'*(num_of_delim-x.count('|')) for x in input_lines ]

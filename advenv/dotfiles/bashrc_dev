@@ -64,10 +64,18 @@ alias pmq='rpm -qa'
 unset -f c; c() {
   cd $@
   ls --color=auto -F
+  if [[ -z $(ls) ]]
+  then
+      echo "No file in directory."
+  fi
 }
 unset -f i; i() {
   cd $(echo $(ls -Fd ../*$1* | grep "/$") | awk '{print $1}')
   ls --color=auto -F
+  if [[ -z $(ls) ]]
+  then
+      echo "No file in directory."
+  fi
 }
 
 unset -f v; v() {

@@ -54,7 +54,7 @@ alias uuuuuuu='cd ../../../../../../..; ls --color=auto --group-directories-firs
 alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
-alias dfh='df -h'
+alias dfh='df -Th'
 alias ctl='crontab -l | less'
 alias cte='VISUAL=vim crontab -e'
 alias rtn='route -n'

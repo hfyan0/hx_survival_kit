@@ -54,7 +54,7 @@ alias uuuuuuu='cd ../../../../../../..; ls --color=auto --group-directories-firs
 alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
-alias dfh='df -h'
+alias dfh='df -Th'
 alias mc='mc --nocolor'
 alias ctl='crontab -l | less'
 alias cte='VISUAL=vim crontab -e'
@@ -69,8 +69,8 @@ alias pms='yum search'
 alias pmr='yum remove'
 alias pmq='rpm -qa'
 alias poormeld="sed -e 's/ differ$//' | sed -e 's/^Files/Files differ: /g' | sed -e 's/ and / | /' | column -t -s'|' | sort"
-alias xn='psg work_plan | xak; psg sunny/note.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/note.txt ~/sunny/work_plan.org ~/sunny/work_plan_old.org'
-alias xp='psg work_plan | xak; psg sunny/note.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/work_plan.org ~/sunny/work_plan_old.org ~/sunny/note.txt'
+alias xn='psg work_plan | xak; psg sunny/note.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/note.txt ~/sunny/work_plan.txt ~/sunny/work_plan_old.txt'
+alias xp='psg work_plan | xak; psg sunny/note.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/work_plan.txt ~/sunny/work_plan_old.txt ~/sunny/note.txt'
 
 
 unset -f print_dir_info; print_dir_info() {

@@ -4,7 +4,13 @@ tmpfile=$(mktemp)
 
 cat - > $tmpfile
 
-if [[ $# -eq 1 ]]
+if [[ $2 == "j" ||  $2 == "m" ]]
+then
+    cat $tmpfile | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s | sed -e 's/^/| /'
+elif [[ $1 == "j" ||  $1 == "m" ]]
+then
+    cat $tmpfile | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s
+elif [[ $# -eq 1 ]]
 then
     cat $tmpfile | sed -e 's/^| //' | sed -e 's/^|//' | fold -s | sed -e 's/^/| /'
 else

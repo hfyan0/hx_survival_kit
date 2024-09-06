@@ -345,3 +345,8 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
  nmap <Leader>y     V!~/.advenv/bin/st 9 y<cr>
  vmap <Leader>y      !~/.advenv/bin/st 9 y<cr>
  nmap <Leader>p     <esc>o<esc>:r!~/.advenv/bin/st 9<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" to solve nvim behaviour of no abbreviation expansion after C-w
+" ---------------------------------------------------------------------------------------------------
+  inoremap <C-w>    <esc>vbxi

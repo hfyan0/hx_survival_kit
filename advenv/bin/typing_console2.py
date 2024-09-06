@@ -23,8 +23,8 @@ def clean_str(s):
     s = s.strip()
     for i in range(10):
         s = s.replace('  ',' ')
-        s = s.replace(' @@','@@')
-        s = s.replace('@@ ','@@')
+        # s = s.replace(' @@','@@')
+        # s = s.replace('@@ ','@@')
     return s
 
 
@@ -172,7 +172,7 @@ def update_state(state,k,width,height,abbrev_dict):
                39,
                58,
                59,
-               10,
+               # 10, # enter
                27,
                9]:
         # ! ? , . - = [ ] ( ) { } / | \ " ' : ; enter esc tab
@@ -180,6 +180,10 @@ def update_state(state,k,width,height,abbrev_dict):
         es = expand_last_word(s[:pos],abbrev_dict)
         ns = es + chr(k) + s[pos:]
         npos = len(es)+1
+    elif k == 10: # enter
+        es = expand_last_word(s,abbrev_dict)
+        ns = clean_str(es)
+        npos = len(ns)
     elif k in [258,259]: # up down
         ns = s
         npos = pos
@@ -225,7 +229,8 @@ def update_state(state,k,width,height,abbrev_dict):
             to_upper_case = (s[0] == s[0].lower())
             ns = toggle_case(s[0]) + s[1:]
             ns = toggle_sentence_case(ns, to_upper_case)
-            npos = pos
+            ns = clean_str(ns)
+            npos = pos if pos < len(ns) else len(ns)
     elif k == "alt-f":
         ns = s
         loc1 = s.find(' ', pos+1)
@@ -301,7 +306,8 @@ def draw_menu(stdscr):
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
     while True:
-        if k in [10,27]: # enter / escape
+        # if k in [10,27]: # enter / escape
+        if k in [27]: # escape
             state = update_state(state,k,width,height,abbrev_dict)
             break
 
