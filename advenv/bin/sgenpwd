@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+import sys
+import random
+import math
+
+def gen_pwd(n):
+    digits=['2','3','4','5','6','7','9']
+    lowercase_letters=['a','b','c','d','e','f','g','h','i','j','k','m','n','o','p','q','r','s','t','x','y','z']
+    uppercase_letters=['A','C','E','F','G','H','J','K','L','M','N','P','R','T','U','V','W','X','Y','Z']
+
+    min_desired_char = int(math.floor(pwd_len/3))
+
+    def gen_pwd_impl(p,D,U,L):
+        if len(p) >= n:
+            return p
+
+        r = random.random()
+        if r < 0.33:
+            if D <= min_desired_char:
+                new_pwd = p + digits[random.randint(0,len(digits)-1)]
+                return gen_pwd_impl(new_pwd,D+1,U,L)
+        elif r < 0.66:
+            if L <= min_desired_char:
+                new_pwd = p + lowercase_letters[random.randint(0,len(lowercase_letters)-1)]
+                return gen_pwd_impl(new_pwd,D,U,L+1)
+        else:
+            if U <= min_desired_char:
+                new_pwd = p + uppercase_letters[random.randint(0,len(uppercase_letters)-1)]
+                return gen_pwd_impl(new_pwd,D,U+1,L)
+
+        return gen_pwd_impl(p,D,U,L)
+
+    return gen_pwd_impl("",0,0,0)
+
+pwd_len = 15 if len(sys.argv) == 1 else int(sys.argv[1])
+print (gen_pwd(pwd_len))
