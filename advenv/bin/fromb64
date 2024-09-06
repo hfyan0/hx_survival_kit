@@ -21,7 +21,7 @@ then
     pwd=$(pwd)
     tmpfolder=$(mktemp -d)
     cd $tmpfolder
-    cat $b64input | base64 --decode > tmp.zip
+    cat $b64input | tr -d '\r' | base64 --decode > tmp.zip
     unzip tmp.zip
     rm -rf tmp.zip
     cd ..
