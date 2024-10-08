@@ -48,6 +48,8 @@ alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
 alias dfh='df -Th'
+alias pf='realpath'
+alias rp='realpath'
 alias mc='mc --nocolor'
 alias ctl='crontab -l | less'
 alias cte='VISUAL=vim crontab -e'
@@ -176,9 +178,6 @@ unset -f ff; ff() {
       rm -f $tmpfile1
       rm -f $tmpfile2
   fi
-}
-unset -f pf; pf() {
-  echo $(pwd)/$(echo $@)
 }
 unset -f gsc; gsc() {
     if [[ -e $(which rg) ]]

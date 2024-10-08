@@ -47,6 +47,8 @@ alias suq='sort | uniq'
 alias les='less'
 alias ltr='ls -lhtrF --color=auto'
 alias dfh='df -Th'
+alias pf='realpath'
+alias rp='realpath'
 alias mc='mc --nocolor'
 alias ctl='crontab -l | less'
 alias cte='VISUAL=vim crontab -e'
@@ -94,9 +96,6 @@ unset -f v; v() {
   fi
 }
 
-unset -f pf; pf() {
-  echo $(pwd)/$(echo $@)
-}
 unset -f gsc; gsc() {
     if [[ -e $(which rg) ]]
     then

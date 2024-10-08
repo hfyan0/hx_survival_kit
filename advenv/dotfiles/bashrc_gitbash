@@ -55,6 +55,8 @@ alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
 alias dfh='df -Th'
+alias pf='realpath'
+alias rp='realpath'
 alias ctl='crontab -l | less'
 alias cte='VISUAL=vim crontab -e'
 alias rtn='route -n'
@@ -188,9 +190,6 @@ unset -f ff; ff() {
 }
 unset -f gg; gg() {
     grep -B 1 -A 1 --color=auto "$@" . -r
-}
-unset -f pf; pf() {
-  echo $(pwd)/$(echo $@)
 }
 unset -f gsc; gsc() {
     if [[ -e $(which rg) ]]
