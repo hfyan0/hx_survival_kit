@@ -16,7 +16,8 @@ then
     exit
 fi
 
-cat $tmpfile | ./encrypt.py d | base64 --decode > $tmpfile2
-gpg --ignore-mdc-error -d $tmpfile2 | tar Jxf -
+cat $tmpfile | tr -d '\r' | ./encrypt.py d | base64 --decode > $tmpfile2
+# gpg --ignore-mdc-error -d $tmpfile2 | tar Jxf -
+gpg --ignore-mdc-error -d $tmpfile2 | unxz | tar xf -
 
 rm -f $tmpfile $tmpfile2
