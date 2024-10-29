@@ -9,11 +9,11 @@ then
 
     if [[ $fmt == "x"* || $fmt == "X"* ]]
     then
-        "tar Jcf $FILENAME $1" "Compressing file: "
-        "tar Jtf $FILENAME"    "Testing file: "
+        tar Jcf $FILENAME $1
+        tar Jtf $FILENAME
     else
-        "tar zcf $FILENAME $1" "Compressing file: "
-        "tar ztf $FILENAME"    "Testing file: "
+        tar zcf $FILENAME $1
+        tar ztf $FILENAME
     fi
 
     echo
