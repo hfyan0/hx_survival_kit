@@ -1,0 +1,22 @@
+#!/bin/bash
+FILENAME=$(basename $1)_$(date +'%Y%m%d_%H%M').txz
+if [[ -e $1 ]]
+then
+    echo -n "Which format? [gz|xz] "
+    read fmt
+
+    echo "This program is threadsafe..."
+
+    if [[ $fmt == "x"* || $fmt == "X"* ]]
+    then
+        "tar Jcf $FILENAME $1" "Compressing file: "
+        "tar Jtf $FILENAME"    "Testing file: "
+    else
+        "tar zcf $FILENAME $1" "Compressing file: "
+        "tar ztf $FILENAME"    "Testing file: "
+    fi
+
+    echo
+    echo "--------------------------------------------------"
+    ls --color=auto --group-directories-first
+fi
