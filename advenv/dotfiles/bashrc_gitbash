@@ -44,13 +44,13 @@ alias xask9='awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill -9'
 alias xall='sed -e "s/^\s\+//" | tr "\n" "\0" | xargs -0 ls -lh --color=auto'
 alias xalll='sed -e "s/^\s\+//" | tr "\n" "\0" | xargs -0 ls -ll --color=auto'
 alias xal='tr "\n" "\0" | xargs -0 ls -lh --color=auto'
-alias u='cd ..; ls --color=auto --group-directories-first'
-alias uu='cd ../..; ls --color=auto --group-directories-first'
-alias uuu='cd ../../..; ls --color=auto --group-directories-first'
-alias uuuu='cd ../../../..; ls --color=auto --group-directories-first'
-alias uuuuu='cd ../../../../..; ls --color=auto --group-directories-first'
-alias uuuuuu='cd ../../../../../..; ls --color=auto --group-directories-first'
-alias uuuuuuu='cd ../../../../../../..; ls --color=auto --group-directories-first'
+alias u='cd ..; # ls --color=auto --group-directories-first'
+alias uu='cd ../..; # ls --color=auto --group-directories-first'
+alias uuu='cd ../../..; # ls --color=auto --group-directories-first'
+alias uuuu='cd ../../../..; # ls --color=auto --group-directories-first'
+alias uuuuu='cd ../../../../..; # ls --color=auto --group-directories-first'
+alias uuuuuu='cd ../../../../../..; # ls --color=auto --group-directories-first'
+alias uuuuuuu='cd ../../../../../../..; # ls --color=auto --group-directories-first'
 alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
@@ -74,26 +74,26 @@ unset -f print_dir_info; print_dir_info() {
     local WHITE="\033[0;37m"
     local NOCOLOR="\033[0m"
 
-    echo
-    pwd
-    echo "--------------------------------------------------"
-
-    if [[ $(ls | wc -l) -lt 100 ]]
-    then
-        ls --color=auto --group-directories-first
-    else
-        ls --group-directories-first
-    fi
-
-    echo -e -n "$YELLOW"
-    if [[ $(ls -a | wc -l) -eq 2 ]]
-    then
-        echo "Folder is empty"
-    elif [[ $(ls | wc -l) -eq 0 ]]
-    then
-        echo "Folder only contains hidden files"
-    fi
-    echo -e -n "\033[00m"
+    # echo
+    # pwd
+    # echo "--------------------------------------------------"
+    #
+    # if [[ $(ls | wc -l) -lt 100 ]]
+    # then
+    #     ls --color=auto --group-directories-first
+    # else
+    #     ls --group-directories-first
+    # fi
+    #
+    # echo -e -n "$YELLOW"
+    # if [[ $(ls -a | wc -l) -eq 2 ]]
+    # then
+    #     echo "Folder is empty"
+    # elif [[ $(ls | wc -l) -eq 0 ]]
+    # then
+    #     echo "Folder only contains hidden files"
+    # fi
+    # echo -e -n "\033[00m"
 
 }
 unset -f c; c() {

@@ -37,13 +37,13 @@ alias psg='ps -eo user,pid,vsize,rss,lstart,etime,fname,cmd --sort user | grep'
 alias xa='tr "\n" "\0" | xargs -0 -n 1'
 alias xak='awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill'
 alias xask='awk "{print \$2}" | tr "\n" "\0" | xargs -0 sudo kill'
-alias u='cd ..; ls --color=never -F'
-alias uu='cd ../..; ls --color=never -F'
-alias uuu='cd ../../..; ls --color=never -F'
-alias uuuu='cd ../../../..; ls --color=never -F'
-alias uuuuu='cd ../../../../..; ls --color=never -F'
-alias uuuuuu='cd ../../../../../..; ls --color=never -F'
-alias uuuuuuu='cd ../../../../../../..; ls --color=never -F'
+alias u='cd ..; # ls --color=never -F'
+alias uu='cd ../..; # ls --color=never -F'
+alias uuu='cd ../../..; # ls --color=never -F'
+alias uuuu='cd ../../../..; # ls --color=never -F'
+alias uuuuu='cd ../../../../..; # ls --color=never -F'
+alias uuuuuu='cd ../../../../../..; # ls --color=never -F'
+alias uuuuuuu='cd ../../../../../../..; # ls --color=never -F'
 alias fd='find . -type d'
 alias suq='sort | uniq'
 alias les='less'
@@ -71,21 +71,21 @@ unset -f print_dir_info; print_dir_info() {
     local WHITE="\033[0;37m"
     local NOCOLOR="\033[0m"
 
-    echo
-    pwd
-    echo "--------------------------------------------------"
-
-    ls -F
-
-    echo -e -n "$YELLOW"
-    if [[ $(ls -a | wc -l) -eq 2 ]]
-    then
-        echo "Folder is empty"
-    elif [[ $(ls | wc -l) -eq 0 ]]
-    then
-        echo "Folder only contains hidden files"
-    fi
-    echo -e -n "\033[00m"
+    # echo
+    # pwd
+    # echo "--------------------------------------------------"
+    #
+    # ls -F
+    #
+    # echo -e -n "$YELLOW"
+    # if [[ $(ls -a | wc -l) -eq 2 ]]
+    # then
+    #     echo "Folder is empty"
+    # elif [[ $(ls | wc -l) -eq 0 ]]
+    # then
+    #     echo "Folder only contains hidden files"
+    # fi
+    # echo -e -n "\033[00m"
 
 }
 unset -f c; c() {
@@ -686,24 +686,24 @@ unset -f svcor; svcor() {
 
 HOST="$(hostname)"
 
-# Regular Colors                                                                                        
-Black="\[\033[0;30m\]"        # Black                                                             
-Red="\[\033[0;31m\]"          # Red                                                               
-Green="\[\033[0;32m\]"        # Green                                                             
-Yellow="\[\033[0;33m\]"       # Yellow                                                            
-Blue="\[\033[0;34m\]"         # Blue                                                              
-Purple="\[\033[0;35m\]"       # Purple                                                            
-Cyan="\[\033[0;36m\]"         # Cyan                                                              
+# Regular Colors
+Black="\[\033[0;30m\]"        # Black
+Red="\[\033[0;31m\]"          # Red
+Green="\[\033[0;32m\]"        # Green
+Yellow="\[\033[0;33m\]"       # Yellow
+Blue="\[\033[0;34m\]"         # Blue
+Purple="\[\033[0;35m\]"       # Purple
+Cyan="\[\033[0;36m\]"         # Cyan
 White="\[\033[0;37m\]"        # White
 Color_Off="\[\033[0m\]"       # Text Reset
-# Bold                                                                                                  
-BBlack="\[\033[1;30m\]"       # Black                                                             
-BRed="\[\033[1;31m\]"         # Red                                                               
-BGreen="\[\033[1;32m\]"       # Green                                                             
-BYellow="\[\033[1;33m\]"      # Yellow                                                            
-BBlue="\[\033[1;34m\]"        # Blue                                                              
-BPurple="\[\033[1;35m\]"      # Purple                                                            
-BCyan="\[\033[1;36m\]"        # Cyan                                                              
+# Bold
+BBlack="\[\033[1;30m\]"       # Black
+BRed="\[\033[1;31m\]"         # Red
+BGreen="\[\033[1;32m\]"       # Green
+BYellow="\[\033[1;33m\]"      # Yellow
+BBlue="\[\033[1;34m\]"        # Blue
+BPurple="\[\033[1;35m\]"      # Purple
+BCyan="\[\033[1;36m\]"        # Cyan
 BWhite="\[\033[1;37m\]"       # White
 
 export PS1="\n\n$BGreen$HOST$Color_Off $BYellow\u$Color_Off \w\n\\$ "
