@@ -81,7 +81,7 @@ unset -f i; i() {
 }
 
 unset -f v; v() {
-  if [[ -n $(which vim 2> /dev/null) ]]
+  if [[ -n $(which vim | grep -v alias | grep -v "vi$" 2> /dev/null) ]]
   then
       CMD="vim -p"
   else

@@ -19,4 +19,5 @@ grep -v "Unzipping changed files..." | \
 grep -v "Checking exec permissions..." | \
 grep -v "Uploading changed files finished successfully." | \
 grep -v "Entering directory" | \
-sed -e 's/"\/usr\/bin\/gmake"/\/usr\/bin\/gmake/'
+sed -e 's/"\/usr\/bin\/gmake"/\/usr\/bin\/gmake/' | \
+sed -e 's/ansi/ansi -std=c++11/'
