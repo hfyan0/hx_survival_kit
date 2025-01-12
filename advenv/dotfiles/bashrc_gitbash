@@ -422,21 +422,21 @@ unset -f gdi; gdi() {
 }
 
 unset -f gslga; gslga() {
-    git status -sb | tail -n +2 | grep -v "^??" | scol w 2 | xargs git add
+    git status -sb | tail -n +2 | grep -v "^??" | awk '{print $2}' | xargs git add
     git status -sb
 }
 unset -f gsllga; gsllga() {
-    git status -sb | tail -n +2 | grep "^??" | scol w 2 | xargs git add
+    git status -sb | tail -n +2 | grep "^??" | awk '{print $2}' | xargs git add
     git status -sb
 }
 
 alias gs='gst'
-alias gsl='git status -sb | tail -n +2 | grep -v "^??" | scol w 2'
-alias gsll='git status -sb | tail -n +2 | grep "^??" | scol w 2'
-alias gagsl='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
-alias gagsll='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep "^??" | scol w 2)'
-alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
-alias gcogsll='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep "^??" | scol w 2)'
+alias gsl='git status -sb | tail -n +2 | grep -v "^??" | awk '{print $2}''
+alias gsll='git status -sb | tail -n +2 | grep "^??" | awk '{print $2}''
+alias gagsl='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep -v "^??" | awk '{print $2}')'
+alias gagsll='git_cmd_then_gst git add $(git status -sb | tail -n +2 | grep "^??" | awk '{print $2}')'
+alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | awk '{print $2}')'
+alias gcogsll='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep "^??" | awk '{print $2}')'
 alias gss='git status'
 alias gf='git_cmd_then_gst git fetch'
 alias gclone='git clone'
@@ -515,7 +515,7 @@ alias gph='git_cmd_then_gst git push -v'
 alias gphfwl='git_cmd_then_gst git push --force-with-lease'
 alias grb='git rebase'
 alias gco='git_cmd_then_gst git checkout'
-alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | scol w 2)'
+alias gcogsl='git_cmd_then_gst git checkout $(git status -sb | tail -n +2 | grep -v "^??" | awk '{print $2}')'
 alias gcos='git_cmd_then_gst git checkout sunny'
 alias gcou='git_cmd_then_gst git checkout uat'
 alias gcom='git_cmd_then_gst git checkout master'

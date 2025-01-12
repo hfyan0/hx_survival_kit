@@ -26,7 +26,7 @@ else
         if [[ $sess -eq $default_sess ]]
         then
             # attach to default session
-            tmux detach -t $clt
+            # tmux detach -t $clt
             tmux a -t $default_sess
             exit
         fi
