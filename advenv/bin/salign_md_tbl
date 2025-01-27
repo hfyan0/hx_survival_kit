@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
+MIN_COL_WIDTH = 3 # if less than 2 then the logic going wild
 
 def centre_justify(s, i):
     space_len = i-len(s)
@@ -61,14 +62,24 @@ if input_lines[0].lstrip()[0] != '|' and input_lines[0].rstrip()[-1] != '|':
 
 rows = [[el.strip() for el in row.split('|')] for row in input_lines if row.strip()]
 
-
-if len(sys.argv) == 1:
+# automatically detect header separator row
+if len(rows) >= 3 and \
+    (rows[1][1].strip()[:2] == ":-" or rows[1][1].strip()[-2:] == "-:" ):
+    # has header separator row already
     rows_excl_line = rows[:1] + rows[2:]
 else:
     rows_excl_line = rows
+    # insert header separator
     rows = rows[:1] + [[""]+[":---" for x in rows[0]][1:-1]+[""]] + rows[1:]
 
-col_widths = [max(max(map(len, column)),2) for column in zip(*rows_excl_line)] # make sure there is a minimum width of 2 to prevent the logic going wild
+col_widths = [max(max(map(len, column)),MIN_COL_WIDTH) for column in zip(*rows_excl_line)] # make sure there is a minimum width of MIN_COL_WIDTH
+
+# limit max column width
+if len(sys.argv) > 1:
+    max_len = int(sys.argv[1])
+    max_len = max(max_len,MIN_COL_WIDTH)
+    rows = [[ x[:max_len] for x in row] for row in rows]
+    col_widths = [min(col_width,max_len) for col_width in col_widths ]
 
 for row in rows:
     out_list = [proc(entry,width,align) for entry,width,align in zip(row, col_widths, rows[1])]
