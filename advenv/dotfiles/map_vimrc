@@ -92,8 +92,6 @@ map <Leader>b <Leader><Leader>b
 
   inoremap <C-a> <Home>
   inoremap <C-e> <End>
-  nnoremap <C-a> 0
-  nnoremap <C-e> $
 
   inoremap <C-d> <Del>
   inoremap <M-d> <esc>lcw
