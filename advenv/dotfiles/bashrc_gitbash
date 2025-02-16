@@ -225,8 +225,13 @@ unset -f cpb; cpb(){
         local fldr=$(dirname $1)
         local bnm=$(basename $1)
         cd $fldr
-        cp -rp $bnm $bnm"_"$(date +'%Y%m%d_%H%M%S')
-        ls --color=auto --group-directories-first
+        newname=$bnm"_"$(date +'%Y%m%d_%H%M%S')
+        cp -rp $bnm $newname
+        chmod a-wx $newname
+        echo "===================="
+        echo "ls $fldr"
+        echo "===================="
+        ls --color=auto --group-directories-first $fldr
         cd $thisdir
     fi
 }
