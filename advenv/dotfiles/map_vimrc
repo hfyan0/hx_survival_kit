@@ -85,8 +85,8 @@ map <Leader>b <Leader><Leader>b
 " ---------------------------------------------------------------------------------------------------
   inoremap <C-b> <Left>
   inoremap <C-f> <Right>
-  inoremap <M-b> <esc>b
-  inoremap <M-f> <esc>ww
+  inoremap <M-b> <esc>bi
+  inoremap <M-f> <esc>wwi
   nnoremap <M-b> b
   nnoremap <M-f> w
 
@@ -113,7 +113,7 @@ map <Leader>b <Leader><Leader>b
 
 " not working when there is only 1 tab
 " nnoremap <Leader>t      <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
-nnoremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
+" nnoremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
 nnoremap <C-p>          <esc>:tabnew<cr>:CtrlP<cr>
 "nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
 nnoremap <C-o>          <esc>:tabnext<cr>
@@ -233,13 +233,20 @@ nnoremap V 0V
  vnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
 
 
+" ---------------------------------------------------------------------------------------------------
+" for tidying up notes easily
+" ---------------------------------------------------------------------------------------------------
+vnoremap <Leader>t      !salign_md_tbl
+nnoremap <Leader>t      vip!salign_md_tbl
+vnoremap <Leader>f      !sfold m<cr>
+nnoremap <Leader>f      V!sfold m<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " C++
 " ---------------------------------------------------------------------------------------------------
 " Refactor the selected code to a new function
 " ---------------------------------------------------------------------------------------------------
-vnoremap <Leader>f      d<esc>IRefactoredFunction();<cr><cr><esc>Go<cr><cr>void RefactoredFunction()<cr>{<cr><esc>maPGoreturn;<cr>}<cr><esc>'a
+" vnoremap <Leader>f      d<esc>IRefactoredFunction();<cr><cr><esc>Go<cr><cr>void RefactoredFunction()<cr>{<cr><esc>maPGoreturn;<cr>}<cr><esc>'a
 " ---------------------------------------------------------------------------------------------------
 " make declaration line from definition
 " ---------------------------------------------------------------------------------------------------
