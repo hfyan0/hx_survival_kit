@@ -1,20 +1,45 @@
 #!/bin/bash
+tmpfile1=$(mktemp)
+tmpfile2=$(mktemp)
 
-tmpfile=$(mktemp)
-
-cat - > $tmpfile
-
-if [[ $2 == "j" ||  $2 == "m" ]]
+cat - > $tmpfile2
+indentation=$(($(cat $tmpfile2 | head -n 1 | wc -c) - $(cat $tmpfile2 | head -n 1 | sed 's/^\s\+//' | wc -c)))
+if [[ $(cat $tmpfile2 | head -n 1 | sed 's/^\s\+//' | cut -c1) == "|" ]]
 then
-    cat $tmpfile | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s | sed -e 's/^/| /'
-elif [[ $1 == "j" ||  $1 == "m" ]]
-then
-    cat $tmpfile | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s
-elif [[ $# -eq 1 ]]
-then
-    cat $tmpfile | sed -e 's/^| //' | sed -e 's/^|//' | fold -s | sed -e 's/^/| /'
+    has_pipe="Y"
 else
-    cat $tmpfile | fold -s
+    has_pipe="N"
 fi
 
-rm -f $tmpfile
+cat $tmpfile2 | sed 's/^\s\+//' > $tmpfile1
+
+if [[ $has_pipe == "Y" ]]
+then
+    if [[ $1 == "j" ||  $1 == "m" ]]
+    then
+        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s | sed -e 's/^/| /'
+    elif [[ $1 == "s" ]]
+    then
+        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' | sed 's/^./\u&/' | fold -s | sed -e 's/^/| /'
+    else
+        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | fold -s | sed -e 's/^/| /'
+    fi
+
+else
+    if [[ $1 == "j" ||  $1 == "m" ]]
+    then
+        cat $tmpfile1 | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s
+    elif [[ $1 == "s" ]]
+    then
+        cat $tmpfile1 | sed -e 's/\s\+$//' | tr '\n' ' ' | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' | sed 's/^./\u&/' | fold -s
+    else
+        cat $tmpfile1 | fold -s
+    fi
+
+fi \
+| sed 's/\s\+$//' > $tmpfile2
+
+sed -i "s/^/$(printf '%*s' $indentation)/" $tmpfile2
+cat $tmpfile2
+
+rm -f $tmpfile1 $tmpfile2
