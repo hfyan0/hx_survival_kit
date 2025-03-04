@@ -227,6 +227,8 @@ nnoremap V 0V
 "vnoremap <Leader>\|    :s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
 "nnoremap <Leader>\\    vap:s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
 "vnoremap <Leader>\\    :s/\s\+/ /g<cr>:Tabularize /\|<cr><esc>:noh<cr>
+ nnoremap <Leader>\|    vip!stogglepipe<cr>
+ vnoremap <Leader>\|    !stogglepipe<cr>
 
  " title case / sentence case
  nnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
