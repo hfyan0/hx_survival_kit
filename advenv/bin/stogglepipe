@@ -21,11 +21,11 @@ if has_pipe:
 else:
     for line in lines:
         if len(line) <= indentation:
-            new_line = ' '*indentation + \
+            new_line = line[0:indentation] + \
                        "|" + \
                        line[indentation:]
         else:
-            new_line = ' '*indentation + \
+            new_line = line[0:indentation] + \
                        "| " + \
                        line[indentation:]
         print(new_line)
