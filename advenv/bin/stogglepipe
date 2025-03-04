@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+import sys
+from datetime import datetime
+
+lines = [line.rstrip() for line in sys.stdin]
+
+if not lines:
+    sys.exit()
+
+first_line = lines[0]
+first_line_stripped = first_line.lstrip()
+
+indentation = len(first_line) - len(first_line_stripped)
+has_pipe = (first_line_stripped[:1] == "|")
+
+if has_pipe:
+    for line in lines:
+        new_line = ' '*indentation + \
+                   line[indentation:].replace("| ","",1).replace("|","",1)
+        print(new_line)
+else:
+    for line in lines:
+        if len(line) <= indentation:
+            new_line = ' '*indentation + \
+                       "|" + \
+                       line[indentation:]
+        else:
+            new_line = ' '*indentation + \
+                       "| " + \
+                       line[indentation:]
+        print(new_line)
