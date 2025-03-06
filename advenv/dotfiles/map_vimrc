@@ -244,6 +244,8 @@ vnoremap <Leader>t      !salign_md_tbl
 nnoremap <Leader>t      vip!salign_md_tbl
 vnoremap <Leader>f      !sfold s<cr>
 nnoremap <Leader>f      V!sfold s<cr>
+vnoremap <Leader>F      !sfold<cr>
+nnoremap <Leader>F      V!sfold<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " C++
