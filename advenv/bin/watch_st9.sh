@@ -9,10 +9,12 @@ get_last_mod_time()
 last_output=$(get_last_mod_time)
 while [ 1 ]
 do
-    if [[ $(get_last_mod_time) != $last_output ]]
+    this_output=$(get_last_mod_time)
+    if [[ $this_output != $last_output ]]
     then
-        echo "Oh"
-        last_output=$(get_last_mod_time)
+        clear
+        cat $filepath
+        last_output=$this_output
     else
         sleep 0.2
     fi
