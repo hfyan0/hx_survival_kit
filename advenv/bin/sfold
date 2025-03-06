@@ -1,6 +1,8 @@
 #!/bin/bash
+
 tmpfile1=$(mktemp)
 tmpfile2=$(mktemp)
+tmpfile3=$(mktemp)
 
 cat - > $tmpfile2
 indentation=$(($(cat $tmpfile2 | head -n 1 | wc -c) - $(cat $tmpfile2 | head -n 1 | sed 's/^\s\+//' | wc -c)))
@@ -15,31 +17,45 @@ cat $tmpfile2 | sed 's/^\s\+//' > $tmpfile1
 
 if [[ $has_pipe == "Y" ]]
 then
-    if [[ $1 == "j" ||  $1 == "m" ]]
-    then
-        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s | sed -e 's/^/| /'
-    elif [[ $1 == "s" ]]
-    then
-        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | sed -e 's/\s\+$//' | tr '\n' ' ' | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' | sed 's/^./\u&/' | fold -s | sed -e 's/^/| /'
-    else
-        cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' | fold -s | sed -e 's/^/| /'
-    fi
-
+    cat $tmpfile1 | sed -e 's/^| //' | sed -e 's/^|//' > $tmpfile2
 else
-    if [[ $1 == "j" ||  $1 == "m" ]]
-    then
-        cat $tmpfile1 | sed -e 's/\s\+$//' | tr '\n' ' ' | fold -s
-    elif [[ $1 == "s" ]]
-    then
-        cat $tmpfile1 | sed -e 's/\s\+$//' | tr '\n' ' ' | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' | sed 's/^./\u&/' | fold -s
-    else
-        cat $tmpfile1 | fold -s
-    fi
+    cat $tmpfile1 > $tmpfile2
+fi
 
-fi \
-| sed 's/\s\+$//' > $tmpfile2
+if [[ $1 == "j" ||  $1 == "m" ]]
+then
+    cat $tmpfile2 \
+        | sed -e 's/\s\+$//' \
+        | tr '\n' ' ' \
+        | fold -s \
+    > $tmpfile3
+elif [[ $1 == "s" ]]
+then
+    cat $tmpfile2 \
+        | sed -e 's/\s\+$//' \
+        | sed ':a;N;$!ba;s/\n\n/TWOLINES/g' \
+        | tr '\n' ' ' \
+        | sed 's/TWOLINES/\n\n/g' \
+        | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' \
+        | sed 's/^./\u&/' \
+        | fold -s \
+    > $tmpfile3
+else
+    cat $tmpfile2 \
+        | fold -s \
+    > $tmpfile3
+fi
+
+if [[ $has_pipe == "Y" ]]
+then
+    cat $tmpfile3 | sed -e 's/^/| /' > $tmpfile1
+else
+    cat $tmpfile3 > $tmpfile1
+fi
+
+cat $tmpfile1 | sed 's/\s\+$//' > $tmpfile2
 
 sed -i "s/^/$(printf '%*s' $indentation)/" $tmpfile2
 cat $tmpfile2
 
-rm -f $tmpfile1 $tmpfile2
+rm -f $tmpfile1 $tmpfile2 $tmpfile3
