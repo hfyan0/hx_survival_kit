@@ -1,0 +1,15 @@
+#!/bin/bash
+
+work_plan=~/sunny/work_plan.txt
+work_plan_old=~/sunny/work_plan_old.txt
+work_plan_ostdg=~/sunny/work_plan_ostdg.txt
+note=~/sunny/note.txt
+note_old=~/sunny/note_old.txt
+
+cat $work_plan | grep -e 'TODO' -e '- \[ \]' > $work_plan_ostdg
+
+ps aux work_plan | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
+ps aux sunny/note.txt | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
+ps aux sunny/note_old.txt | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
+
+nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $work_plan_old $work_plan_ostdg $note $note_old'

@@ -71,8 +71,7 @@ alias pms='yum search'
 alias pmr='yum remove'
 alias pmq='rpm -qa'
 alias poormeld="sed -e 's/ differ$//' | sed -e 's/^Files/Files differ: /g' | sed -e 's/ and / | /' | column -t -s'|' | sort"
-alias xn='psg work_plan | xak; psg sunny/note.txt | xak; psg sunny/note_old.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/note.txt ~/sunny/note_old.txt ~/sunny/work_plan.txt ~/sunny/work_plan_old.txt'
-alias xp='psg work_plan | xak; psg sunny/note.txt | xak; psg sunny/note_old.txt | xak; nvim -u ~/.advenv/dotfiles/org_vimrc -p ~/sunny/work_plan.txt ~/sunny/work_plan_old.txt ~/sunny/note.txt ~/sunny/note_old.txt'
+alias xp='xn'
 
 
 unset -f print_dir_info; print_dir_info() {
