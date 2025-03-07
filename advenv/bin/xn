@@ -1,15 +1,17 @@
 #!/bin/bash
 
-work_plan=~/sunny/work_plan.txt
-work_plan_old=~/sunny/work_plan_old.txt
-work_plan_ostdg=~/sunny/work_plan_ostdg.txt
-note=~/sunny/note.txt
-note_old=~/sunny/note_old.txt
+work_plan=$HOME/sunny/work_plan.txt
+work_plan_old=$HOME/sunny/work_plan_old.txt
+work_plan_ostdg=$HOME/sunny/work_plan_ostdg.txt
+note_txt=$HOME/sunny/note.txt
+note_old_txt=$HOME/sunny/note_old.txt
 
-cat $work_plan | grep -e 'TODO' -e '- \[ \]' > $work_plan_ostdg
+cat $work_plan | grep -e 'TODO' -e '- \[ \]' | sed '/TODO/{x;p;x;}' > $work_plan_ostdg
 
-ps aux work_plan | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
-ps aux sunny/note.txt | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
-ps aux sunny/note_old.txt | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill
+ps aux | grep $(basename $work_plan)       | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
+ps aux | grep $(basename $work_plan_old)   | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
+ps aux | grep $(basename $work_plan_ostdg) | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
+ps aux | grep $(basename $note_txt)        | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
+ps aux | grep $(basename $note_old_txt)    | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
 
-nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $work_plan_old $work_plan_ostdg $note $note_old'
+nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $work_plan_old $work_plan_ostdg $note_txt $note_old_txt
