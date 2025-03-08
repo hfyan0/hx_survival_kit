@@ -62,15 +62,14 @@ if input_lines[0].lstrip()[0] != '|' and input_lines[0].rstrip()[-1] != '|':
 
 rows = [[el.strip() for el in row.split('|')] for row in input_lines if row.strip()]
 
-# automatically detect header separator row
-if len(rows) >= 3 and \
-    (rows[1][1].strip()[:2] == ":-" or rows[1][1].strip()[-2:] == "-:" ):
-    # has header separator row already
-    rows_excl_line = rows[:1] + rows[2:]
-else:
-    rows_excl_line = rows
-    # insert header separator
-    rows = rows[:1] + [[""]+[":---" for x in rows[0]][1:-1]+[""]] + rows[1:]
+# skip header separator rows
+rows_excl_line = []
+for line_num in range(0,len(rows)):
+    if (rows[line_num][1].strip()[:2] != ":-" and rows[line_num][1].strip()[-2:] != "-:" ):
+        rows_excl_line.append(rows[line_num])
+
+# insert header separator
+rows = rows_excl_line[:1] + [[""]+[":---" for x in rows[0]][1:-1]+[""]] + rows_excl_line[1:]
 
 col_widths = [max(max(map(len, column)),MIN_COL_WIDTH) for column in zip(*rows_excl_line)] # make sure there is a minimum width of MIN_COL_WIDTH
 
