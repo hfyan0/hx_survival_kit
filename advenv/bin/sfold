@@ -34,8 +34,20 @@ then
     cat $tmpfile2 \
         | sed -e 's/\s\+$//' \
         | sed ':a;N;$!ba;s/\n\n/TWOLINES/g' \
+        | sed ':a;N;$!ba;s/\n-/ONELINE-/g' \
+        | sed ':a;N;$!ba;s/\n0\./ONELINE0\./g' \
+        | sed ':a;N;$!ba;s/\n1\./ONELINE1\./g' \
+        | sed ':a;N;$!ba;s/\n2\./ONELINE2\./g' \
+        | sed ':a;N;$!ba;s/\n3\./ONELINE3\./g' \
+        | sed ':a;N;$!ba;s/\n4\./ONELINE4\./g' \
+        | sed ':a;N;$!ba;s/\n5\./ONELINE5\./g' \
+        | sed ':a;N;$!ba;s/\n6\./ONELINE6\./g' \
+        | sed ':a;N;$!ba;s/\n7\./ONELINE7\./g' \
+        | sed ':a;N;$!ba;s/\n8\./ONELINE8\./g' \
+        | sed ':a;N;$!ba;s/\n9\./ONELINE9\./g' \
         | tr '\n' ' ' \
         | sed 's/TWOLINES/\n\n/g' \
+        | sed 's/ONELINE/\n/g' \
         | sed 's/\([.!?]\)\s*\([a-z]\)/\1 \u\2/g' \
         | sed 's/^./\u&/' \
         | fold -s \
@@ -46,16 +58,59 @@ else
     > $tmpfile3
 fi
 
-if [[ $has_pipe == "Y" ]]
+# extra handling for bullet points
+if [[ $1 == "s" ]]
 then
-    cat $tmpfile3 | sed -e 's/^/| /' > $tmpfile1
+    if [[ -n $(cat $tmpfile3 | grep "^- \[ \]") ]]
+    then
+        # check if there are checkbox points "- [ ]"
+        cat $tmpfile3 \
+            | awk '{if (!/^- \[ \] /) $0 = "      " $0}1'
+        > $tmpfile1
+    elif [[ -n $(cat $tmpfile3 | grep "^- ") ]]
+    then
+        # check if there are bullet points "- "
+        cat $tmpfile3 \
+            | sed -E 's/^([^-]|-[^ ])/  \0/' \
+        > $tmpfile1
+        # or awk '{if (!/^- /) $0 = "  " $0}1'
+    else
+        cat $tmpfile3 > $tmpfile1
+    fi
 else
     cat $tmpfile3 > $tmpfile1
 fi
 
-cat $tmpfile1 | sed 's/\s\+$//' > $tmpfile2
+# extra handling for numbering
+if [[ $1 == "s" ]]
+then
+    # check if there is numbering
+    if [[ -n $(cat $tmpfile1 | grep "^1\. ") ]]
+    then
+        cat $tmpfile1 \
+            | awk '{if (!/^[0-9]+\. /) $0 = "   " $0}1' \
+        > $tmpfile2
+        # or awk '{if (!/^[0-9]+\. /) $0 = "   " $0}1'
+    else
+        cat $tmpfile1 > $tmpfile2
+    fi
+else
+    cat $tmpfile1 > $tmpfile2
+fi
 
-sed -i "s/^/$(printf '%*s' $indentation)/" $tmpfile2
-cat $tmpfile2
+
+
+if [[ $has_pipe == "Y" ]]
+then
+    cat $tmpfile2 | sed -e 's/^/| /' > $tmpfile3
+else
+    cat $tmpfile2 > $tmpfile3
+fi
+
+cat $tmpfile3 | sed 's/\s\+$//' > $tmpfile1
+
+# add back indentation
+sed -i "s/^/$(printf '%*s' $indentation)/" $tmpfile1
+cat $tmpfile1
 
 rm -f $tmpfile1 $tmpfile2 $tmpfile3

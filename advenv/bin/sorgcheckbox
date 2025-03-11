@@ -8,13 +8,13 @@ def proc_line(s):
             # final touch
             soutltrimmed = sout.lstrip()
             if not applied and soutltrimmed[0] != '-':
-                return ' '*(len(sout)-len(soutltrimmed)) + "- [ ] " + soutltrimmed
+                return ' '*(len(sout)-len(soutltrimmed)) + "- [ ] " + soutltrimmed[0].upper() + soutltrimmed[1:]
             else:
                 return sout
         c = sin[0]
 
-        if not applied and mem[-2:] == "- " and c != '[':
-            return proc_line_impl(sin[1:], sout + "[ ] " + c, "", True)
+        if not applied and mem[-2:] == "- " and c != '[' and not mem[:-2].strip():
+            return proc_line_impl(sin[1:], sout + "[ ] " + c.upper(), "", True)
         elif not applied and mem[-3:] == "- [":
             if c in ['x','o']:
                 return proc_line_impl(sin[1:], sout + c.upper(), "", True)

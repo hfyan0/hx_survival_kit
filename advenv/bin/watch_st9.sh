@@ -6,13 +6,14 @@ get_last_mod_time()
     stat $filepath | grep Modify
 }
 
-last_output=$(get_last_mod_time)
+last_output=""
 while [ 1 ]
 do
     this_output=$(get_last_mod_time)
     if [[ $this_output != $last_output ]]
     then
         clear
+        echo
         cat $filepath
         last_output=$this_output
     else
