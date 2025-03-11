@@ -21,7 +21,8 @@ if has_pipe:
 else:
     for line in lines:
         if len(line) <= indentation:
-            new_line = line[0:indentation] + \
+            new_line = line + \
+                       " "*(indentation-len(line)) + \
                        "|" + \
                        line[indentation:]
         else:
