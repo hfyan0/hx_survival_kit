@@ -1,12 +1,24 @@
 #!/bin/bash
 
-work_plan=$HOME/sunny/work_plan.txt
-work_plan_old=$HOME/sunny/work_plan_old.txt
-work_plan_ostdg=$HOME/sunny/work_plan_ostdg.txt
-note_txt=$HOME/sunny/note.txt
-note_old_txt=$HOME/sunny/note_old.txt
+home_dir=$HOME/xxx
+work_plan=${home_dir}/work_plan.txt
+work_plan_old=${home_dir}/work_plan_old.txt
+work_plan_ostdg=${home_dir}/work_plan_ostdg.txt
+note_txt=${home_dir}/note.txt
+note_old_txt=${home_dir}/note_old.txt
 
-cat $work_plan | grep -e 'TODO' -e '- \[ \]' | sed '/TODO/{x;p;x;}' > $work_plan_ostdg
+chmod 644 $work_plan_ostdg
+
+cat $work_plan \
+  | grep -e 'TODO' -e '- \[ \]' -e '==========' -e '----------' \
+  | sed 's/----------/====================/g' \
+  | sed 's/^\s\+$//' \
+  | sed '/^$/d' \
+  | uniq \
+  | sed '/==========/{x;p;x;}' \
+  > $work_plan_ostdg
+
+chmod 444 $work_plan_ostdg
 
 ps aux | grep $(basename $work_plan)       | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
 ps aux | grep $(basename $work_plan_old)   | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
@@ -14,4 +26,4 @@ ps aux | grep $(basename $work_plan_ostdg) | awk "{print \$2}" | tr "\n" "\0" | 
 ps aux | grep $(basename $note_txt)        | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
 ps aux | grep $(basename $note_old_txt)    | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
 
-nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $work_plan_old $work_plan_ostdg $note_txt $note_old_txt
+nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $note_txt $work_plan_ostdg $work_plan_old $note_old_txt
