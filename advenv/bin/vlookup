@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+import sys
+import argparse
+from itertools import groupby
+
+parser = argparse.ArgumentParser(description = "vlookup from the command line! stream your values to this program through stdin")
+parser.add_argument("-kv", "--keyvalfile", action="store", dest="keyvalfile", help="Comma separated value file for key value pairs", required=True)
+parser.add_argument("-kv2", "--keyvalfile2", action="store", dest="keyvalfile2", help="Comma separated value file for a second list of key value pairs", default="")
+args = parser.parse_args()
+
+###################################################
+kv_dict_list = []
+for kv_file in [x for x in [args.keyvalfile,args.keyvalfile2] if x != ""]:
+    with open(kv_file,'r') as f:
+        kv_dict_list.append(dict([tuple(x.split(',')) for x in [line.strip() for line in f]]))
+
+input_list = [line.strip() for line in sys.stdin]
+
+ls_of_ls = [[(x, i, kv_dict.get(x,None)) for x in input_list] for i,kv_dict in enumerate(kv_dict_list) ]
+
+flattened_tuple_list = [tup for ls in ls_of_ls for tup in ls if tup[2] is not None]
+
+k__k_i_v__dict = dict( (e,list(it_v)) for e, it_v in groupby(sorted(flattened_tuple_list, key=lambda x: (x[0],x[1])), lambda x: x[0]))
+
+for ipt in input_list:
+    print("%s,%s" % (ipt,k__k_i_v__dict.get(ipt,[(None,None,"NA")])[0][2]))
