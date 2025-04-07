@@ -315,7 +315,11 @@ unset -f xs_base; xs_base() {
                 grep "$argm" \
                 *.txt \
                 $GOPT; \
-            cd ~/sunny/doc/2024_si; \
+            cd ~/sunny/doc/si_2024; \
+                grep "$argm" \
+                *.txt \
+                $GOPT; \
+            cd ~/sunny/doc/si_2025; \
                 grep "$argm" \
                 *.txt \
                 $GOPT; \
