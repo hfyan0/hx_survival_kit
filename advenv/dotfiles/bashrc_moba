@@ -24,7 +24,6 @@ alias ch6='chmod 644'
 alias ch600='chmod 600'
 alias tf='tail -500f'
 alias g='grep --color=always'
-alias gv='grep -v'
 alias eg="egrep -a --color"
 alias md='mkdir -p'
 alias tp='htop || top'
@@ -178,6 +177,19 @@ unset -f ff; ff() {
       rm -f $tmpfile1
       rm -f $tmpfile2
   fi
+}
+
+unset -f gv; gv() {
+    tmpfile1=$(mktemp)
+    tmpfile2=$(mktemp)
+    cat - > $tmpfile1
+    for x in $@
+    do
+        cat $tmpfile1 | grep -v $x > $tmpfile2
+        cat $tmpfile2 > $tmpfile1
+    done
+    cat $tmpfile1
+    rm -f $tmpfile1 $tmpfile2
 }
 unset -f gsc; gsc() {
     if [[ -e $(which rg) ]]
