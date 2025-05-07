@@ -15,7 +15,7 @@ fi
 
 if [[ $# -eq 0 ]]
 then
-    $OURVIM -p $(cat -)
+    $OURVIM -p $(cat - | sed '/^#/d')
 else
     # get file list
     filelist=""
