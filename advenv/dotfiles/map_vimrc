@@ -22,19 +22,18 @@ command!                Q q " Bind :Q to :q
 command!                Qall qall
 
 " ---------------------------------------------------------------------------------------------------
+" source abbreviations
+" ---------------------------------------------------------------------------------------------------
+ nnoremap <Leader>2      <esc>:abclear<cr><esc>:source ~/.advenv/dotfiles/abbrev<cr>
+ nnoremap <Leader>3      <esc>:abclear<cr>
+
+" ---------------------------------------------------------------------------------------------------
 " Reading and Saving buffers
 " ---------------------------------------------------------------------------------------------------
  set autoread                                                                                                                                                                                    
  set updatetime=1000
  autocmd CursorMoved,BufLeave,FocusLost              * silent! wall
  autocmd CursorHold,CursorHoldI,CursorMovedI         * silent! checktime
-
-" ---------------------------------------------------------------------------------------------------
-" more convenient
-" ---------------------------------------------------------------------------------------------------
-  nnoremap <Leader>m      @q
-" nnoremap 0              050l^
-
 
 " ---------------------------------------------------------------------------------------------------
 " Easy Motion
@@ -62,7 +61,6 @@ map <Leader>b <Leader><Leader>b
 "nnoremap / /\v
 "nnoremap ? ?\v
 
-
 " ---------------------------------------------------------------------------------------------------
 " Turbo keys / Red Bull keys / Superman keys
 " ---------------------------------------------------------------------------------------------------
@@ -86,17 +84,19 @@ map <Leader>b <Leader><Leader>b
   inoremap <C-b> <Left>
   inoremap <C-f> <Right>
   inoremap <M-b> <esc>bi
-  inoremap <M-f> <esc>wwi
+  inoremap <M-f> <esc>ewi
   nnoremap <M-b> b
   nnoremap <M-f> w
 
   inoremap <C-a> <Home>
   inoremap <C-e> <End>
+" nnoremap <C-a> 0 " don't remap this, want to preserve C-a add number function
+" nnoremap <C-e> $ " don't remap this, want to preserve C-e scrolling function
 
   inoremap <C-d> <Del>
   inoremap <M-d> <esc>lcw
   nnoremap <M-d> dw
-  inoremap <C-h> <BS>
+" inoremap <C-h> <BS>
 
 " ---------------------------------------------------------------------------------------------------
 " Tabs and opening files through plugin / sf
@@ -114,8 +114,7 @@ map <Leader>b <Leader><Leader>b
 " not working when there is only 1 tab
 " nnoremap <Leader>t      <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
 " nnoremap <Leader>t      <esc>:tabnew<cr>:CtrlP<cr>
-nnoremap <C-p>          <esc>:tabnew<cr>:CtrlP<cr>
-"nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
+nnoremap <C-p>          <esc>:tablast<cr><esc>:tabnew<cr>:CtrlP<cr>
 nnoremap <C-o>          <esc>:tabnext<cr>
 nnoremap <C-i>          <esc>:tabprev<cr>
 nnoremap <Tab>          <esc>:tabprev<cr>
@@ -134,6 +133,13 @@ nnoremap <Leader>cs        :noh<cr>
  nmap <Leader>/     <esc>yypkgcc<esc>j
  vmap <Leader>/     ygvgcgv<esc>jP
 
+
+" ---------------------------------------------------------------------------------------------------
+" our own clipboard that can be shared anywhere
+" ---------------------------------------------------------------------------------------------------
+ nmap <Leader>y     V!~/.advenv/bin/st 9 y<cr>
+ vmap <Leader>y      !~/.advenv/bin/st 9 y<cr>
+ nmap <Leader>p     <esc>o<esc>:r!~/.advenv/bin/st 9<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " Make Y consistent with D and C (instead of yy)
@@ -232,20 +238,34 @@ nnoremap V 0V
  nnoremap <Leader>\\    vip!stogglepipe<cr>
  vnoremap <Leader>\\    !stogglepipe<cr>
 
- " title case / sentence case
- nnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
- vnoremap <Leader>u      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
+" ---------------------------------------------------------------------------------------------------
+" change case
+" ---------------------------------------------------------------------------------------------------
+  nnoremap <Leader>cu      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
+  vnoremap <Leader>cu      :s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g<cr>:noh<cr>
+  vnoremap <Leader>u       !~/.advenv/bin/scap<cr>
+  nnoremap <Leader>u       V!~/.advenv/bin/scap<cr>
+" Convert each name_like_this to NameLikeThis in current line
+" nnoremap <Leader>c      :s#\(\%(\<\l\+\)\%(_\)\@=\)\|_\(\l\)#\u\1\2#g<cr>
 
+" Convert each name_like_this to nameLikeThis in current line
+" nnoremap <Leader>cc     :s#_\(\l\)#\u\1#g<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " for tidying up notes easily
 " ---------------------------------------------------------------------------------------------------
+nnoremap <Leader>ct     :tabnew<cr>
 vnoremap <Leader>t      !salign_md_tbl
 nnoremap <Leader>t      vip!salign_md_tbl
 vnoremap <Leader>f      !sfold s<cr>
 nnoremap <Leader>f      V!sfold s<cr>
 vnoremap <Leader>F      !sfold<cr>
 nnoremap <Leader>F      V!sfold<cr>
+
+" ---------------------------------------------------------------------------------------------------
+" more convenience
+" ---------------------------------------------------------------------------------------------------
+nnoremap <Leader>cn     !~/.advenv/bin/prepend_seq_num<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " C++
@@ -322,6 +342,12 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
  nnoremap  dic  /#\+$<cr>NjlD:noh<cr><esc>
 
 " ---------------------------------------------------------------------------------------------------
+" org-mode
+" ---------------------------------------------------------------------------------------------------
+ nnoremap <Leader>ck     V:!~/.advenv/bin/sorgcheckbox<cr>
+ vnoremap <Leader>ck     :!~/.advenv/bin/sorgcheckbox<cr>
+
+" ---------------------------------------------------------------------------------------------------
 " git rebase
 " ---------------------------------------------------------------------------------------------------
  vnoremap <Leader>gf     :s/pick/f/<cr>
@@ -329,33 +355,6 @@ nnoremap  <Leader>[   VdO{<cr>}<esc>kp
  nnoremap <Leader>gr     V:s/pick/r/<cr>
  vnoremap <Leader>gs     :s/pick/s/<cr>
  nnoremap <Leader>gs     V:s/pick/s/<cr>
-
-" ---------------------------------------------------------------------------------------------------
-" source abbreviations
-" ---------------------------------------------------------------------------------------------------
- nnoremap <Leader>2      <esc>:abclear<cr><esc>:source ~/.advenv/dotfiles/abbrev<cr>
- nnoremap <Leader>3      <esc>:abclear<cr>
-
-" ---------------------------------------------------------------------------------------------------
-" case
-" ---------------------------------------------------------------------------------------------------
-  vnoremap <Leader>cu     !~/.advenv/bin/scap<cr>
-  nnoremap <Leader>cu     V!~/.advenv/bin/scap<cr>
-
-" ---------------------------------------------------------------------------------------------------
-" org-mode
-" ---------------------------------------------------------------------------------------------------
- nnoremap <Leader>ct     V:!~/.advenv/bin/sorgtoggle<cr>
- vnoremap <Leader>ct     :!~/.advenv/bin/sorgtoggle<cr>
- nnoremap <Leader>ck     V:!~/.advenv/bin/sorgcheckbox<cr>
- vnoremap <Leader>ck     :!~/.advenv/bin/sorgcheckbox<cr>
-
-" ---------------------------------------------------------------------------------------------------
-" our own clipboard that can be shared anywhere, through Dropbox
-" ---------------------------------------------------------------------------------------------------
- nmap <Leader>y     V!~/.advenv/bin/st 9 y<cr>
- vmap <Leader>y      !~/.advenv/bin/st 9 y<cr>
- nmap <Leader>p     <esc>o<esc>:r!~/.advenv/bin/st 9<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " to solve nvim behaviour of no abbreviation expansion after C-w

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+tmpfile1=$(mktemp)
+
+cat - > $tmpfile1
+
+no_of_lines=$(cat $tmpfile1 | wc -l)
+
+paste <(seq $no_of_lines) $tmpfile1 | sed 's/\t/  /'
+
+rm -f $tmpfile1
