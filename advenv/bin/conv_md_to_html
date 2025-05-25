@@ -15,8 +15,9 @@ cat $tmpfile2 | pandoc -s --metadata title="___" --from=gfm --to=html -o $tmpfil
 # }
 
 cat $tmpfile1 | \
-    sed 's/max-width: 36em;/max-width: 72em;/' \
-    sed 's/font-size: 85%;/font-size: 100%; background-color: #dddddd;/' \
+    sed 's/max-width: 36em;/max-width: 72em;/' | \
+    sed 's/font-size: 85\%;/font-size: 90\%; background-color: \#f0f0f0;/' | \
+    sed 's/blockquote/strong { color: \#3c5683; }\n blockquote/' \
     > /home/sunnyyan/sunny/tmp.html
 
 cat $tmpfile2
