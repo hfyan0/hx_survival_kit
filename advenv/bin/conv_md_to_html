@@ -5,15 +5,19 @@ tmpfile2=$(mktemp)
 cat - | sed -e 's/^\s\+| //' | sed -e 's/^\s\+|$//' > $tmpfile2
 cat $tmpfile2 | pandoc -s --metadata title="___" --from=gfm --to=html -o $tmpfile1
 
-{ \
-  echo "<style>"; \
-  # cat /home/sunnyyan/.advenv/styles/sunny_clear.css; \
-  # cat /home/sunnyyan/.advenv/styles/latex_style1a.css; \
-  # cat /home/sunnyyan/.advenv/styles/witex.css; \
-  cat /home/sunnyyan/.advenv/styles/medium_unbound.css; \
-  echo "</style>"; \
-  cat $tmpfile1; \
-} | sed 's/max-width: 36em;/max-width: 72em;/' > /home/sunnyyan/sunny/tmp.html
+# { \
+#   echo "<style>"; \
+#   # cat /home/sunnyyan/.advenv/styles/sunny_clear.css; \
+#   # cat /home/sunnyyan/.advenv/styles/latex_style1a.css; \
+#   # cat /home/sunnyyan/.advenv/styles/witex.css; \
+#   echo "</style>"; \
+#   cat $tmpfile1; \
+# }
+
+cat $tmpfile1 | \
+    sed 's/max-width: 36em;/max-width: 72em;/' \
+    sed 's/font-size: 85%;/font-size: 100%; background-color: #dddddd;/' \
+    > /home/sunnyyan/sunny/tmp.html
 
 cat $tmpfile2
 
