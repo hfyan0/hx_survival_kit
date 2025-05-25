@@ -255,17 +255,12 @@ nnoremap V 0V
 " for tidying up notes easily
 " ---------------------------------------------------------------------------------------------------
 nnoremap <Leader>ct     :tabnew<cr>
-vnoremap <Leader>t      !salign_md_tbl
-nnoremap <Leader>t      vip!salign_md_tbl
+vnoremap <Leader>t      !salign_md_tbl<cr>
+nnoremap <Leader>t      vip!salign_md_tbl<cr>
 vnoremap <Leader>f      !sfold s<cr>
 nnoremap <Leader>f      V!sfold s<cr>
 vnoremap <Leader>F      !sfold<cr>
 nnoremap <Leader>F      V!sfold<cr>
-
-" ---------------------------------------------------------------------------------------------------
-" more convenience
-" ---------------------------------------------------------------------------------------------------
-nnoremap <Leader>cn     !~/.advenv/bin/prepend_seq_num<cr>
 
 " ---------------------------------------------------------------------------------------------------
 " C++
