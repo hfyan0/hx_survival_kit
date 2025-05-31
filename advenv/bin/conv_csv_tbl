@@ -1,0 +1,2 @@
+#!/bin/bash
+cat - | sed 's/ ,/_,/g' | sed 's/,/|/g' | salign_md_tbl

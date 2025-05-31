@@ -1,0 +1,2 @@
+#!/bin/bash
+cat - | sed 's/^\s*|//' | sed 's/\s*|\s*/,/g' | sed '/:---/d' | tr '_' ' ' | sed 's/^\s*//' | sed 's/,$//'
