@@ -6,6 +6,17 @@ cat - > $tmpfile1
 
 no_of_lines=$(cat $tmpfile1 | wc -l)
 
-paste <(seq $no_of_lines) $tmpfile1 | sed 's/\t/  /'
+if [[ $no_of_lines -le 9 ]]
+then
+    paste <(seq $no_of_lines) $tmpfile1 | sed 's/\t/  /'
+elif [[ $no_of_lines -le 99 ]]
+then
+    paste <(printf "%02d\n" $(seq $no_of_lines)) $tmpfile1 | sed 's/\t/  /'
+elif [[ $no_of_lines -le 999 ]]
+then
+    paste <(printf "%03d\n" $(seq $no_of_lines)) $tmpfile1 | sed 's/\t/  /'
+else
+    paste <(seq $no_of_lines) $tmpfile1 | sed 's/\t/  /'
+fi
 
 rm -f $tmpfile1
