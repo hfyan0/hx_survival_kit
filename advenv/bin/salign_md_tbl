@@ -3,19 +3,22 @@ import sys
 
 MIN_COL_WIDTH = 3 # if less than 2 then the logic going wild
 
+def get_len(text, encoding='gbk'):
+    return len(text.encode(encoding))
+
 def centre_justify(s, i):
-    space_len = i-len(s)
+    space_len = i-get_len(s)
     front_space_len = int(space_len / 2)
     back_space_len = space_len - front_space_len
     return ' '*front_space_len + str(s) + ' '*back_space_len
 
 
 def left_justify(s, i):
-    return str(s) + ' '*(i-len(s))
+    return str(s) + ' '*(i-get_len(s))
 
 
 def right_justify(s, i):
-    return ' '*(i-len(s)) + str(s)
+    return ' '*(i-get_len(s)) + str(s)
 
 
 def proc(entry, width, align):
@@ -42,7 +45,7 @@ def proc(entry, width, align):
 
 
 input_lines = [row for row in sys.stdin]
-initial_indentation = len(input_lines[0]) - len(input_lines[0].lstrip())
+initial_indentation = get_len(input_lines[0]) - get_len(input_lines[0].lstrip())
 
 # convert tab to |
 input_lines = [row.replace('\t','|') for row in input_lines]
@@ -71,7 +74,7 @@ for line_num in range(0,len(rows)):
 # insert header separator
 rows = rows_excl_line[:1] + [[""]+[":---" for x in rows[0]][1:-1]+[""]] + rows_excl_line[1:]
 
-col_widths = [max(max(map(len, column)),MIN_COL_WIDTH) for column in zip(*rows_excl_line)] # make sure there is a minimum width of MIN_COL_WIDTH
+col_widths = [max(max(map(get_len, column)),MIN_COL_WIDTH) for column in zip(*rows_excl_line)] # make sure there is a minimum width of MIN_COL_WIDTH
 
 # limit max column width
 if len(sys.argv) > 1:

@@ -7,6 +7,12 @@ lines = [line.rstrip() for line in sys.stdin]
 if not lines:
     sys.exit()
 
+def remove_end_pipe(s):
+    if s.endswith("|"):
+        return s[:-1]
+    else:
+        return s
+
 first_line = lines[0]
 first_line_stripped = first_line.lstrip()
 
@@ -15,8 +21,15 @@ has_pipe = (first_line_stripped[:1] == "|")
 
 if has_pipe:
     for line in lines:
-        new_line = ' '*indentation + \
-                   line[indentation:].replace("| ","",1).replace("|","",1)
+        content = remove_end_pipe(line[indentation:].replace("| ","",1))
+
+        if not content:
+            new_line = ""
+        elif content.isspace():
+            new_line = ""
+        else:
+            new_line = ' '*indentation + content
+
         print(new_line)
 else:
     for line in lines:

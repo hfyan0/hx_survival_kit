@@ -1,0 +1,10 @@
+#!/bin/bash
+
+home_dir=$HOME/xxx
+work_plan=${home_dir}/work_plan.txt
+work_plan_old=${home_dir}/work_plan_old.txt
+work_plan_ostdg=${home_dir}/work_plan_ostdg.txt
+note_txt=${home_dir}/note.txt
+note_old_txt=${home_dir}/note_old.txt
+
+nvim -$ -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $note_txt $work_plan_ostdg $work_plan_old $note_old_txt
