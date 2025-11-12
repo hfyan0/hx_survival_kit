@@ -6,7 +6,7 @@ unset HISTFILE
 
 #unalias -a
 alias rm='rm -i'
-alias cp='cp -i'
+alias cp='cp -ip'
 alias mv='mv -i'
 alias h='head'
 alias t='tail'
