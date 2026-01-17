@@ -1,15 +1,32 @@
 #!/bin/bash
 
-home_dir=$HOME/xxx
-work_plan=${home_dir}/work_plan.txt
-work_plan_old=${home_dir}/work_plan_old.txt
-work_plan_ostdg=${home_dir}/work_plan_ostdg.txt
-note_txt=${home_dir}/note.txt
-note_old_txt=${home_dir}/note_old.txt
+work_plan=$HOME/sunny/work_plan.txt
+work_plan_old=$HOME/sunny/work_plan_old.txt
+note_txt=$HOME/sunny/note.txt
+
+work_plan2=$HOME/sunny/.work_plan.txt
+work_plan_old2=$HOME/sunny/.work_plan_old.txt
+note_txt2=$HOME/sunny/.note.txt
+
+work_plan_ostdg=$HOME/sunny/work_plan_ostdg.txt
+note_old_txt=$HOME/sunny/note_old.txt
 
 chmod 644 $work_plan_ostdg
 
-cat $work_plan \
+proc_cnt=$(ps aux | grep -e $(basename $work_plan) -e $(basename $work_plan_old) -e $(basename $work_plan_ostdg) -e $(basename $note_txt) -e $(basename $note_old_txt) | grep -v grep | wc -l)
+
+if [[ $proc_cnt -gt 0 ]]
+then
+    echo "Already running."
+    exit
+fi
+
+cat $note_txt      | sde > $note_txt2
+cat $work_plan     | sde > $work_plan2
+cat $work_plan_old | sde > $work_plan_old2
+
+# create summary
+cat $work_plan2 \
   | grep -e 'TODO' -e '- \[ \]' -e '==========' -e '----------' \
   | sed 's/----------/====================/g' \
   | sed 's/^\s\+$//' \
@@ -20,10 +37,11 @@ cat $work_plan \
 
 chmod 444 $work_plan_ostdg
 
-ps aux | grep $(basename $work_plan)       | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
-ps aux | grep $(basename $work_plan_old)   | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
-ps aux | grep $(basename $work_plan_ostdg) | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
-ps aux | grep $(basename $note_txt)        | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
-ps aux | grep $(basename $note_old_txt)    | awk "{print \$2}" | tr "\n" "\0" | xargs -0 kill > /dev/null 2>&1
+#
+nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan2 $note_txt2 $work_plan_ostdg $work_plan_old2 $note_old_txt
 
-nvim -u ~/.advenv/dotfiles/org_vimrc -p $work_plan $note_txt $work_plan_ostdg $work_plan_old $note_old_txt
+cat $note_txt2      | sen > $note_txt
+cat $work_plan2     | sen > $work_plan
+cat $work_plan_old2 | sen > $work_plan_old
+
+rm -f $note_txt2 $work_plan2 $work_plan_old2
