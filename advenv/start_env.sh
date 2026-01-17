@@ -1,3 +1,3 @@
-export HOME=/home/itops60/sunnyyan/home
+export HOME=$HOME/sunnyyan/home
 . $HOME/.advenv/dotfiles/bashrc
 cd
