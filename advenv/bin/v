@@ -34,5 +34,7 @@ else
             fi
         fi
     done
+
+    filelist=$(echo $filelist | tr ' ' '\n' | sort | uniq)
     $OURVIM -p $filelist
 fi
