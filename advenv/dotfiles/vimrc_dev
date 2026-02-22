@@ -1,0 +1,8 @@
+set nowrap
+syntax off
+
+let mapleader = ","
+let g:mapleader = ","
+nmap \ ,
+
+nnoremap <Leader>q      :qall<cr>
