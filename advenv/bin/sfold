@@ -60,6 +60,7 @@ cat $tmpfile2 \
     | tr '\n' ' ' \
     | sed 's/TWOLINES/\n\n/g' \
     | sed 's/ONELINE/\n/g' \
+    | sed 's/^\([a-z]\)/\u\1/g' \
     | sed 's/\([.!?]\)\s\+\([a-z]\)/\1 \u\2/g' \
     | sed 's/^\([-â€¢>]\) \([a-z]\)/\1 \u\2/g' \
     | fold -s \
