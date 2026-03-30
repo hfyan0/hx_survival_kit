@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
+import os
+# import shutil
 import sys
 import math
 from datetime import datetime,timedelta,date
@@ -143,6 +145,23 @@ hk_holiday_list = [
                     date(2025,10,29),
                     date(2025,12,25),
                     date(2025,12,26),
+                    date(2026, 1, 1),
+                    date(2026, 2,17),
+                    date(2026, 2,18),
+                    date(2026, 2,19),
+                    date(2026, 4, 3),
+                    date(2026, 4, 4),
+                    date(2026, 4, 6),
+                    date(2026, 4, 7),
+                    date(2026, 5, 1),
+                    date(2026, 5,25),
+                    date(2026, 6,19),
+                    date(2026, 7, 1),
+                    date(2026, 9,26),
+                    date(2026,10, 1),
+                    date(2026,10,19),
+                    date(2026,12,25),
+                    date(2026,12,26),
                     ]
 
 cn_holiday_list = [ date(2018,  1,  1),
@@ -267,6 +286,35 @@ us_holiday_list = [ date(2018,  1,  1),
                     date(2025,  9,  1),
                     date(2025, 11, 27),
                     date(2025, 12, 25),
+                    date(2026,  1,  1),
+                    date(2026,  1, 19),
+                    date(2026,  2, 16),
+                    date(2026,  4,  3),
+                    date(2026,  5, 25),
+                    date(2026,  6, 19),
+                    date(2026,  7,  3),
+                    date(2026,  9,  7),
+                    date(2026, 11, 26),
+                    date(2026, 12, 25),
+                    date(2027,  1,  1),
+                    date(2027,  1, 18),
+                    date(2027,  2, 15),
+                    date(2027,  3, 26),
+                    date(2027,  5, 31),
+                    date(2027,  6, 18),
+                    date(2027,  7,  5),
+                    date(2027,  9,  6),
+                    date(2027, 11, 25),
+                    date(2027, 12, 24),
+                    date(2028,  1, 17),
+                    date(2028,  2, 21),
+                    date(2028,  4, 14),
+                    date(2028,  5, 29),
+                    date(2028,  6, 19),
+                    date(2028,  7,  4),
+                    date(2028,  9,  4),
+                    date(2028, 11, 23),
+                    date(2028, 12, 25),
                     ]
 
 mth_code = {  1 : "Jan",
@@ -378,15 +426,22 @@ def scal_format(dt, next_dt, tdy):
             mth = "---"
         else:
             mth = ""
-        output_str = output_str + mth + "\n"
+        output_str = output_str + mth + '\n'
 
     return output_str
 
 if len(sys.argv) == 1:
     # current
     today = datetime.now().date()
-    begindate = today - timedelta(days = 77)
-    date_list = [ begindate + timedelta(days = x) for x in range(160)]
+
+    # screen_lines = shutil.get_terminal_size().lines
+    # screen_lines = os.environ.get('LINES', 28)
+    screen_lines,_ = os.popen('stty size').read().split()
+    lookback_days = math.floor(math.floor((int(screen_lines)-5) / 2) * 7 + (today.isoweekday()%7))
+    lookfwd_days  = math.floor(math.floor((int(screen_lines)-5) / 2) * 7 + (7-(today.isoweekday()%7)))
+
+    begindate = today - timedelta(days = lookback_days)
+    date_list = [ begindate + timedelta(days = x) for x in range(lookback_days + 1 + lookfwd_days)]
 elif len(sys.argv) == 2:
     if int(sys.argv[1]) > 1900:
         # year
@@ -402,7 +457,6 @@ elif len(sys.argv) == 2:
 date_list = zip(date_list[:-1],date_list[1:])
 
 init_list = [ (' ' if x == 0 else '') + right_justify("",3) for x in range(begindate.isoweekday() % 7) ]
-body_str = ''.join(init_list + [ scal_format(x, y, today)  for x,y in  date_list ])
 print (in_colour(' ' + ''.join([ right_justify(x,2)+' '  for x in  [ 'S','M','T','W','T','F','S' ] ]), BWhite))
-print
-print (body_str)
+body_str = (''.join(init_list + [ scal_format(x, y, today)  for x,y in  date_list ])).rstrip()
+sys.stdout.write(body_str)
