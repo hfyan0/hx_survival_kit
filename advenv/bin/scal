@@ -390,7 +390,7 @@ def scal_format(dt, next_dt, tdy):
     output_str = ""
 
     if dt == tdy:
-        output_str = in_colour('[',BYellow) + output_str
+        output_str = in_colour('[',BGreen) + output_str
     elif wkd == 0:
         output_str = ' ' + output_str
     else:
@@ -412,7 +412,7 @@ def scal_format(dt, next_dt, tdy):
         output_str += fmt_day
 
     if dt == tdy:
-        output_str = output_str + in_colour(']',BYellow)
+        output_str = output_str + in_colour(']',BGreen)
     elif next_dt != tdy:
         output_str = output_str + in_colour(' ',White)
 
@@ -425,7 +425,10 @@ def scal_format(dt, next_dt, tdy):
         elif dt.day <= 7:
             mth = "---"
         else:
-            mth = ""
+            if dt.month == tdy.month:
+                mth = in_colour("---",BGreen)
+            else:
+                mth = ""
         output_str = output_str + mth + '\n'
 
     return output_str
