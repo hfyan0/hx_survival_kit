@@ -23,6 +23,7 @@ def clean_str(s):
     s = s.strip()
     for i in range(10):
         s = s.replace('  ',' ')
+        s = s.replace('\x00', '')
         # s = s.replace(' @@','@@')
         # s = s.replace('@@ ','@@')
     return s
@@ -213,13 +214,34 @@ def update_state(state,k,width,height,abbrev_dict):
         npos = pos
     elif k == "alt-b":
         ns = s
-        stop_cs = [' ','(','[','{','@']
+        stop_cs = [' ','(','[','{','@','-']
         locs = [s.rfind(c, 0, max(pos-1,0)) for c in stop_cs]
-        loc = max(max(locs),0)
+        locs = [x for x in locs if x != -1] + [0]
+        loc = max(locs)
         if s[loc] in stop_cs:
             npos = min(loc+1,len(s))
         else:
             npos = loc
+    elif k == "alt-f":
+        ns = s
+        stop_cs = [' ',')',']','}','@','-']
+        locs = [s.find(c, pos+1) for c in stop_cs]
+        locs = [x for x in locs if x != -1] + [len(s)]
+        loc = min(locs)
+        npos = loc
+        # ns = s
+        # loc1 = s.find(' ', pos+1)
+        # loc2 = s.find('@', pos+1)
+        #
+        # if loc1 * loc2 > 0:
+        #     loc = min(loc1, loc2)
+        # else:
+        #     loc = max(loc1, loc2)
+        #
+        # if loc < 0:
+        #     npos = len(s)
+        # else:
+        #     npos = loc
     elif k == "alt-c":
         # toggle sentence case
         if not s:
@@ -230,21 +252,7 @@ def update_state(state,k,width,height,abbrev_dict):
             ns = toggle_case(s[0]) + s[1:]
             ns = toggle_sentence_case(ns, to_upper_case)
             ns = clean_str(ns)
-            npos = pos if pos < len(ns) else len(ns)
-    elif k == "alt-f":
-        ns = s
-        loc1 = s.find(' ', pos+1)
-        loc2 = s.find('@', pos+1)
-
-        if loc1 * loc2 > 0:
-            loc = min(loc1, loc2)
-        else:
-            loc = max(loc1, loc2)
-
-        if loc < 0:
-            npos = len(s)
-        else:
-            npos = loc
+            npos = min(pos,len(ns))
     elif k == "alt-d":
         start_pos = (pos+1) if s[pos] in [' ','@'] else pos
         loc1 = s.find(' ',start_pos)
@@ -354,7 +362,7 @@ def draw_menu(stdscr):
         
         if outfile:
             with open(outfile, "w+") as f:
-                f.write(clean_str(state.text))
+                f.write(state.text)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
