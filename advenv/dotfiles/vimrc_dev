@@ -1,5 +1,6 @@
 set nowrap
 syntax off
+colorscheme elflord
 
 let mapleader = ","
 let g:mapleader = ","
