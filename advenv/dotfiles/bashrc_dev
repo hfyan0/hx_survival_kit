@@ -26,7 +26,6 @@ alias eg="egrep -a --color"
 alias md='mkdir -p'
 alias md5='md5sum'
 alias tp='top'
-alias ifc='ifconfig | less'
 alias wcl='wc -l'
 alias p='pwd'
 alias e='echo'
@@ -57,10 +56,14 @@ alias dush='du -sh * | sort -h'
 alias vw='view'
 alias rd='rmdir'
 alias gt='tig'
+alias ipa='ip -br -c a'
+alias gzb64='gzip | base64 | tr -d "\n"'
+alias b64gz='base64 --decode | gunzip'
 alias pmi='yum install'
 alias pms='yum search'
 alias pmr='yum remove'
 alias pmq='rpm -qa'
+
 unset -f c; c() {
   cd $@
   ls --color=auto -F
@@ -233,6 +236,45 @@ unset -f fromb64; fromb64() {
     fi
 
     cd $pwd
+}
+
+unset -f ifc; ifc() {
+    ip addr | awk '
+    /^[0-9]+:/ {
+        if (iface != "") print ""
+        iface = $2
+        sub(":", "", iface)
+        print iface
+    }
+
+    /link\/ether/ {
+        printf "    ether %s\n", $2
+    }
+
+    /inet / {
+        split($2, a, "/")
+        printf "    inet %s  netmask %s\n", a[1], cidr2mask(a[2])
+    }
+
+    /inet6 / {
+        printf "    inet6 %s\n", $2
+    }
+
+    function cidr2mask(cidr,    mask, i) {
+        mask = ""
+        for (i = 0; i < 4; i++) {
+            if (cidr >= 8) {
+                mask = mask "255"
+                cidr -= 8
+            } else {
+                mask = mask (256 - 2^(8 - cidr))
+                cidr = 0
+            }
+            if (i < 3) mask = mask "."
+        }
+        return mask
+    }
+    '
 }
 
 alias    w0='watch --color -n 0 '
